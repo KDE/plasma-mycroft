@@ -1,0 +1,9 @@
+[Global]
+IconName=mycroft-plasma-appicon
+Comment=Mycroft Plasmoid
+
+[Event/MycroftResponse]
+Name=Mycroft Response
+Comment=Connection to device failed
+Icon=mycroft-plasma-appicon
+Action=Popup
