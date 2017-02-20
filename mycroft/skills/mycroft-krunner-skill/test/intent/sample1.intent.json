@@ -1,0 +1,7 @@
+{
+  "utterance": "search",
+  "intent_type": "KrunnerKeywordIntent",
+  "intent": {
+    "KrunnerPlasmaDesktopSkillKeyword": "this computer for"
+  }
+}

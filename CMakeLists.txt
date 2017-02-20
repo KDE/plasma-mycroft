@@ -33,3 +33,4 @@ plasma_install_package(plasmoid org.kde.plasma.mycroftplasmoid)
 
 install( DIRECTORY image/breeze DESTINATION ${ICON_INSTALL_DIR})
 install( DIRECTORY image/breeze-dark DESTINATION ${ICON_INSTALL_DIR})
+install( DIRECTORY mycroft DESTINATION /opt )
