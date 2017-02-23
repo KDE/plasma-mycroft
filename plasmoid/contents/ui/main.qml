@@ -23,6 +23,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
 import Qt.WebSockets 1.0
 import QtQuick.Controls.Styles 1.4
+import Qt.labs.settings 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
@@ -75,7 +76,6 @@ Item {
         property int minimumHeight: inputlistView.height ? inputlistView.height : rectanglebottombar.height + 30
         
         property int maximumHeight: minimumHeight
-        //property int minimumWidth: units.gridUnit * 20
         
         anchors { 
             fill: parent
@@ -197,8 +197,7 @@ Item {
                         socket.active = true;
                         })
                     }
-                        
-                   // barAnim.toggle();
+
                 }
                 
                 }
@@ -289,35 +288,32 @@ anchors.bottom: rectanglebottombar.top
                     spacing: 12
                     model: conversationInputList
                     delegate: Column {
-                        spacing: 6
-                        anchors.right: parent.right
+                    spacing: 6
+                    anchors.right: parent.right
 
-                        readonly property bool sentByMe: model.recipient !== "User"
+                    readonly property bool sentByMe: model.recipient !== "User"
                         
-                        Row {
-                            id: messageRow
-                            spacing: 6
+                    Row {
+                        id: messageRow
+                        spacing: 6
                             
-                            Rectangle {
-                                id: messageRect
-                                width: cbwidth
-                                radius: 2
-                                height: messageText.implicitHeight + 24
-                                color: theme.backgroundColor
-                                //border.color: "black"
-                                //border.width: 1
+                    Rectangle {
+                        id: messageRect
+                        width: cbwidth
+                        radius: 2
+                        height: messageText.implicitHeight + 24
+                        color: theme.backgroundColor
 
-                                PlasmaComponents.Label {
-                                    id: messageText
-                                    text: model.InputQuery
-                                    anchors.fill: parent
-                                    anchors.margins: 12
-                                    wrapMode: Label.Wrap
-                                }
-                                
-                            }
+                    PlasmaComponents.Label {
+                        id: messageText
+                        text: model.InputQuery
+                        anchors.fill: parent
+                        anchors.margins: 12
+                        wrapMode: Label.Wrap
                         }
-                    }
+                            }
+                                }
+                                    }
 
                     ScrollBar.vertical: ScrollBar {}
 
@@ -329,20 +325,12 @@ anchors.bottom: rectanglebottombar.top
                         for (var i = 0; i < root.visibleChildren.length; i++) {
                         listViewHeight += root.visibleChildren[i].height
                         }
-
-                        //inputlistView.height = listViewHeight + boxrowheight
-                        //inputlistView.width = listViewWidth
-                        //console.log (listViewHeight)
-                        //console.log(inputlistView.contentItem.children[messageRow].height)
-                        }
-                    }
-
-                }
-
-            }
-
-            }
-        }
+                            }
+                                }
+                                    }
+                                        }
+                                            }
+                                                }
         
 ColumnLayout {
 id: mycroftSkillscolumntab    
@@ -371,48 +359,45 @@ Rectangle {
                 color: theme.backgroundColor
                 z: -99
 
-                        Column {
-                            id: skillcolumn
-                            Layout.fillWidth: true;
-                            PlasmaComponents.Label { wrapMode: Text.WordWrap; font.bold: true; text: '<b>Skill:</b> ' + Skill }
+                Column {
+                id: skillcolumn
+                Layout.fillWidth: true;
+                PlasmaComponents.Label { wrapMode: Text.WordWrap; font.bold: true; text: '<b>Skill:</b> ' + Skill }
 
-                            Row {
-                                id: skillTopRowLayout
-                                height: skillimage.height
-                                spacing: 10
-                                //Image {id: skillimage; source: Pic; width: 32; height: 32;}
+                Row {
+                id: skillTopRowLayout
+                height: skillimage.height
+                spacing: 10
                                    
-                            Column {
-                                id: skillinnercolumn
-                            //Text { wrapMode: Text.WordWrap; font.bold: true; text: '<b>Skill:</b> ' + Skill }
-                            PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(0).Commands}
-                            PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(1).Commands}
-                            PlasmaComponents.Label { wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(2).Commands}
-                            PlasmaComponents.Label { wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(3).Commands}
-                            PlasmaComponents.Label { wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(4).Commands}
-                               }
-                            }
+                Column {
+                id: skillinnercolumn
+
+                PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(0).Commands}
+                PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(1).Commands}
+                PlasmaComponents.Label { wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(2).Commands}
+                PlasmaComponents.Label { wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(3).Commands}
+                PlasmaComponents.Label { wrapMode: Text.WordWrap; width: main.width; text: '<b>Command:</b> ' + CommandList.get(4).Commands}
+                }
+                    }
                         }
+                            }
+                                }
+                                    }
 
+            ListView {
+                id: skillslistmodelview
+                anchors.top: parent.top
+                anchors.topMargin: 5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                model: SkillModel{}
+                delegate: skillDelegate
+                spacing: 4
+                focus: false
+                interactive: true
             }
-}
-}
-
-ListView {
-        id: skillslistmodelview
-        anchors.top: parent.top
-        anchors.topMargin: 5
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        model: SkillModel{}
-        delegate: skillDelegate
-        spacing: 4
-        focus: false
-        interactive: true
-}
-
-}
+                }
 
 ColumnLayout {
 id: mycroftSettingsColumn
@@ -472,8 +457,6 @@ Rectangle {
                         else if (settingsTabUnitsOpZero.checked === true && coreinstallstoppath === customlocstoppath) {
                             coreinstallstoppath = defaultmcorestoppath;   
                         }
-//                        console.log(coreinstallstartpath)
-//                        console.log(coreinstallstoppath)
                     }
                 }
                 
@@ -499,9 +482,6 @@ Rectangle {
                         else if (settingsTabUnitsOpOne.checked === true && coreinstallstoppath === customlocstoppath) {
                             coreinstallstoppath = packagemcorestopcmd;   
                         }
-                        
-//                        console.log(coreinstallstartpath)
-//                        console.log(coreinstallstoppath)
                     }
                 }
                 
@@ -528,8 +508,6 @@ Rectangle {
                             coreinstallstoppath = customlocstoppath;   
                         }
                         
-//                        console.log(coreinstallstartpath)
-//                        console.log(coreinstallstoppath)
                     }
                 } 
                     }
@@ -605,7 +583,6 @@ Rectangle {
         anchors.rightMargin: 0
         anchors.left: root.left
         anchors.leftMargin: 0
-        //Layout.maximumHeight: 30
         border.color: "#80000000"
         border.width: 0
         z: 4
@@ -655,4 +632,11 @@ Rectangle {
         }
      }
 }
+Settings {
+     property alias customsetuppath: settingsTabUnitsOpThree.text
+     property alias notifybool: notificationswitch.checked
+     property alias radiobt1: settingsTabUnitsOpOne.checked
+     property alias radiobt2: settingsTabUnitsOpTwo.checked
+     property alias radiobt3: settingsTabUnitsOpZero.checked
+    }
 }
