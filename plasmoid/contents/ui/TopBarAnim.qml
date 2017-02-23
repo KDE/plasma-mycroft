@@ -19,8 +19,7 @@ Item {
         function wsocclosedanimtoggle() { wsocketClosed = !wsocketClosed }
         
     property bool wsocketMsg: false
-        function wsocmsganimtoggle() { wsocketMsg = !wsocketMsg, 
-                                onmsganim.running = true; } 
+        function wsocmsganimtoggle() { onmsganim.running = true; } 
         
         
         StateGroup {
@@ -31,7 +30,6 @@ Item {
                 when: wsocketRunning
                 PropertyChanges { anchors.leftMargin: -50; target: canvasleftline }
                 PropertyChanges { anchors.rightMargin: -50; target: canvasrightline }
-                //PropertyChanges { fillStyle: "green"; fill: true; target: canvascentergraphic }
                 },
 
                 State {
@@ -39,7 +37,6 @@ Item {
                 when: wsocketError
                 PropertyChanges { anchors.leftMargin: -50; target: canvasleftline }
                 PropertyChanges { anchors.rightMargin: -50; target: canvasrightline }
-                //PropertyChanges { fillStyle: "red"; fill: true; target: canvascentergraphic }
                 },
 
                 State {
@@ -47,7 +44,6 @@ Item {
                 when: wsocketClosed
                 PropertyChanges { anchors.leftMargin: 0; target: canvasleftline }
                 PropertyChanges { anchors.rightMargin: 0; target: canvasrightline }
-                //PropertyChanges { fillStyle: "grey"; fill: true; target: canvascentergraphic }
                 },
 
                 State {
@@ -55,7 +51,6 @@ Item {
                 when: wsocketMsg
                 PropertyChanges { anchors.leftMargin: -50; target: canvasleftline }
                 PropertyChanges { anchors.rightMargin: -50; target: canvasrightline }
-                //PropertyChanges { fillStyle: "blue"; fill: true; target: canvascentergraphic }
                 }
                     ]
                                     
@@ -114,20 +109,57 @@ Item {
         
         SequentialAnimation {
          id: onmsganim
+         ParallelAnimation{
+            PropertyAnimation {
+                    target: canvasleftline
+                    property: "anchors.leftMargin"
+                    from: 0
+                    to: -50
+                    duration: 200
+                }
+                
+            PropertyAnimation {
+                    target: canvasrightline
+                    property: "anchors.rightMargin"
+                    from: 0
+                    to: -50
+                    duration: 200
+                }    
+                
             PropertyAnimation {
                 target: canvascentergraphic
                 property: "fillStyle"
                 to: "blue"
-                duration: 1
+                duration: 10
             }
+         }
+        
+        ParallelAnimation{
+            PropertyAnimation {
+                    target: canvasleftline
+                    property: "anchors.leftMargin"
+                    from: - 50
+                    to: 0
+                    duration: 200
+                }
+                
+            PropertyAnimation {
+                    target: canvasrightline
+                    property: "anchors.rightMargin"
+                    from: - 50
+                    to: 0
+                    duration: 200
+                }    
+         
             PropertyAnimation {
                 target: canvascentergraphic
                 property: "fillStyle"
                 to: "grey"
                 duration: 1000
+                }
             }
         }
-
+        
             Canvas {
                         id:canvasleftline
                         anchors.left: parent.left

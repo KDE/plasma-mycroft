@@ -193,7 +193,7 @@ Item {
                         mycroftstartservicebutton.iconSource = "media-playback-pause"
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
                         conversationInputList.clear()
-                        delay(12000, function() {
+                        delay(7000, function() {
                         socket.active = true;
                         })
                     }
