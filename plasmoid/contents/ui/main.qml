@@ -36,7 +36,7 @@ Item {
     Plasmoid.toolTipMainText: i18n("Mycroft")
     Plasmoid.switchWidth: units.gridUnit * 15
     Plasmoid.switchHeight: units.gridUnit * 15
-    Layout.minimumHeight: units.gridUnit * 14
+    Layout.minimumHeight: units.gridUnit * 18
     Layout.minimumWidth: units.gridUnit * 22
     
     property alias cbwidth: rectangle2.width
@@ -49,6 +49,240 @@ Item {
     property string customloc: " "
     property string coreinstallstartpath: defaultmcorestartpath
     property string coreinstallstoppath: defaultmcorestoppath
+
+        function filtersuggest() {
+        console.log('iNsde filter suggest');
+        var keywordToSearch = qinput.text;
+        var result = wordSuggest(keywordToSearch);
+        if(result.length>0){
+                suggst.suggest1 = result[0];
+                suggst.suggest2 = result[1];
+                suggst.suggest3 = result[2];
+                suggst.visible=true;
+            }
+        else{
+            suggst.visible=false;
+        }
+    }
+    function wordSuggest(keywordToSearch){
+        console.log(keywordToSearch);
+        var baseLocation = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/ui/suggestion/";
+        var files = [{
+            "id" : "1",
+            "category" : "math",
+            "keywordFile" : baseLocation + "MathKeywords.txt",
+            "listFile" : baseLocation + "MathList.txt",
+            },
+            {
+            "id" : "2",
+            "category" : "general",
+            "keywordFile" : baseLocation + "GeneralKeywords.txt",
+            "listFile" : baseLocation + "GeneralList.txt",
+            },
+            {
+            "id" : "3",
+            "category" : "desktop",
+            "keywordFile" : baseLocation + "DesktopKeywords.txt",
+            "listFile" : baseLocation + "DesktopList.txt",
+            },
+            {
+            "id" : "4",
+            "category" : "weather",
+            "keywordFile" : baseLocation + "WeatherKeywords.txt",
+            "listFile" : baseLocation + "WeatherList.txt",
+            },
+            {
+            "id" : "5",
+            "category" : "wiki",
+            "keywordFile" : baseLocation + "WikiKeywords.txt",
+            "listFile" : baseLocation + "WikiList.txt",
+            }];
+            var baseSearch,keywords,keywordsFile,list,listFile,suggestion = ['9','8','7'];
+            for (var i=0; i < files.length; i++){
+                baseSearch = files[i];
+                console.log('id: ' +baseSearch.id);
+                //console.log(baseSearch.keywordFile);
+                //console.log("/home/Aix/MycroftPlamsaPrototype/suggestion/GeneralKeywords.txt");
+                keywordsFile = PlasmaLa.FileReader.read(baseSearch.keywordFile).toString("utf-8");
+                //console.log('keywordfile'+keywordsFile);
+                keywords = keywordsFile.split('\n');
+                keywords = keywords.filter(Boolean);
+                console.log(keywords);
+                for(var j=0; j < keywords.length; j++){
+                    keywordToSearch = keywordToSearch.toLowerCase();
+                    if(keywordToSearch.indexOf(keywords[j]) !== -1){
+                        console.log('found keyword' + keywordToSearch.indexOf(keywords[i]));
+                        listFile = PlasmaLa.FileReader.read(baseSearch.listFile).toString("utf-8");
+                        list = listFile.split('\n');
+                        list = list.filter(Boolean);
+                        console.log('list: ' + list);
+                        for(var k=0; k < 3; k++){
+                            suggestion[k] = list[Math.floor(list.length * Math.random())];
+                        }
+                        console.log('Suggestion '+suggestion);
+                        return suggestion;
+                    }
+                    if(keywordToSearch.indexOf(keywords[j]) === -1){
+                        suggst.visible = false;
+                    }
+                }
+            }}
+            
+            
+        function filterinput() {
+        if (qboxoutput.text.indexOf("With") != -1 && qboxoutput.text.indexOf("a") != -1 && qboxoutput.text.indexOf("high") && qboxoutput.text.indexOf("of") != -1 && qboxoutput.text.indexOf("degrees") != -1) {
+                                           var totalnumbclimstatementa = qboxoutput.text.match(/\d/g)
+
+                                           var hightempclimstatementa = totalnumbclimstatementa.toString().substring(0, 3)
+                                           hightempclimstatementa = hightempclimstatementa.replace(/\,/g,"")
+                                           console.log(hightempclimstatementa)
+
+                                           var lowtempclimstatementa = totalnumbclimstatementa.toString().substring(4,7)
+                                           lowtempclimstatementa = lowtempclimstatementa.replace(/\,/g,"")
+                                           console.log(lowtempclimstatementa)
+
+                                           var currenttempclimstatementa = totalnumbclimstatementa.toString().substring(8,11)
+                                           currenttempclimstatementa = currenttempclimstatementa.replace(/\,/g,"")
+                                           console.log(currenttempclimstatementa)
+
+                                           var componentmsga = Qt.createComponent("Weather.qml")
+                                           var loadmsga = componentmsga.createObject({})
+                                           for(var f1=0; f1<1; f1++){
+                                           conversationInputList.insert(f1, loadmsga);
+                                           
+                                           //console.log("Current Temp:" + currenttempclimstatementa)
+                                           //console.log("High Temp:" + hightempclimstatementa)
+                                           //console.log("Low Temp:" + lowtempclimstatementa)
+                                           conversationInputList.get(0).cttemp = currenttempclimstatementa;
+                                           conversationInputList.get(0).httemp = hightempclimstatementa;
+                                           conversationInputList.get(0).lttemp = lowtempclimstatementa;
+                                           }
+
+                                            if (currenttempclimstatementa <= "60") {
+                                            //   loadwin.weatherbackgroundimage = "../images/snow.gif"
+                                           }
+
+                                           else if (currenttempclimstatementa <= "60" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1 ) {
+                                              //     loadwin.weatherbackgroundimage = "../images/rain.gif"
+                                           }
+
+                                           else if (currenttempclimstatementa >= "61") {
+                                              // loadwin.weatherbackgroundimage = "../images/clearsky.gif"
+                                           }
+
+                                           else if (currenttempclimstatementa >= "61" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
+                                                //   loadwin.weatherbackgroundimage = "../images/rain.gif"
+                                           }
+
+                                       }
+
+                       else if (qboxoutput.text.indexOf("It's") != -1 && qboxoutput.text.indexOf("currently") != -1 && qboxoutput.text.indexOf("degrees") != -1 && qboxoutput.text.indexOf("Today's") != -1 && qboxoutput.text.indexOf("forecast") != -1 && qboxoutput.text.indexOf("high") != -1 && qboxoutput.text.indexOf("low") != -1) {
+
+                                           var totalnumbclimstatementb = qboxoutput.text.match(/\d/g)
+
+                                           var hightempclimstatementb = totalnumbclimstatementb.toString().substring(4,7)
+                                           hightempclimstatementb = hightempclimstatementb.replace(/\,/g,"")
+                                           console.log(hightempclimstatementb) //current
+
+                                           var lowtempclimstatementb = totalnumbclimstatementb.toString().substring(8,11)
+                                           lowtempclimstatementb = lowtempclimstatementb.replace(/\,/g,"")
+                                           console.log(lowtempclimstatementb) //high
+
+                                           var currenttempclimstatementb = totalnumbclimstatementb.toString().substring(0,3)
+                                           currenttempclimstatementb = currenttempclimstatementb.replace(/\,/g,"")
+                                           console.log(currenttempclimstatementb) //low
+
+                                           var componentmsgb = Qt.createComponent("Weather.qml")
+                                           var loadmsgb = componentmsgb.createObject({})
+                                           for(var f2=0; f2<1; f2++){
+                                           conversationInputList.insert(f2, loadmsgb);
+                                           
+                                           //console.log("Current Temp:" + currenttempclimstatementb)
+                                           //console.log("High Temp:" + hightempclimstatementb)
+                                           //console.log("Low Temp:" + lowtempclimstatementb)
+
+                                           conversationInputList.get(0).cttemp = currenttempclimstatementb;
+                                           conversationInputList.get(0).httemp = hightempclimstatementb;
+                                           conversationInputList.get(0).lttemp = lowtempclimstatementb;
+                                           }
+
+                                            if (currenttempclimstatementb <= "60") {
+                                           //    loadwin.weatherbackgroundimage = "../images/snow.gif"
+                                           }
+
+                                           else if (currenttempclimstatementb <= "60" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
+                                           //        loadwin.weatherbackgroundimage = "../images/rain.gif"
+                                           }
+
+                                           else if (currenttempclimstatementb >= "61") {
+                                             //  loadwin.weatherbackgroundimage = "../images/clearsky.gif"
+                                           }
+
+                                           else if (currenttempclimstatementb >= "61" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1 ) {
+                                               //    loadwin.weatherbackgroundimage = "../images/rain.gif"
+                                           }
+
+                       }
+
+                       else if (qboxoutput.text.indexOf("Right") != -1 && qboxoutput.text.indexOf("now") != -1 && qboxoutput.text.indexOf("and") != -1 && qboxoutput.text.indexOf("degrees") != -1 && qboxoutput.text.indexOf("for") != -1 && qboxoutput.text.indexOf("a") != -1 && qboxoutput.text.indexOf("high") != -1 && qboxoutput.text.indexOf("low") != -1) {
+
+                                           var totalnumbclimstatementc = qboxoutput.text.match(/\d/g)
+
+                                           var hightempclimstatementc = totalnumbclimstatementc.toString().substring(4,7)
+                                           hightempclimstatementc = hightempclimstatementc.replace(/\,/g,"")
+                                           console.log(hightempclimstatementc) //low
+
+                                           var lowtempclimstatementc = totalnumbclimstatementc.toString().substring(8,11)
+                                           lowtempclimstatementc = lowtempclimstatementc.replace(/\,/g,"")
+                                           console.log(lowtempclimstatementc) //current
+
+                                           var currenttempclimstatementc = totalnumbclimstatementc.toString().substring(0,3)
+                                           currenttempclimstatementc = currenttempclimstatementc.replace(/\,/g,"")
+                                           console.log(currenttempclimstatementc) //high
+
+                                           var componentmsgc = Qt.createComponent("Weather.qml")
+                                           var loadmsgc = componentmsgc.createObject({})
+                                           for(var f3=0; f3<1; f3++){
+                                           conversationInputList.insert(f3, loadmsgc);
+                                           
+                                           //console.log("Current Temp:" + currenttempclimstatementc)
+                                           //console.log("High Temp:" + hightempclimstatementc)
+                                           //console.log("Low Temp:" + lowtempclimstatementc)
+
+                                           conversationInputList.get(0).cttemp = currenttempclimstatementc;
+                                           conversationInputList.get(0).httemp = hightempclimstatementc;
+                                           conversationInputList.get(0).lttemp = lowtempclimstatementc;
+                                           }
+
+
+                                            if (currenttempclimstatementa <= "60") {
+                                            //   loadwin.weatherbackgroundimage = "../images/snow.gif"
+                                           }
+
+                                           else if (currenttempclimstatementc <= "60" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
+                                           //        loadwin.weatherbackgroundimage = "../images/rain.gif"
+                                           }
+
+                                           else if (currenttempclimstatementc >= "61") {
+                                           //  loadwin.weatherbackgroundimage = "../images/clearsky.gif"
+                                           }
+
+                                           else if (currenttempclimstatementc >= "61" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
+                                           //        loadwin.weatherbackgroundimage = "../images/rain.gif"
+                                           }
+
+                       }
+
+        else {
+                var componentmsg = Qt.createComponent("MessageBox.qml")
+                var loadmsg = componentmsg.createObject({})
+                for(var f=0; f<1; f++){
+                conversationInputList.insert(f, loadmsg);
+                conversationInputList.get(0).mssg = qboxoutput.text;
+                } 
+            }
+        }
+    
     
         function isBottomEdge() {
         return plasmoid.location == PlasmaCore.Types.BottomEdge;
@@ -89,10 +323,22 @@ Item {
         onTextMessageReceived: {
             var somestring = JSON.parse(message)
             var msgType = somestring.type;
+            qinput.focus = false;
+            
+            if (msgType === "recognizer_loop:utterance") {
+                var intpost = somestring.data.utterances;
+                console.log ("intpost:" + intpost);
+                qinput.text = intpost.toString()
+                filtersuggest();
+            }
+            
             if (msgType === "speak") {
                 var post = somestring.data.utterance;
-                conversationInputList.append({author:"Mycroft", recipient:"User", InputQuery:post})
-                inputlistView.positionViewAtEnd()
+                //conversationInputList.append({author:"Mycroft", recipient:"User", InputQuery:post})
+                //inputlistView.positionViewAtEnd()
+                qboxoutput.text = post;
+                filterinput()
+                //inputlistView.positionViewAtEnd()
                 var title = "Mycroft's Reply:"
                 var notiftext = " "+ post;
                 
@@ -130,7 +376,7 @@ Item {
  Rectangle {
         id: rectangletopbar
         height: 40
-        color: "#00000000"
+        color: theme.backgroundColor
         anchors.top: root.top
         anchors.right: root.right
         anchors.rightMargin: 0
@@ -186,6 +432,8 @@ Item {
                     if (mycroftstartservicebutton.checked === false) {
                         mycroftstartservicebutton.iconSource = "media-playback-start"
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
+                        conversationInputList.clear()
+                        suggst.visible = false;
                         socket.active = false;
                     }
                     
@@ -193,7 +441,8 @@ Item {
                         mycroftstartservicebutton.iconSource = "media-playback-pause"
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
                         conversationInputList.clear()
-                        delay(7000, function() {
+                        suggst.visible = false;
+                        delay(10000, function() {
                         socket.active = true;
                         })
                     }
@@ -242,8 +491,8 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: rectangletopbar.bottom
-        anchors.topMargin: -20;
-        color: "#00000000"
+        anchors.topMargin: -12;
+        color: theme.backgroundColor
         z: 3
         
         TopBarAnim {
@@ -263,9 +512,13 @@ anchors.bottom: rectanglebottombar.top
  Rectangle {
                 id: rectangle2
                 color: "#00000000"
-                anchors.fill: parent
-    
-    ListModel{
+                anchors.top: mycroftcolumntab.top
+                anchors.topMargin:15
+                anchors.left: mycroftcolumntab.left
+                anchors.right: mycroftcolumntab.right
+                anchors.bottom: suggestionbottombox.top
+                
+    ObjectModel{
     id: conversationInputList
     }
 
@@ -287,49 +540,44 @@ anchors.bottom: rectanglebottombar.top
                     //clip: true;
                     spacing: 12
                     model: conversationInputList
-                    delegate: Column {
-                    spacing: 6
-                    anchors.right: parent.right
-
-                    readonly property bool sentByMe: model.recipient !== "User"
-                        
-                    Row {
-                        id: messageRow
-                        spacing: 6
-                            
-                    Rectangle {
-                        id: messageRect
-                        width: cbwidth
-                        radius: 2
-                        height: messageText.implicitHeight + 24
-                        color: theme.backgroundColor
-
-                    PlasmaComponents.Label {
-                        id: messageText
-                        text: model.InputQuery
-                        anchors.fill: parent
-                        anchors.margins: 12
-                        wrapMode: Label.Wrap
-                        }
-                            }
-                                }
-                                    }
+                    //delegate:
 
                     ScrollBar.vertical: ScrollBar {}
 
-                    onCountChanged: {
-                        inputlistView.positionViewAtEnd()  
-                        var root = inputlistView.visibleChildren[0]
-                        var listViewHeight = 0
-                        var boxrowheight = 150
-                        for (var i = 0; i < root.visibleChildren.length; i++) {
-                        listViewHeight += root.visibleChildren[i].height
-                        }
-                            }
+    onCountChanged: {
+        console.log("currentIndex:" + currentIndex)
+        inputlistView.positionViewAtBeginning();
+    }
                                 }
                                     }
                                         }
                                             }
+                               
+                    Rectangle {
+                    id: suggestionbottombox
+                    anchors.bottom: mycroftcolumntab.bottom
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+                    color: theme.backgroundColor
+                    height: 40;
+                    
+                    Flickable {
+                    width: parent.width
+                    height: suggestionbottombox.height
+                    contentWidth: 1000
+                    contentHeight: suggestionbottombox.height
+                    interactive: true;
+                    
+                        Suggestions {
+                            id: suggst
+                            visible: false;
+                        }
+                        
+                                            ScrollBar.horizontal: ScrollBar {}
+                        
+                    }
+                    }
+                                            
                                                 }
         
 ColumnLayout {
@@ -340,6 +588,12 @@ anchors.left: root.left
 anchors.right: root.right
 anchors.bottom: rectanglebottombar.top
 anchors.bottomMargin: 5
+
+Text {
+ id: qboxoutput
+ text: " "
+ visible: false
+}
 
 Rectangle {
         anchors.top: mycroftSkillscolumntab.top
@@ -575,7 +829,7 @@ Rectangle {
 Rectangle {
         id: rectanglebottombar
         height: 30
-        color: "#00000000"
+        color: theme.backgroundColor
         radius: 0
         anchors.bottom: root.bottom
         anchors.bottomMargin: 0
@@ -608,13 +862,21 @@ Rectangle {
                 clearButtonShown: true
 
                 onAccepted: {
-                conversationInputList.append({author:"User", recipient:"Mycroft", InputQuery:qinput.text})
-                inputlistView.positionViewAtEnd()
+                suggst.visible = false;
+                //conversationInputList.append({author:"User", recipient:"Mycroft", InputQuery:qinput.text})
+                var componentmsg = Qt.createComponent("MessageBox.qml")
+                var loadmsg = componentmsg.createObject({})
+                for(var fi=0; fi<1; fi++){
+                conversationInputList.insert(fi, loadmsg);
+                conversationInputList.get(0).mssg = qinput.text;
+                }
+                //inputlistView.positionViewAtEnd()
                 var socketmessage = {};
                 socketmessage.type = "recognizer_loop:utterance";
                 socketmessage.data = {};
                 socketmessage.data.utterances = [qinput.text];
                 socket.sendTextMessage(JSON.stringify(socketmessage));
+                filtersuggest();
                 qinput.text = "";                
                 if (socket.status == WebSocket.Error) {
                                 barAnim.wsocerroranimtoggle()
@@ -622,8 +884,6 @@ Rectangle {
                 else {
                     barAnim.wsocmsganimtoggle();                    
                 }
-                
-                
                 } 
                 }            
             
