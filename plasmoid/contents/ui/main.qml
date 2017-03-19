@@ -39,6 +39,11 @@ Item {
     Layout.minimumHeight: units.gridUnit * 18
     Layout.minimumWidth: units.gridUnit * 22
     
+    Component.onCompleted: {
+    mycroftStatusCheckSocket.active = true
+    console.log(mycroftStatusCheckSocket.status)
+    }
+    
     property alias cbwidth: rectangle2.width
     property string defaultmcorestartpath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/startservice.sh"
     property string defaultmcorestoppath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/stopservice.sh"
@@ -51,7 +56,6 @@ Item {
     property string coreinstallstoppath: defaultmcorestoppath
 
         function filtersuggest() {
-        console.log('iNsde filter suggest');
         var keywordToSearch = qinput.text;
         var result = wordSuggest(keywordToSearch);
         if(result.length>0){
@@ -65,7 +69,6 @@ Item {
         }
     }
     function wordSuggest(keywordToSearch){
-        console.log(keywordToSearch);
         var baseLocation = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/ui/suggestion/";
         var files = [{
             "id" : "1",
@@ -100,26 +103,20 @@ Item {
             var baseSearch,keywords,keywordsFile,list,listFile,suggestion = ['9','8','7'];
             for (var i=0; i < files.length; i++){
                 baseSearch = files[i];
-                console.log('id: ' +baseSearch.id);
-                //console.log(baseSearch.keywordFile);
-                //console.log("/home/Aix/MycroftPlamsaPrototype/suggestion/GeneralKeywords.txt");
                 keywordsFile = PlasmaLa.FileReader.read(baseSearch.keywordFile).toString("utf-8");
-                //console.log('keywordfile'+keywordsFile);
                 keywords = keywordsFile.split('\n');
                 keywords = keywords.filter(Boolean);
-                console.log(keywords);
+                
                 for(var j=0; j < keywords.length; j++){
                     keywordToSearch = keywordToSearch.toLowerCase();
                     if(keywordToSearch.indexOf(keywords[j]) !== -1){
-                        console.log('found keyword' + keywordToSearch.indexOf(keywords[i]));
                         listFile = PlasmaLa.FileReader.read(baseSearch.listFile).toString("utf-8");
                         list = listFile.split('\n');
                         list = list.filter(Boolean);
-                        console.log('list: ' + list);
+            
                         for(var k=0; k < 3; k++){
                             suggestion[k] = list[Math.floor(list.length * Math.random())];
                         }
-                        console.log('Suggestion '+suggestion);
                         return suggestion;
                     }
                     if(keywordToSearch.indexOf(keywords[j]) === -1){
@@ -135,45 +132,22 @@ Item {
 
                                            var hightempclimstatementa = totalnumbclimstatementa.toString().substring(0, 3)
                                            hightempclimstatementa = hightempclimstatementa.replace(/\,/g,"")
-                                           console.log(hightempclimstatementa)
 
                                            var lowtempclimstatementa = totalnumbclimstatementa.toString().substring(4,7)
                                            lowtempclimstatementa = lowtempclimstatementa.replace(/\,/g,"")
-                                           console.log(lowtempclimstatementa)
 
                                            var currenttempclimstatementa = totalnumbclimstatementa.toString().substring(8,11)
                                            currenttempclimstatementa = currenttempclimstatementa.replace(/\,/g,"")
-                                           console.log(currenttempclimstatementa)
 
                                            var componentmsga = Qt.createComponent("Weather.qml")
                                            var loadmsga = componentmsga.createObject({})
                                            for(var f1=0; f1<1; f1++){
                                            conversationInputList.insert(f1, loadmsga);
                                            
-                                           //console.log("Current Temp:" + currenttempclimstatementa)
-                                           //console.log("High Temp:" + hightempclimstatementa)
-                                           //console.log("Low Temp:" + lowtempclimstatementa)
                                            conversationInputList.get(0).cttemp = currenttempclimstatementa;
                                            conversationInputList.get(0).httemp = hightempclimstatementa;
                                            conversationInputList.get(0).lttemp = lowtempclimstatementa;
                                            }
-
-                                            if (currenttempclimstatementa <= "60") {
-                                            //   loadwin.weatherbackgroundimage = "../images/snow.gif"
-                                           }
-
-                                           else if (currenttempclimstatementa <= "60" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1 ) {
-                                              //     loadwin.weatherbackgroundimage = "../images/rain.gif"
-                                           }
-
-                                           else if (currenttempclimstatementa >= "61") {
-                                              // loadwin.weatherbackgroundimage = "../images/clearsky.gif"
-                                           }
-
-                                           else if (currenttempclimstatementa >= "61" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
-                                                //   loadwin.weatherbackgroundimage = "../images/rain.gif"
-                                           }
-
                                        }
 
                        else if (qboxoutput.text.indexOf("It's") != -1 && qboxoutput.text.indexOf("currently") != -1 && qboxoutput.text.indexOf("degrees") != -1 && qboxoutput.text.indexOf("Today's") != -1 && qboxoutput.text.indexOf("forecast") != -1 && qboxoutput.text.indexOf("high") != -1 && qboxoutput.text.indexOf("low") != -1) {
@@ -182,46 +156,22 @@ Item {
 
                                            var hightempclimstatementb = totalnumbclimstatementb.toString().substring(4,7)
                                            hightempclimstatementb = hightempclimstatementb.replace(/\,/g,"")
-                                           console.log(hightempclimstatementb) //current
 
                                            var lowtempclimstatementb = totalnumbclimstatementb.toString().substring(8,11)
                                            lowtempclimstatementb = lowtempclimstatementb.replace(/\,/g,"")
-                                           console.log(lowtempclimstatementb) //high
 
                                            var currenttempclimstatementb = totalnumbclimstatementb.toString().substring(0,3)
                                            currenttempclimstatementb = currenttempclimstatementb.replace(/\,/g,"")
-                                           console.log(currenttempclimstatementb) //low
 
                                            var componentmsgb = Qt.createComponent("Weather.qml")
                                            var loadmsgb = componentmsgb.createObject({})
                                            for(var f2=0; f2<1; f2++){
                                            conversationInputList.insert(f2, loadmsgb);
                                            
-                                           //console.log("Current Temp:" + currenttempclimstatementb)
-                                           //console.log("High Temp:" + hightempclimstatementb)
-                                           //console.log("Low Temp:" + lowtempclimstatementb)
-
                                            conversationInputList.get(0).cttemp = currenttempclimstatementb;
                                            conversationInputList.get(0).httemp = hightempclimstatementb;
                                            conversationInputList.get(0).lttemp = lowtempclimstatementb;
                                            }
-
-                                            if (currenttempclimstatementb <= "60") {
-                                           //    loadwin.weatherbackgroundimage = "../images/snow.gif"
-                                           }
-
-                                           else if (currenttempclimstatementb <= "60" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
-                                           //        loadwin.weatherbackgroundimage = "../images/rain.gif"
-                                           }
-
-                                           else if (currenttempclimstatementb >= "61") {
-                                             //  loadwin.weatherbackgroundimage = "../images/clearsky.gif"
-                                           }
-
-                                           else if (currenttempclimstatementb >= "61" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1 ) {
-                                               //    loadwin.weatherbackgroundimage = "../images/rain.gif"
-                                           }
-
                        }
 
                        else if (qboxoutput.text.indexOf("Right") != -1 && qboxoutput.text.indexOf("now") != -1 && qboxoutput.text.indexOf("and") != -1 && qboxoutput.text.indexOf("degrees") != -1 && qboxoutput.text.indexOf("for") != -1 && qboxoutput.text.indexOf("a") != -1 && qboxoutput.text.indexOf("high") != -1 && qboxoutput.text.indexOf("low") != -1) {
@@ -230,47 +180,22 @@ Item {
 
                                            var hightempclimstatementc = totalnumbclimstatementc.toString().substring(4,7)
                                            hightempclimstatementc = hightempclimstatementc.replace(/\,/g,"")
-                                           console.log(hightempclimstatementc) //low
 
                                            var lowtempclimstatementc = totalnumbclimstatementc.toString().substring(8,11)
                                            lowtempclimstatementc = lowtempclimstatementc.replace(/\,/g,"")
-                                           console.log(lowtempclimstatementc) //current
 
                                            var currenttempclimstatementc = totalnumbclimstatementc.toString().substring(0,3)
                                            currenttempclimstatementc = currenttempclimstatementc.replace(/\,/g,"")
-                                           console.log(currenttempclimstatementc) //high
 
                                            var componentmsgc = Qt.createComponent("Weather.qml")
                                            var loadmsgc = componentmsgc.createObject({})
                                            for(var f3=0; f3<1; f3++){
                                            conversationInputList.insert(f3, loadmsgc);
                                            
-                                           //console.log("Current Temp:" + currenttempclimstatementc)
-                                           //console.log("High Temp:" + hightempclimstatementc)
-                                           //console.log("Low Temp:" + lowtempclimstatementc)
-
                                            conversationInputList.get(0).cttemp = currenttempclimstatementc;
                                            conversationInputList.get(0).httemp = hightempclimstatementc;
                                            conversationInputList.get(0).lttemp = lowtempclimstatementc;
                                            }
-
-
-                                            if (currenttempclimstatementa <= "60") {
-                                            //   loadwin.weatherbackgroundimage = "../images/snow.gif"
-                                           }
-
-                                           else if (currenttempclimstatementc <= "60" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
-                                           //        loadwin.weatherbackgroundimage = "../images/rain.gif"
-                                           }
-
-                                           else if (currenttempclimstatementc >= "61") {
-                                           //  loadwin.weatherbackgroundimage = "../images/clearsky.gif"
-                                           }
-
-                                           else if (currenttempclimstatementc >= "61" && qboxoutput.text.indexOf("mist") != -1 || qboxoutput.text.indexOf("light") != -1 && qboxoutput.text.indexOf("intensity") != -1 || qboxoutput.text.indexOf("rain") != -1 || qboxoutput.text.indexOf("storm") != -1) {
-                                           //        loadwin.weatherbackgroundimage = "../images/rain.gif"
-                                           }
-
                        }
 
         else {
@@ -318,6 +243,31 @@ Item {
         }
         
         WebSocket {
+        id: mycroftStatusCheckSocket
+        url: "ws://0.0.0.0:8181/core"
+        onTextMessageReceived: {
+            console.log("Mycroft Status Ping");
+        }
+            active: true
+            onStatusChanged: 
+            if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
+            console.log("Activated")
+            socket.active = true
+            mycroftstartservicebutton.checked = true
+            mycroftstartservicebutton.iconSource = "media-playback-pause"
+            statusId.text = "Mycroft is Ready"
+            statusId.color = "green"
+            }
+
+            else if (mycroftStatusCheckSocket.status == WebSocket.Error) {
+            mycroftstartservicebutton.checked = false
+            mycroftstartservicebutton.iconSource = "media-playback-start"
+            statusId.text = "Mycroft is Disabled"
+            statusId.color = "#f4bf42"
+            }
+        }
+        
+        WebSocket {
         id: socket
         url: "ws://0.0.0.0:8181/core"
         onTextMessageReceived: {
@@ -327,18 +277,14 @@ Item {
             
             if (msgType === "recognizer_loop:utterance") {
                 var intpost = somestring.data.utterances;
-                console.log ("intpost:" + intpost);
                 qinput.text = intpost.toString()
                 filtersuggest();
             }
             
             if (msgType === "speak") {
                 var post = somestring.data.utterance;
-                //conversationInputList.append({author:"Mycroft", recipient:"User", InputQuery:post})
-                //inputlistView.positionViewAtEnd()
                 qboxoutput.text = post;
                 filterinput()
-                //inputlistView.positionViewAtEnd()
                 var title = "Mycroft's Reply:"
                 var notiftext = " "+ post;
                 
@@ -357,6 +303,7 @@ Item {
                                 statusId.text = "Mycroft is Ready"
                                 statusId.color = "green"
                                 barAnim.wsocrunninganimtoggle()
+                                mycroftStatusCheckSocket.active = false;
                          } else if (socket.status == WebSocket.Closed) {
                                 statusId.text = "Mycroft is Disabled"
                                 statusId.color = "#f4bf42"
@@ -427,7 +374,7 @@ Item {
                 minimumWidth: 4
                 
                 onClicked: {
-                    console.log(coreinstallstartpath);
+                    //console.log(coreinstallstartpath);
                     mycroftstartservicebutton.checked = !mycroftstartservicebutton.checked
                     if (mycroftstartservicebutton.checked === false) {
                         mycroftstartservicebutton.iconSource = "media-playback-start"
@@ -537,15 +484,13 @@ anchors.bottom: rectanglebottombar.top
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     verticalLayoutDirection: ListView.TopToBottom
-                    //clip: true;
                     spacing: 12
                     model: conversationInputList
-                    //delegate:
 
                     ScrollBar.vertical: ScrollBar {}
 
     onCountChanged: {
-        console.log("currentIndex:" + currentIndex)
+        //console.log("currentIndex:" + currentIndex)
         inputlistView.positionViewAtBeginning();
     }
                                 }
@@ -620,7 +565,7 @@ Rectangle {
 
                 Row {
                 id: skillTopRowLayout
-                height: skillimage.height
+                //height: skillimage.height
                 spacing: 10
                                    
                 Column {
@@ -863,14 +808,13 @@ Rectangle {
 
                 onAccepted: {
                 suggst.visible = false;
-                //conversationInputList.append({author:"User", recipient:"Mycroft", InputQuery:qinput.text})
                 var componentmsg = Qt.createComponent("MessageBox.qml")
                 var loadmsg = componentmsg.createObject({})
                 for(var fi=0; fi<1; fi++){
                 conversationInputList.insert(fi, loadmsg);
                 conversationInputList.get(0).mssg = qinput.text;
                 }
-                //inputlistView.positionViewAtEnd()
+
                 var socketmessage = {};
                 socketmessage.type = "recognizer_loop:utterance";
                 socketmessage.data = {};
