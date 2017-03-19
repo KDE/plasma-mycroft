@@ -251,7 +251,7 @@ Item {
             active: true
             onStatusChanged: 
             if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
-            console.log("Activated")
+            //console.log("Activated")
             socket.active = true
             mycroftstartservicebutton.checked = true
             mycroftstartservicebutton.iconSource = "media-playback-pause"
@@ -374,7 +374,6 @@ Item {
                 minimumWidth: 4
                 
                 onClicked: {
-                    //console.log(coreinstallstartpath);
                     mycroftstartservicebutton.checked = !mycroftstartservicebutton.checked
                     if (mycroftstartservicebutton.checked === false) {
                         mycroftstartservicebutton.iconSource = "media-playback-start"
@@ -490,7 +489,6 @@ anchors.bottom: rectanglebottombar.top
                     ScrollBar.vertical: ScrollBar {}
 
     onCountChanged: {
-        //console.log("currentIndex:" + currentIndex)
         inputlistView.positionViewAtBeginning();
     }
                                 }
