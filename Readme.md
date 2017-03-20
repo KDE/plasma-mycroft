@@ -19,10 +19,10 @@
   + cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release   -DKDE_INSTALL_LIBDIR=lib -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   + make
   + sudo make install
-  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.projectmycroftplasmoid/contents/code/startservice.sh
-  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.projectmycroftplasmoid/contents/code/stopservice.sh
-  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.projectmycroftplasmoid/contents/code/pkgstartservice.sh
-  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.projectmycroftplasmoid/contents/code/pkgstopservice.sh
+  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/startservice.sh
+  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/stopservice.sh
+  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/pkgstartservice.sh
+  + sudo chmod +x /usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/pkgstopservice.sh
   + Logout / Login or Restart Plasma Shell
 
 Note: This plasmoids default find location for mycroft-core services is /home/$USER/mycroft-core/. This can be changed as per your installation path of mycroft-core in the settings tab.
