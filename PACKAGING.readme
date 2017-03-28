@@ -1,0 +1,26 @@
+(Plasmoid) Debian Packaging Requirements:
+
+libkf5notifications-data 
+libkf5notifications-dev 
+qml-module-qtquick2 
+qml-module-qtquick-controls2 
+qml-module-qtquick-controls 
+qml-module-qtwebsockets 
+qml-module-qt-websockets 
+qtdeclarative5-qtquick2-plugin 
+qtdeclarative5-models-plugin 
+cmake 
+cmake-extras 
+cmake-data 
+qml-module-qtquick-layouts 
+libkf5plasma-dev 
+extra-cmake-modules 
+qtdeclarative5-dev
+
+(Plasma Mycroft Skills) Debian Packaging Requirements:
+
+python-dbus
+python-pyqt5
+pyqt5-dev 
+python-sip 
+python-sip-dev

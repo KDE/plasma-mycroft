@@ -29,6 +29,7 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
+import org.kde.plasma.private.volume 0.1
 
 Item {
     id: main
@@ -55,6 +56,14 @@ Item {
     property string coreinstallstartpath: defaultmcorestartpath
     property string coreinstallstoppath: defaultmcorestoppath
 
+    function muteMicrophone() {
+        if (!sourceModel.defaultSource) {
+            return;
+        }
+        var toMute = !sourceModel.defaultSource.muted;
+        sourceModel.defaultSource.muted = toMute;
+    }
+    
         function filtersuggest() {
         var keywordToSearch = qinput.text;
         var result = wordSuggest(keywordToSearch);
@@ -84,9 +93,9 @@ Item {
             },
             {
             "id" : "3",
-            "category" : "desktop",
-            "keywordFile" : baseLocation + "DesktopKeywords.txt",
-            "listFile" : baseLocation + "DesktopList.txt",
+            "category" : "wiki",
+            "keywordFile" : baseLocation + "WikiKeywords.txt",
+            "listFile" : baseLocation + "WikiList.txt",
             },
             {
             "id" : "4",
@@ -96,9 +105,9 @@ Item {
             },
             {
             "id" : "5",
-            "category" : "wiki",
-            "keywordFile" : baseLocation + "WikiKeywords.txt",
-            "listFile" : baseLocation + "WikiList.txt",
+            "category" : "desktop",
+            "keywordFile" : baseLocation + "DesktopKeywords.txt",
+            "listFile" : baseLocation + "DesktopList.txt",
             }];
             var baseSearch,keywords,keywordsFile,list,listFile,suggestion = ['9','8','7'];
             for (var i=0; i < files.length; i++){
@@ -127,85 +136,8 @@ Item {
             
             
         function filterinput() {
-        if (qboxoutput.text.indexOf("With") != -1 && qboxoutput.text.indexOf("a") != -1 && qboxoutput.text.indexOf("high") && qboxoutput.text.indexOf("of") != -1 && qboxoutput.text.indexOf("degrees") != -1) {
-                                           var totalnumbclimstatementa = qboxoutput.text.match(/\d/g)
-
-                                           var hightempclimstatementa = totalnumbclimstatementa.toString().substring(0, 3)
-                                           hightempclimstatementa = hightempclimstatementa.replace(/\,/g,"")
-
-                                           var lowtempclimstatementa = totalnumbclimstatementa.toString().substring(4,7)
-                                           lowtempclimstatementa = lowtempclimstatementa.replace(/\,/g,"")
-
-                                           var currenttempclimstatementa = totalnumbclimstatementa.toString().substring(8,11)
-                                           currenttempclimstatementa = currenttempclimstatementa.replace(/\,/g,"")
-
-                                           var componentmsga = Qt.createComponent("Weather.qml")
-                                           var loadmsga = componentmsga.createObject({})
-                                           for(var f1=0; f1<1; f1++){
-                                           conversationInputList.insert(f1, loadmsga);
-                                           
-                                           conversationInputList.get(0).cttemp = currenttempclimstatementa;
-                                           conversationInputList.get(0).httemp = hightempclimstatementa;
-                                           conversationInputList.get(0).lttemp = lowtempclimstatementa;
-                                           }
-                                       }
-
-                       else if (qboxoutput.text.indexOf("It's") != -1 && qboxoutput.text.indexOf("currently") != -1 && qboxoutput.text.indexOf("degrees") != -1 && qboxoutput.text.indexOf("Today's") != -1 && qboxoutput.text.indexOf("forecast") != -1 && qboxoutput.text.indexOf("high") != -1 && qboxoutput.text.indexOf("low") != -1) {
-
-                                           var totalnumbclimstatementb = qboxoutput.text.match(/\d/g)
-
-                                           var hightempclimstatementb = totalnumbclimstatementb.toString().substring(4,7)
-                                           hightempclimstatementb = hightempclimstatementb.replace(/\,/g,"")
-
-                                           var lowtempclimstatementb = totalnumbclimstatementb.toString().substring(8,11)
-                                           lowtempclimstatementb = lowtempclimstatementb.replace(/\,/g,"")
-
-                                           var currenttempclimstatementb = totalnumbclimstatementb.toString().substring(0,3)
-                                           currenttempclimstatementb = currenttempclimstatementb.replace(/\,/g,"")
-
-                                           var componentmsgb = Qt.createComponent("Weather.qml")
-                                           var loadmsgb = componentmsgb.createObject({})
-                                           for(var f2=0; f2<1; f2++){
-                                           conversationInputList.insert(f2, loadmsgb);
-                                           
-                                           conversationInputList.get(0).cttemp = currenttempclimstatementb;
-                                           conversationInputList.get(0).httemp = hightempclimstatementb;
-                                           conversationInputList.get(0).lttemp = lowtempclimstatementb;
-                                           }
-                       }
-
-                       else if (qboxoutput.text.indexOf("Right") != -1 && qboxoutput.text.indexOf("now") != -1 && qboxoutput.text.indexOf("and") != -1 && qboxoutput.text.indexOf("degrees") != -1 && qboxoutput.text.indexOf("for") != -1 && qboxoutput.text.indexOf("a") != -1 && qboxoutput.text.indexOf("high") != -1 && qboxoutput.text.indexOf("low") != -1) {
-
-                                           var totalnumbclimstatementc = qboxoutput.text.match(/\d/g)
-
-                                           var hightempclimstatementc = totalnumbclimstatementc.toString().substring(4,7)
-                                           hightempclimstatementc = hightempclimstatementc.replace(/\,/g,"")
-
-                                           var lowtempclimstatementc = totalnumbclimstatementc.toString().substring(8,11)
-                                           lowtempclimstatementc = lowtempclimstatementc.replace(/\,/g,"")
-
-                                           var currenttempclimstatementc = totalnumbclimstatementc.toString().substring(0,3)
-                                           currenttempclimstatementc = currenttempclimstatementc.replace(/\,/g,"")
-
-                                           var componentmsgc = Qt.createComponent("Weather.qml")
-                                           var loadmsgc = componentmsgc.createObject({})
-                                           for(var f3=0; f3<1; f3++){
-                                           conversationInputList.insert(f3, loadmsgc);
-                                           
-                                           conversationInputList.get(0).cttemp = currenttempclimstatementc;
-                                           conversationInputList.get(0).httemp = hightempclimstatementc;
-                                           conversationInputList.get(0).lttemp = lowtempclimstatementc;
-                                           }
-                       }
-
-        else {
-                var componentmsg = Qt.createComponent("MessageBox.qml")
-                var loadmsg = componentmsg.createObject({})
-                for(var f=0; f<1; f++){
-                conversationInputList.insert(f, loadmsg);
-                conversationInputList.get(0).mssg = qboxoutput.text;
-                } 
-            }
+                conversationInputList.append({"InputQuery": qboxoutput.text});
+                inputlistView.positionViewAtEnd(); 
         }
     
     
@@ -251,7 +183,7 @@ Item {
             active: true
             onStatusChanged: 
             if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
-            //console.log("Activated")
+            console.log("Activated")
             socket.active = true
             mycroftstartservicebutton.checked = true
             mycroftstartservicebutton.iconSource = "media-playback-pause"
@@ -374,6 +306,7 @@ Item {
                 minimumWidth: 4
                 
                 onClicked: {
+                    //console.log(coreinstallstartpath);
                     mycroftstartservicebutton.checked = !mycroftstartservicebutton.checked
                     if (mycroftstartservicebutton.checked === false) {
                         mycroftstartservicebutton.iconSource = "media-playback-start"
@@ -464,7 +397,7 @@ anchors.bottom: rectanglebottombar.top
                 anchors.right: mycroftcolumntab.right
                 anchors.bottom: suggestionbottombox.top
                 
-    ObjectModel{
+    ListModel{
     id: conversationInputList
     }
 
@@ -485,11 +418,13 @@ anchors.bottom: rectanglebottombar.top
                     verticalLayoutDirection: ListView.TopToBottom
                     spacing: 12
                     model: conversationInputList
-
+                    delegate: Loader {
+                        source: "MessageBox.qml"
+                    }
                     ScrollBar.vertical: ScrollBar {}
 
     onCountChanged: {
-        inputlistView.positionViewAtBeginning();
+        inputlistView.positionViewAtEnd();
     }
                                 }
                                     }
@@ -800,18 +735,14 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                anchors.right: parent.right
+                anchors.right: qinputmicbx.left
                 placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
                 clearButtonShown: true
 
                 onAccepted: {
                 suggst.visible = false;
-                var componentmsg = Qt.createComponent("MessageBox.qml")
-                var loadmsg = componentmsg.createObject({})
-                for(var fi=0; fi<1; fi++){
-                conversationInputList.insert(fi, loadmsg);
-                conversationInputList.get(0).mssg = qinput.text;
-                }
+                conversationInputList.append({"InputQuery": qinput.text});
+                inputlistView.positionViewAtEnd();
 
                 var socketmessage = {};
                 socketmessage.type = "recognizer_loop:utterance";
@@ -827,13 +758,36 @@ Rectangle {
                     barAnim.wsocmsganimtoggle();                    
                 }
                 } 
-                }            
-            
+                }
+                
+                PlasmaComponents.ToolButton {
+                id: qinputmicbx
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                iconSource: "mic-on"
+                flat: true
+                width: 42
+                height: 42
+    
+                onClicked: {
+                    if (qinputmicbx.iconSource == "mic-on") {
+                        qinputmicbx.iconSource = "mic-off"
+                    }
+                    else if (qinputmicbx.iconSource == "mic-off") {
+                        qinputmicbx.iconSource = "mic-on"
+                    }
+                    muteMicrophone()
+                }    
+                }
             }
 
         }
      }
 }
+
+SourceModel {
+        id: sourceModel
+                }
 Settings {
      property alias customsetuppath: settingsTabUnitsOpThree.text
      property alias notifybool: notificationswitch.checked

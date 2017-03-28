@@ -43,12 +43,8 @@ Flickable {
 
             onClicked: {
             suggst.visible = false
-            var componentmsg = Qt.createComponent("MessageBox.qml")
-                var loadmsg = componentmsg.createObject({})
-                for(var sia=0; sia<1; sia++){
-                conversationInputList.insert(sia, loadmsg);
-                conversationInputList.get(0).mssg = suggestiontext1.text;
-                }
+            conversationInputList.append({"InputQuery": suggestiontext1.text});
+            inputlistView.positionViewAtEnd();
             var socketmessage = {};
             socketmessage.type = "recognizer_loop:utterance";
             socketmessage.data = {};
@@ -97,13 +93,8 @@ Flickable {
 
             onClicked: {
             suggst.visible = false
-            //conversationInputList.append({author:"Me", recipient:"MyCroft", InputQuery:suggestiontext2.text})
-            var componentmsg = Qt.createComponent("MessageBox.qml")
-                var loadmsg = componentmsg.createObject({})
-                for(var sib=0; sib<1; sib++){
-                conversationInputList.insert(sib, loadmsg);
-                conversationInputList.get(0).mssg = suggestiontext2.text;
-                }
+            conversationInputList.append({"InputQuery": suggestiontext2.text});
+            inputlistView.positionViewAtEnd();
             var socketmessage = {};
             socketmessage.type = "recognizer_loop:utterance";
             socketmessage.data = {};
@@ -151,13 +142,8 @@ Flickable {
 
             onClicked: {
             suggst.visible = false
-            //conversationInputList.append({author:"Me", recipient:"MyCroft", InputQuery:suggestiontext3.text})
-                var componentmsg = Qt.createComponent("MessageBox.qml")
-                var loadmsg = componentmsg.createObject({})
-                for(var sic=0; sic<1; sic++){
-                conversationInputList.insert(sic, loadmsg);
-                conversationInputList.get(0).mssg = suggestiontext3.text;
-                }
+            conversationInputList.append({"InputQuery": suggestiontext3.text});
+            inputlistView.positionViewAtEnd();
             var socketmessage = {};
             socketmessage.type = "recognizer_loop:utterance";
             socketmessage.data = {};
