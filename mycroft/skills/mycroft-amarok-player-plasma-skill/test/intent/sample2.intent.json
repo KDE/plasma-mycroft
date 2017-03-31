@@ -1,0 +1,7 @@
+{
+  "utterance": "amarok stop",
+  "intent_type": "AmarokStopKeywordIntent",
+  "intent": {
+    "AmarokStopKeyword": "music"
+  }
+}
