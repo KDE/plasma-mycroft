@@ -14,3 +14,7 @@ QByteArray FileReader::read(const QString &filename)
 
     return file.readAll();
 }
+
+bool FileReader::file_exists_local(const QString &filename) {
+    return QFile(filename).exists();
+}

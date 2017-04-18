@@ -42,7 +42,7 @@ Flickable {
             }
 
             onClicked: {
-            suggst.visible = false
+            suggst.visible = true
             conversationInputList.append({"InputQuery": suggestiontext1.text});
             inputlistView.positionViewAtEnd();
             var socketmessage = {};
@@ -51,8 +51,6 @@ Flickable {
             socketmessage.data.utterances = [suggestiontext1.text];
             socket.sendTextMessage(JSON.stringify(socketmessage));
             qinput.text = suggestiontext1.text
-            filtersuggest();
-            qinput.text = ""
             }
         }
 
@@ -92,7 +90,7 @@ Flickable {
             }
 
             onClicked: {
-            suggst.visible = false
+            suggst.visible = true
             conversationInputList.append({"InputQuery": suggestiontext2.text});
             inputlistView.positionViewAtEnd();
             var socketmessage = {};
@@ -101,8 +99,6 @@ Flickable {
             socketmessage.data.utterances = [suggestiontext2.text];
             socket.sendTextMessage(JSON.stringify(socketmessage));
             qinput.text = suggestiontext1.text
-            filtersuggest();
-            qinput.text = ""
             }
         }
 
@@ -141,7 +137,7 @@ Flickable {
             }
 
             onClicked: {
-            suggst.visible = false
+            suggst.visible = true
             conversationInputList.append({"InputQuery": suggestiontext3.text});
             inputlistView.positionViewAtEnd();
             var socketmessage = {};
@@ -150,8 +146,6 @@ Flickable {
             socketmessage.data.utterances = [suggestiontext3.text];
             socket.sendTextMessage(JSON.stringify(socketmessage));
             qinput.text = suggestiontext1.text
-            filtersuggest();
-            qinput.text = ""
             }
         }
 

@@ -41,8 +41,10 @@ Item {
     Layout.minimumWidth: units.gridUnit * 22
     
     Component.onCompleted: {
-    mycroftStatusCheckSocket.active = true
-    console.log(mycroftStatusCheckSocket.status)
+        mycroftStatusCheckSocket.active = true
+        console.log(mycroftStatusCheckSocket.status);
+        initFile();
+        
     }
     
     property alias cbwidth: rectangle2.width
@@ -55,6 +57,169 @@ Item {
     property string customloc: " "
     property string coreinstallstartpath: defaultmcorestartpath
     property string coreinstallstoppath: defaultmcorestoppath
+    property var files: []
+    property variant wordListArray: []
+
+    function initFile() {
+        var keywordFileTemp, listFileTemp,path,wordlist;
+        var baseLocation = '/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/ui/suggestion/';
+        var path = baseLocation + 'words1.txt';
+        var wordlist = readFile(path);
+        wordListArray = wordlist.toString().split('\n');
+        wordListArray = wordListArray.filter(Boolean);
+
+       
+        files = [{
+            id: '1',
+            category: 'math',
+            keywordFile: baseLocation + 'MathKeywords.txt',
+            listFile: baseLocation + 'MathList.txt',
+        }, {
+            id: '2',
+            category: 'general',
+            keywordFile: baseLocation + 'GeneralKeywords.txt',
+            listFile: baseLocation + 'GeneralList.txt',
+        }, {
+            id: '3',
+            category: 'desktop',
+            keywordFile: baseLocation + 'DesktopKeywords.txt',
+            listFile: baseLocation + 'DesktopList.txt',
+        }, {
+            id: '4',
+            category: 'weather',
+            keywordFile: baseLocation + 'WeatherKeywords.txt',
+            listFile: baseLocation + 'WeatherList.txt',
+        }, {
+            id: '5',
+            category: 'wiki',
+            keywordFile: baseLocation + 'WikiKeywords.txt',
+            listFile: baseLocation + 'WikiList.txt',
+        }];
+        for (var i = 0; i < files.length; i++) {
+            keywordFileTemp = readFile(files[i].keywordFile);
+            keywordFileTemp = keywordFileTemp.toString().split('\n');
+            keywordFileTemp = keywordFileTemp.filter(Boolean);
+            files[i].keywordFile = keywordFileTemp;
+            listFileTemp = readFile(files[i].listFile);
+            listFileTemp = listFileTemp.toString().split('\n');
+            listFileTemp = listFileTemp.filter(Boolean);
+            files[i].listFile = listFileTemp;
+        }
+        setSuggestionsRandom();
+    }
+    
+    function readFile(filename) {
+        if (PlasmaLa.FileReader.file_exists_local(filename)) {
+            try {
+                var content = PlasmaLa.FileReader.read(filename).toString("utf-8");
+                return content;
+            } catch (e) {
+                console.log('Mycroft UI - Read File' + e);
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    
+    function suggestionsRandom() {
+        
+        var randomFile, randomText = [];
+        for (var i = 0; i < 3; i++) {
+            randomFile = files[Math.floor(files.length * Math.random())].listFile;
+            randomText[i] = randomFile[Math.floor(randomFile.length * Math.random())];
+        }
+
+        return randomText;
+    }
+    
+    function setSuggestionsRandom() {
+        var random = suggestionsRandom();
+        suggst.suggest1 = random[0];
+        suggst.suggest2 = random[1];
+        suggst.suggest3 = random[2];
+    }
+    
+    function setTerms(suggestTerm) {
+        if (suggestTerm.length > 0) {
+            var keywordToSearch = suggestTerm[suggestTerm.length - 1];
+            var result = wordSuggest(keywordToSearch);
+            if (result.length>2) {
+                suggst.suggest1 = result[0];
+                suggst.suggest2 = result[1];
+                suggst.suggest3 = result[2];
+            } else {
+                //console.log('should not  ever run');
+            }
+        }
+    }
+    
+    function getTermsForSearchString(searchString) {
+        searchString = searchString.replace(/^\s+/g, '').replace(/\s+$/g, '');
+        if (searchString === '') {
+            return [];
+        }
+
+        var terms = searchString.split(/\s+/);
+        return terms;
+    }
+    
+     function wordSuggest(keywordToSearch) {
+        var suggestionFound;
+        keywordToSearch = keywordToSearch.toString().toLowerCase();
+        var len = 0,
+            a, i, j, l, k,
+            baseSearch, keywords, keywordsFile, list, listFile, suggestion = [];
+        for (i = 0; i < files.length; i++) {
+            baseSearch = files[i];
+            keywords = baseSearch.keywordFile;
+            for (j = 0; j < keywords.length; j++) {
+                if (keywordToSearch.indexOf(keywords[j]) !== -1) {
+                    list = baseSearch.listFile;
+                    len = 0
+                    for (l = 0; l < list.length; l++) {
+                        if (list[l].indexOf(keywordToSearch) !== -1) {
+                            suggestionFound = true;
+                            if (len < 3) {
+                                suggestion[len] = list[l];
+                                len++;
+                            }
+                        }
+                    }
+                    if (suggestion.length > 0) {
+                        for (a = suggestion.length; a < 3; a++) {
+                            suggestion[a] = list[Math.floor(list.length * Math.random())];
+                        }
+                        return suggestion;
+                    }
+                    for (k = 0; k < 3; k++) {
+                        suggestion[k] = list[Math.floor(list.length * Math.random())];
+                    }
+                    return suggestion;
+                }
+            }
+        }
+        if (suggestion.length < 1) {
+            suggestion = wordListArray.filter(function(stackValue) {
+                if (stackValue) {
+                    return (stackValue.substring(0, keywordToSearch.length) === keywordToSearch);
+                }
+                //return stackValue;
+            });
+            if (suggestion.length < 3) {
+                for (a = suggestion.length; a < 3; a++) {
+                    suggestion[a] = wordListArray[Math.floor(wordListArray.length * Math.random())];
+                }
+            } else {
+                for (k = 0; k < 3; k++) {
+                    suggestion[k] = suggestion[Math.floor(suggestion.length * Math.random())];
+                }
+            }
+            suggestionFound = false;
+            return suggestion;
+        }
+        return suggestion;
+    }
 
     function muteMicrophone() {
         if (!sourceModel.defaultSource) {
@@ -64,76 +229,6 @@ Item {
         sourceModel.defaultSource.muted = toMute;
     }
     
-        function filtersuggest() {
-        var keywordToSearch = qinput.text;
-        var result = wordSuggest(keywordToSearch);
-        if(result.length>0){
-                suggst.suggest1 = result[0];
-                suggst.suggest2 = result[1];
-                suggst.suggest3 = result[2];
-                suggst.visible=true;
-            }
-        else{
-            suggst.visible=false;
-        }
-    }
-    function wordSuggest(keywordToSearch){
-        var baseLocation = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/ui/suggestion/";
-        var files = [{
-            "id" : "1",
-            "category" : "math",
-            "keywordFile" : baseLocation + "MathKeywords.txt",
-            "listFile" : baseLocation + "MathList.txt",
-            },
-            {
-            "id" : "2",
-            "category" : "general",
-            "keywordFile" : baseLocation + "GeneralKeywords.txt",
-            "listFile" : baseLocation + "GeneralList.txt",
-            },
-            {
-            "id" : "3",
-            "category" : "wiki",
-            "keywordFile" : baseLocation + "WikiKeywords.txt",
-            "listFile" : baseLocation + "WikiList.txt",
-            },
-            {
-            "id" : "4",
-            "category" : "weather",
-            "keywordFile" : baseLocation + "WeatherKeywords.txt",
-            "listFile" : baseLocation + "WeatherList.txt",
-            },
-            {
-            "id" : "5",
-            "category" : "desktop",
-            "keywordFile" : baseLocation + "DesktopKeywords.txt",
-            "listFile" : baseLocation + "DesktopList.txt",
-            }];
-            var baseSearch,keywords,keywordsFile,list,listFile,suggestion = ['9','8','7'];
-            for (var i=0; i < files.length; i++){
-                baseSearch = files[i];
-                keywordsFile = PlasmaLa.FileReader.read(baseSearch.keywordFile).toString("utf-8");
-                keywords = keywordsFile.split('\n');
-                keywords = keywords.filter(Boolean);
-                
-                for(var j=0; j < keywords.length; j++){
-                    keywordToSearch = keywordToSearch.toLowerCase();
-                    if(keywordToSearch.indexOf(keywords[j]) !== -1){
-                        listFile = PlasmaLa.FileReader.read(baseSearch.listFile).toString("utf-8");
-                        list = listFile.split('\n');
-                        list = list.filter(Boolean);
-            
-                        for(var k=0; k < 3; k++){
-                            suggestion[k] = list[Math.floor(list.length * Math.random())];
-                        }
-                        return suggestion;
-                    }
-                    if(keywordToSearch.indexOf(keywords[j]) === -1){
-                        suggst.visible = false;
-                    }
-                }
-            }}
-            
             
         function filterinput() {
                 conversationInputList.append({"InputQuery": qboxoutput.text});
@@ -312,7 +407,7 @@ Item {
                         mycroftstartservicebutton.iconSource = "media-playback-start"
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
                         conversationInputList.clear()
-                        suggst.visible = false;
+                        suggst.visible = true;
                         socket.active = false;
                     }
                     
@@ -320,7 +415,7 @@ Item {
                         mycroftstartservicebutton.iconSource = "media-playback-pause"
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
                         conversationInputList.clear()
-                        suggst.visible = false;
+                        suggst.visible = true;
                         delay(10000, function() {
                         socket.active = true;
                         })
@@ -448,7 +543,7 @@ anchors.bottom: rectanglebottombar.top
                     
                         Suggestions {
                             id: suggst
-                            visible: false;
+                            visible: true;
                         }
                         
                                             ScrollBar.horizontal: ScrollBar {}
@@ -740,26 +835,37 @@ Rectangle {
                 clearButtonShown: true
 
                 onAccepted: {
-                suggst.visible = false;
-                conversationInputList.append({"InputQuery": qinput.text});
-                inputlistView.positionViewAtEnd();
+                    suggst.visible = true;
+                    conversationInputList.append({"InputQuery": qinput.text});
+                    inputlistView.positionViewAtEnd();
 
-                var socketmessage = {};
-                socketmessage.type = "recognizer_loop:utterance";
-                socketmessage.data = {};
-                socketmessage.data.utterances = [qinput.text];
-                socket.sendTextMessage(JSON.stringify(socketmessage));
-                filtersuggest();
-                qinput.text = "";                
-                if (socket.status == WebSocket.Error) {
-                                barAnim.wsocerroranimtoggle()
-                         }                
-                else {
-                    barAnim.wsocmsganimtoggle();                    
-                }
-                } 
-                }
+                    var socketmessage = {};
+                    socketmessage.type = "recognizer_loop:utterance";
+                    socketmessage.data = {};
+                    socketmessage.data.utterances = [qinput.text];
+                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                    filtersuggest();
+                    qinput.text = "";                
+                    if (socket.status == WebSocket.Error) {
+                                    barAnim.wsocerroranimtoggle()
+                             }                
+                    else {
+                        barAnim.wsocmsganimtoggle();                    
+                        }
+                    } 
                 
+                onTextChanged: {
+                    var terms = getTermsForSearchString(qinput.text);
+                    var suggestionsActive = (terms.length > 0);
+
+                    if (suggestionsActive) {
+                        setTerms(terms);
+                    }
+                    else{
+                        setSuggestionsRandom();
+                    }
+                }
+            }
                 PlasmaComponents.ToolButton {
                 id: qinputmicbx
                 anchors.right: parent.right

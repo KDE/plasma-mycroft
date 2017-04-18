@@ -13,6 +13,7 @@ public:
     
 public Q_SLOTS:
     QByteArray read(const QString &filename);
+    bool file_exists_local(const QString &filename);
 };
 
 #endif // FILEREADER_H
