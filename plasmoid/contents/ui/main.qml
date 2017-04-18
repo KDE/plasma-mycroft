@@ -42,7 +42,7 @@ Item {
     
     Component.onCompleted: {
         mycroftStatusCheckSocket.active = true
-        console.log(mycroftStatusCheckSocket.status);
+        //console.log(mycroftStatusCheckSocket.status);
         initFile();
         
     }
