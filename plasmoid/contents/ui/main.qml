@@ -63,7 +63,8 @@ Item {
     function initFile() {
         var keywordFileTemp, listFileTemp,path,wordlist;
         var baseLocation = '/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/ui/suggestion/';
-        var path = baseLocation + 'words1.txt';
+        var diclocation = '/usr/share/dict/'
+        var path = diclocation + 'words';
         var wordlist = readFile(path);
         wordListArray = wordlist.toString().split('\n');
         wordListArray = wordListArray.filter(Boolean);
