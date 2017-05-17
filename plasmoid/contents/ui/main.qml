@@ -306,7 +306,6 @@ Item {
             if (msgType === "recognizer_loop:utterance") {
                 var intpost = somestring.data.utterances;
                 qinput.text = intpost.toString()
-                filtersuggest();
             }
             
             if (msgType === "speak") {
@@ -417,7 +416,7 @@ Item {
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
                         conversationInputList.clear()
                         suggst.visible = true;
-                        delay(10000, function() {
+                        delay(15000, function() {
                         socket.active = true;
                         })
                     }
@@ -845,7 +844,6 @@ Rectangle {
                     socketmessage.data = {};
                     socketmessage.data.utterances = [qinput.text];
                     socket.sendTextMessage(JSON.stringify(socketmessage));
-                    filtersuggest();
                     qinput.text = "";                
                     if (socket.status == WebSocket.Error) {
                                     barAnim.wsocerroranimtoggle()
