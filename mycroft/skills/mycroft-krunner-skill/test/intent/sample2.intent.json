@@ -1,7 +1,0 @@
-{
-  "utterance": "display",
-  "intent_type": "RecentFilesIntent",
-  "intent": {
-    "RecentFileKeyword": "recent"
-  }
-}

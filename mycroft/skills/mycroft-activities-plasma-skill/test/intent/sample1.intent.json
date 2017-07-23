@@ -1,7 +1,0 @@
-{
-  "utterance": "create",
-  "intent_type": "ActivitiesKeywordIntent",
-  "intent": {
-    "ActivitiesCreateKeyword": "a new activity"
-  }
-}

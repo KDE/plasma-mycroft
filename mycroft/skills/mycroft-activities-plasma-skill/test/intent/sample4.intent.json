@@ -1,7 +1,0 @@
-{
-  "utterance": "stop current",
-  "intent_type": "StopActivitiesIntent",
-  "intent": {
-    "ActivitiesStopKeyword": "activity"
-  }
-}

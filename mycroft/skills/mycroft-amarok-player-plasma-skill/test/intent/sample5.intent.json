@@ -1,7 +1,0 @@
-{
-  "utterance": "amarok pause",
-  "intent_type": "AmarokPauseKeywordIntent",
-  "intent": {
-    "AmarokPauseKeyword": "song"
-  }
-}

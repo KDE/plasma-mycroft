@@ -1,7 +1,0 @@
-wiki
-wikipedia
-describe
-define
-explain
-compare
-evaluate

@@ -1,7 +1,0 @@
-{
-  "utterance": "amarok next",
-  "intent_type": "AmarokNextKeywordIntent",
-  "intent": {
-    "AmarokNextKeyword": "song"
-  }
-}

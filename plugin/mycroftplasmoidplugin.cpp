@@ -20,6 +20,7 @@
 #include "launchapp.h"
 #include "notify.h"
 #include "filereader.h"
+#include "msmapp.h"
 #include <QtQml>
 
 static QObject *notify_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -51,5 +52,6 @@ void MycroftPlasmoidPlugin::registerTypes(const char *uri)
     Q_ASSERT(uri == QLatin1String("org.kde.private.mycroftplasmoid"));
     qmlRegisterSingletonType<Notify>(uri, 1, 0, "Notify", notify_singleton);
     qmlRegisterSingletonType<LaunchApp>(uri, 1, 0, "LaunchApp", launchapp_singleton);
-    qmlRegisterSingletonType<FileReader>(uri, 1, 0, "FileReader", filereader_singleton);
+    qmlRegisterSingletonType<FileReader>(uri, 1, 0, "FileReader", filereader_singleton);    
+    qmlRegisterType<MsmApp>(uri, 1, 0, "MsmApp");
 }

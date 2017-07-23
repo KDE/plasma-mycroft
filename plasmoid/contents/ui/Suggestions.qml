@@ -2,29 +2,26 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-Item {
+Rectangle {
     id: suggestionsmainitem
+    color: "#00000000"
+    anchors.fill: parent
     property alias suggest1: suggestiontext1.text
     property alias suggest2: suggestiontext2.text
     property alias suggest3: suggestiontext3.text
 
-Flickable {
-    width: parent.width
-    height: parent.height
-    contentWidth: units.gridUnit * 5
-    contentHeight: parent.height
-    interactive: true;
-    
     Rectangle {
         id: suggestionbutton1
-        width: suggestiontext1.contentWidth + 10
-        height: 30
         color: "#00000000"
-        radius: 5
-        border.width: 1
-        border.color: "#ffffff"
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        border.width: 0.2
+        border.color: theme.textColor
         anchors.left: parent.left
         anchors.leftMargin: 0
+        width: suggestionsmainitem.width / 3
 
         MouseArea {
             id: mouseArea1
@@ -32,79 +29,70 @@ Flickable {
             hoverEnabled: true
 
             onEntered: {
-            suggestionbutton1.color = "#2b2b2b"
-            suggestionbutton1.border.color = "#f2f22f"
+            suggestionbutton1.color = theme.textColor
+            suggestiontext1.color = theme.backgroundColor
             }
 
             onExited: {
             suggestionbutton1.color = "#00000000"
-            suggestionbutton1.border.color = "grey"
+            suggestiontext1.color = theme.textColor
             }
 
             onClicked: {
-            suggst.visible = true
-            conversationInputList.append({"InputQuery": suggestiontext1.text});
-            inputlistView.positionViewAtEnd();
-            var socketmessage = {};
-            socketmessage.type = "recognizer_loop:utterance";
-            socketmessage.data = {};
-            socketmessage.data.utterances = [suggestiontext1.text];
-            socket.sendTextMessage(JSON.stringify(socketmessage));
-            qinput.text = suggestiontext1.text
+            var suggest1 = qinput.text
+            var lastIndex = suggest1.lastIndexOf(" ");
+            qinput.text = suggest1.substring(0, lastIndex) +  " " + suggestiontext1.text + " "
             }
         }
 
-        PlasmaComponents.Label {
+  PlasmaComponents.Label {
             id: suggestiontext1
-            text: qsTr("Text")
-            anchors.verticalCenter: parent.verticalCenter
+            text: i18n("")
             anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 12
         }
     }
 
     Rectangle {
         id: suggestionbutton2
-        width: suggestiontext2.contentWidth + 10
-        height: 30
         color: "#00000000"
-        radius: 5
-        border.color: "#ffffff"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.right: suggestionbutton3.left
+        anchors.rightMargin: 0
+        border.width: 0.2
         anchors.left: suggestionbutton1.right
-        anchors.leftMargin: 20
+        anchors.leftMargin: 0
+        border.color: theme.textColor
 
         MouseArea {
             id: mouseArea2
-            height: 200
             anchors.fill: parent
             hoverEnabled: true
 
             onEntered: {
-            suggestionbutton2.color = "#2b2b2b"
-            suggestionbutton2.border.color = "#f2f22f"
+            suggestionbutton2.color = theme.textColor
+            suggestiontext2.color = theme.backgroundColor
             }
 
             onExited: {
             suggestionbutton2.color = "#00000000"
-            suggestionbutton2.border.color = "grey"
+            suggestiontext2.color = theme.textColor
             }
 
             onClicked: {
-            suggst.visible = true
-            conversationInputList.append({"InputQuery": suggestiontext2.text});
-            inputlistView.positionViewAtEnd();
-            var socketmessage = {};
-            socketmessage.type = "recognizer_loop:utterance";
-            socketmessage.data = {};
-            socketmessage.data.utterances = [suggestiontext2.text];
-            socket.sendTextMessage(JSON.stringify(socketmessage));
-            qinput.text = suggestiontext1.text
+            var suggest2 = qinput.text
+            var lastIndex = suggest2.lastIndexOf(" ");
+            qinput.text = suggest2.substring(0, lastIndex) +  " " + suggestiontext2.text + " "
             }
         }
 
         PlasmaComponents.Label {
             id: suggestiontext2
-            text: qsTr("Text")
+            text: i18n("")
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 12
@@ -113,13 +101,16 @@ Flickable {
 
     Rectangle {
         id: suggestionbutton3
-        width: suggestiontext3.contentWidth + 10
-        height: 30
         color: "#00000000"
-        radius: 5
-        border.color: "#ffffff"
-        anchors.left: suggestionbutton2.right
-        anchors.leftMargin: 20
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.top: parent.top
+        border.color: theme.textColor
+        anchors.topMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        border.width: 0.2
+        width: parent.width / 3
 
         MouseArea {
             id: mouseArea3
@@ -127,35 +118,28 @@ Flickable {
             hoverEnabled: true
 
             onEntered: {
-            suggestionbutton3.color = "#2b2b2b"
-            suggestionbutton3.border.color = "#f2f22f"
+            suggestionbutton3.color = theme.textColor
+            suggestiontext3.color = theme.backgroundColor
             }
 
             onExited: {
             suggestionbutton3.color = "#00000000"
-            suggestionbutton3.border.color = "grey"
+            suggestiontext3.color = theme.textColor
             }
 
             onClicked: {
-            suggst.visible = true
-            conversationInputList.append({"InputQuery": suggestiontext3.text});
-            inputlistView.positionViewAtEnd();
-            var socketmessage = {};
-            socketmessage.type = "recognizer_loop:utterance";
-            socketmessage.data = {};
-            socketmessage.data.utterances = [suggestiontext3.text];
-            socket.sendTextMessage(JSON.stringify(socketmessage));
-            qinput.text = suggestiontext1.text
+            var suggest3 = qinput.text
+            var lastIndex = suggest3.lastIndexOf(" ");
+            qinput.text = suggest3.substring(0, lastIndex) +  " " + suggestiontext3.text + " "
             }
         }
 
-        PlasmaComponents.Label {
+       PlasmaComponents.Label {
             id: suggestiontext3
-            text: qsTr("Text")
+            text: i18n("")
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 12
             }
         }
-    }
 }

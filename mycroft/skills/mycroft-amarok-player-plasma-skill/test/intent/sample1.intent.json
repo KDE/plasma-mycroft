@@ -1,7 +1,0 @@
-{
-  "utterance": "amarok play",
-  "intent_type": "AmarokPlayKeywordIntent",
-  "intent": {
-    "AmarokPlayKeyword": "music"
-  }
-}

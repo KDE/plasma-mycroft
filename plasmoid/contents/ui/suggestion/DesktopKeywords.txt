@@ -1,4 +1,0 @@
-open 
-lockscreen
-shutdown
-switch

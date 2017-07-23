@@ -8,7 +8,8 @@ qml-module-qtquick-controls
 qml-module-qtwebsockets 
 qml-module-qt-websockets 
 qtdeclarative5-qtquick2-plugin 
-qtdeclarative5-models-plugin 
+qtdeclarative5-models-plugin
+gettext
 cmake 
 cmake-extras 
 cmake-data 
@@ -16,9 +17,13 @@ qml-module-qtquick-layouts
 libkf5plasma-dev 
 extra-cmake-modules 
 qtdeclarative5-dev
-
-(Plasma Mycroft Skills) Debian Packaging Requirements:
-
+qml-module-qtwebkit 
+libqt5webkit5-qmlwebkitplugin 
+libqt5webkit5 
+libqt5webkit5-dev
+libkf5i18n-data 
+libkf5i18n-dev 
+libkf5i18n5
 python-dbus
 python-pyqt5
 pyqt5-dev 

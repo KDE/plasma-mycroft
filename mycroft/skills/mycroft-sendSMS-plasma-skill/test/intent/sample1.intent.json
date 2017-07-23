@@ -1,7 +1,0 @@
-{
-  "utterance": "send",
-  "intent_type": "SendSMSKeywordIntent",
-  "intent": {
-    "SendSMSPlasmaDesktopSkillKeyword": "SMS"
-  }
-}
