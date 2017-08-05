@@ -177,7 +177,26 @@ Item {
     }
     
     function wordIndex(){
+        //var diclocation = '/usr/share/dict/'
+        //var path = diclocation + 'words';
+        //var searchlist = readFile(path);
+        //searchIndex = searchlist.toString().split('\n');
+        //searchIndex = searchIndex.filter(Boolean);  
         searchIndex = ["Apache","Autoresponder","BitTorrent","Blog","Bookmark","Bot","Broadband","Captcha","Certificate","Client","Cloud","Cloud Computing","CMS","Cookie","CSS","Cyberspace","Denial of Service","Define","Earth","Facebook","Firefox","Firewall","FTP","Gateway","Google","Google Drive","Gopher","Hashtag","Hit","Home Page","Joke", "Japan", "Inbox","Internet","IP","IP Address","Moon","Meta Tag","Mars","Wallpaper","Mercury","Youtube","Alarm","Pi","News","Time","Distance","Weather","Song","Search Engine","Social Networking","Socket","Spam","Spider","Spoofing","SSH","SSL","Static Website","Twitter", "Venus","XHTML"];
+    }
+    
+    function readFile(filename) {
+        if (PlasmaLa.FileReader.file_exists_local(filename)) {
+            try {
+                var content = PlasmaLa.FileReader.read(filename).toString("utf-8");
+                return content;
+            } catch (e) {
+                console.log('Mycroft UI - Read File' + e);
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     function quicksearch(inputvalue){
@@ -322,7 +341,6 @@ TopBarAnim {
                 onClicked: {
                     //mycroftstartservicebutton.checked = !mycroftstartservicebutton.checked
                     if (mycroftstartservicebutton.checked === false) {
-                        //mycroftstartservicebutton.iconSource = "media-playback-start"
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
                         convoLmodel.clear()
                         suggst.visible = true;
@@ -331,7 +349,7 @@ TopBarAnim {
                     }
                     
                     if (mycroftstartservicebutton.checked === true) {
-                        //mycroftstartservicebutton.iconSource = "media-playback-pause"
+                        disclaimbox.visible = false;
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
                         convoLmodel.clear()
                         suggst.visible = true;
@@ -420,8 +438,8 @@ Item {
             if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
             console.log("Activated")
             socket.active = true
+            disclaimbox.visible = false;
             mycroftstartservicebutton.checked = true
-            mycroftstartservicebutton.iconSource = "media-playback-pause"
             statusId.text = i18n("Mycroft is Ready")
             statusId.color = "green"
             statusId.visible = true
@@ -429,7 +447,6 @@ Item {
 
             else if (mycroftStatusCheckSocket.status == WebSocket.Error) {
             mycroftstartservicebutton.checked = false
-            mycroftstartservicebutton.iconSource = "media-playback-start"
             statusId.text = i18n("Mycroft is Disabled")
             statusId.color = "#f4bf42"
             statusId.visible = true
@@ -524,6 +541,13 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 iconSource: "user-home"
+                
+                    PlasmaCore.ToolTipArea {
+                        id: tooltiptab1
+                        mainText: i18n("Home Tab")
+                        anchors.fill: parent
+                        }
+                
                 }
                   
             PlasmaComponents.TabButton {
@@ -531,6 +555,13 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 iconSource: "games-hint"
+                
+                    PlasmaCore.ToolTipArea {
+                        id: tooltiptab2
+                        mainText: i18n("Skills Tab")
+                        anchors.fill: parent
+                        }
+                
                 }
                 
             PlasmaComponents.TabButton {
@@ -538,6 +569,13 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 iconSource: "games-config-options"
+                
+                    PlasmaCore.ToolTipArea {
+                        id: tooltiptab3
+                        mainText: i18n("Settings Tab")
+                        anchors.fill: parent
+                        }
+                
                 }
                 
             PlasmaComponents.TabButton {
@@ -545,6 +583,14 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 iconSource: "kmouth-phresebook-new"
+                
+                
+                    PlasmaCore.ToolTipArea {
+                        id: tooltiptab4
+                        mainText: i18n("Skill Installs Tab")
+                        anchors.fill: parent
+                        }
+                
                 }  
                 
             }
@@ -627,6 +673,12 @@ DropArea {
             }
         }
     }
+    
+    
+       Disclaimer{
+           id: disclaimbox
+           visible: true
+        }
     
        ListModel{
        id: convoLmodel
