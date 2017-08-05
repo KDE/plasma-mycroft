@@ -3,7 +3,14 @@
 
 1. Installation Requirements
 
-  + This plasmoid requires Mycroft Core Installed from http://github.com/MycroftAi/
+  + This plasmoid requires Mycroft Core Installed from http://github.com/MycroftAi/ using the GIT Method:
+    + cd /home/$USER/
+    + git clone https://github.com/MycroftAI/mycroft-core
+    + For Debian Run: ./build_host_setup_debian.sh
+    + For Arch Run: ./build_host_setup_arch.sh
+    + For Fedora Run: ./build_host_setup_fedora.sh
+    + Run: ./dev_setup.sh
+    
   + Download / Clone Mycroft Plasmoid from this REPO.
   + Unzip to folder if Downloaded
 
@@ -27,7 +34,7 @@
 
 Note: This plasmoids default find location for mycroft-core services is /home/$USER/mycroft-core/. This can be changed as per your installation path of mycroft-core in the settings tab.
 
-6. Upgrade From Previous Plasmoid Instructions 
+3. Upgrade From Previous Plasmoid Instructions 
 
   + Install additional dependencies: 
   (Neon/Kubuntu): sudo apt-get install libqt5webkit5 libqt5webkit5-dev libkf5i18n-data libkf5i18n-dev libkf5i18n5 
