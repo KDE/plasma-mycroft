@@ -1,7 +1,7 @@
 # Set minimum CMake version (required for CMake 3.0 or later)
 cmake_minimum_required(VERSION 2.8.12)
  
-set(QT_MIN_VERSION "5.4.0")
+set(QT_MIN_VERSION "5.7.0")
 set(KF5_MIN_VERSION "5.0.0")
  
 # Use Extra CMake Modules (ECM) for common functionality.

@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Templates 2.1 as T
+import QtQuick.Templates 2.0 as T
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
