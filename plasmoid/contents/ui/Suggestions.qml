@@ -1,10 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Rectangle {
     id: suggestionsmainitem
-    color: "#00000000"
+    color: theme.backgroundColor
     anchors.fill: parent
     property alias suggest1: suggestiontext1.text
     property alias suggest2: suggestiontext2.text
@@ -12,7 +13,7 @@ Rectangle {
 
     Rectangle {
         id: suggestionbutton1
-        color: "#00000000"
+        color: theme.backgroundColor
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.bottom: parent.bottom
@@ -34,7 +35,7 @@ Rectangle {
             }
 
             onExited: {
-            suggestionbutton1.color = "#00000000"
+            suggestionbutton1.color = theme.backgroundColor
             suggestiontext1.color = theme.textColor
             }
 
@@ -53,10 +54,31 @@ Rectangle {
             font.pixelSize: 12
         }
     }
+    
+    PlasmaCore.SvgItem {
+        id: suggestbarDividerline1
+        anchors {
+            left: suggestionbutton1.right
+            //rightMargin: units.gridUnit * 0.25
+            top: parent.top
+            topMargin: 0
+            bottom: parent.bottom
+            bottomMargin: 0
+        }
+
+        width: linesuggest1vertSvg.elementSize("vertical-line").width
+        z: 110
+        elementId: "vertical-line"
+
+        svg: PlasmaCore.Svg {
+            id: linesuggest1vertSvg;
+            imagePath: "widgets/line"
+        }
+    } 
 
     Rectangle {
         id: suggestionbutton2
-        color: "#00000000"
+        color: theme.backgroundColor
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.top: parent.top
@@ -64,7 +86,7 @@ Rectangle {
         anchors.right: suggestionbutton3.left
         anchors.rightMargin: 0
         border.width: 0.2
-        anchors.left: suggestionbutton1.right
+        anchors.left: suggestbarDividerline1.right
         anchors.leftMargin: 0
         border.color: theme.textColor
 
@@ -79,7 +101,7 @@ Rectangle {
             }
 
             onExited: {
-            suggestionbutton2.color = "#00000000"
+            suggestionbutton2.color = theme.backgroundColor
             suggestiontext2.color = theme.textColor
             }
 
@@ -98,10 +120,31 @@ Rectangle {
             font.pixelSize: 12
         }
     }
+    
+    PlasmaCore.SvgItem {
+        id: suggestbarDividerline2
+        anchors {
+            right: suggestionbutton3.left
+            //rightMargin: units.gridUnit * 0.25
+            top: parent.top
+            topMargin: 0
+            bottom: parent.bottom
+            bottomMargin: 0
+        }
+
+        width: linesuggest2vertSvg.elementSize("vertical-line").width
+        z: 110
+        elementId: "vertical-line"
+
+        svg: PlasmaCore.Svg {
+            id: linesuggest2vertSvg;
+            imagePath: "widgets/line"
+        }
+    }
 
     Rectangle {
         id: suggestionbutton3
-        color: "#00000000"
+        color: theme.backgroundColor
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.top: parent.top
@@ -123,7 +166,7 @@ Rectangle {
             }
 
             onExited: {
-            suggestionbutton3.color = "#00000000"
+            suggestionbutton3.color = theme.backgroundColor
             suggestiontext3.color = theme.textColor
             }
 

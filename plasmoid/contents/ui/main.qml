@@ -353,7 +353,7 @@ TopBarAnim {
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
                         convoLmodel.clear()
                         suggst.visible = true;
-                        delay(10000, function() {
+                        delay(15000, function() {
                         socket.active = true;
                         })
                     }
