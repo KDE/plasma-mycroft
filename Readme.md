@@ -60,7 +60,20 @@ Note: This plasmoids default find location for mycroft-core services is /home/$U
  + For User Control Skill: Install from Plasmoid (Follow Dependency Installation Below). Skill Name: Plasma-User-Control-Skill
  + For Wallpaper Change Skill: Install from Plasmoid (Follow Dependency Installation Below). Skill Name: Unsplash-Wallpaper-Plasma-Skill
  + For Image Recognition Skill: Follow Instructions at: https://github.com/AIIX/clarifai-image-recognition-skill
-
+ 
+ To Install Skills With HTML Data:
+ + skill-weather: Replace /opt/mycroft/skills/skill-weather with https://github.com/AIIX/skill-weather
+    + git clone https://github.com/AIIX/skill-weather
+    + cp -nr /skill-weather* /opt/mycroft/skills/skill-weather
+ 
+ + skill-stocks: Replace /opt/mycroft/skills/skill-stock with https://github.com/AIIX/skill-stock
+    + git clone https://github.com/AIIX/skill-stock
+    + cp -nr /skill-stock* /opt/mycroft/skills/skill-stock
+    
+ + skill-wiki: Replace /opt/mycroft/skills/skill-wiki with https://github.com/AIIX/skill-wiki
+    + git clone https://github.com/AIIX/skill-wiki
+    + cp -nr /skill-wiki* /opt/mycroft/skills/skill-wiki
+ 
 5. Skills Dependency Requirements
 
  + For Skills (KDE Neon): sudo apt install python-dbus, python-pyqt5 pyqt5-dev, python-sip, python-sip-dev
