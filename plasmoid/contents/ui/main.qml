@@ -79,12 +79,14 @@ Item {
     }
     
     function filterincoming(intent, metadata) {
-        var intentVisualArray = ['WeatherSkill:CurrentWeatherIntent'];
+        var intentVisualArray = ['CurrentWeatherIntent'];
         var itemType
+        var filterintentname = intent.split(':');
+        var intentname = filterintentname[1];
 
-        if (intentVisualArray.indexOf(intent) !== -1) {
-                switch (intent){
-                case "WeatherSkill:CurrentWeatherIntent":
+        if (intentVisualArray.indexOf(intentname) !== -1) {
+                switch (intentname){
+                case "CurrentWeatherIntent":
                     itemType = "CurrentWeather"
                     break;
                 }
