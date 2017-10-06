@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd /home/$USER/mycroft-core*/
-./mycroft.sh start
+./start-mycroft.sh all
 paplay /usr/share/sounds/freedesktop/stereo/dialog-error.oga

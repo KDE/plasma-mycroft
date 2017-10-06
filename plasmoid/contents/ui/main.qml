@@ -938,7 +938,7 @@ Flickable {
                 PlasmaComponents.RadioButton {
                     id: settingsTabUnitsOpTwo
                     exclusiveGroup: installPathGroup
-                    text: i18n("Manual Install Path of Mycroft.sh")
+                    text: i18n("Location of Mycroft-Core Directory")
                     checked: false
                     
                     onCheckedChanged: {
@@ -967,7 +967,7 @@ Flickable {
                     width: settingscontent.width / 1.1
                     anchors.top: radiobuttonColoumn.bottom
                     anchors.topMargin: 10
-                    placeholderText: i18n("/home/<Your UserName>/mycroft-core/mycroft.sh")
+                    placeholderText: i18n("<custom location>/mycroft-core/")
                     text: ""
                     
                     onTextChanged: {
@@ -986,8 +986,8 @@ Flickable {
                    
                    onClicked: {
                        var cstlocl = customloc
-                       var ctstart = cstlocl + " " + "start"
-                       var ctstop = cstlocl + " " + "stop"
+                       var ctstart = cstlocl + "start-mycroft.sh all" 
+                       var ctstop = cstlocl + "stop-mycroft.sh" 
                         startsrvcustom.text = ctstart
                         stopsrvcustom.text = ctstop
                         console.log(startsrvcustom.text)                    
@@ -1051,7 +1051,7 @@ Flickable {
                     id: settingsTabTF2
                     anchors.top: notificationswitch.bottom
                     anchors.topMargin: 15
-                    text: i18n("<i>Please Note: Default path is set to /home/$USER/mycroft-core/mycroft.sh. Change the above settings to match your installation</i>")
+                    text: i18n("<i>Please Note: Default path is set to /home/$USER/mycroft-core/. Change the above settings to match your installation</i>")
                 }
                 
               PlasmaComponents.Label {
