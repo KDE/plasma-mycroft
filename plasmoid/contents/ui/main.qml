@@ -17,12 +17,11 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
+import QtQuick 2.9
 import QtQml.Models 2.2
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import Qt.WebSockets 1.0
-import QtQuick.Controls.Styles 1.4
 import Qt.labs.settings 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
@@ -38,8 +37,8 @@ Item {
     Plasmoid.toolTipMainText: i18n("Mycroft")
     Plasmoid.switchWidth: units.gridUnit * 15
     Plasmoid.switchHeight: units.gridUnit * 15
-    Layout.minimumHeight: units.gridUnit * 22
-    Layout.minimumWidth: units.gridUnit * 24
+    Layout.minimumHeight: units.gridUnit * 24
+    Layout.minimumWidth: units.gridUnit * 26
     
     Component.onCompleted: {
         mycroftStatusCheckSocket.active = true
@@ -62,6 +61,29 @@ Item {
     property variant results: []
     property var smintent
     property var dataContent
+    property alias autoCompModel: completionItems
+    property alias textInput: qinput
+    
+    Connections {
+        target: main2
+        onSendShowMycroft: {
+            console.log("senttorootbydbus");
+            plasmoid.expanded = !plasmoid.expanded
+            tabBar.currentTab = mycroftTab
+        }
+        onSendShowSkills: {
+            tabBar.currentTab = mycroftSkillsTab
+            if(plasmoid.expanded = !plasmoid.expanded){
+                plasmoid.expanded
+            }
+        }
+        onSendShowSkillsInstaller: {
+            tabBar.currentTab = mycroftMSMinstTab
+            if(plasmoid.expanded = !plasmoid.expanded){
+                plasmoid.expanded
+            }
+        }
+    }
     
     function retryConn(){
         socket.active = true
@@ -167,26 +189,7 @@ Item {
                   var ext = filePath.split('.').pop();
                   return ext === "jpg" || ext === "png" || ext === "jpeg" || ext === 'mp3' || ext === 'wav' || ext === 'mp4'
     }
-
-    function getTermsForSearchString(searchString) {
-        searchString = searchString.replace(/^\s+/g, '').replace(/\s+$/g, '');
-        if (searchString === '') {
-            return [];
-        }
-
-        var interms = searchString.split(/\s+/);
-        quicksearch(interms)
-    }
-    
-    function wordIndex(){
-        //var diclocation = '/usr/share/dict/'
-        //var path = diclocation + 'words';
-        //var searchlist = readFile(path);
-        //searchIndex = searchlist.toString().split('\n');
-        //searchIndex = searchIndex.filter(Boolean);  
-        searchIndex = ["Apache","Autoresponder","BitTorrent","Blog","Bookmark","Bot","Broadband","Captcha","Certificate","Client","Cloud","Cloud Computing","CMS","Cookie","CSS","Cyberspace","Denial of Service","Define","Earth","Facebook","Firefox","Firewall","FTP","Gateway","Google","Google Drive","Gopher","Hashtag","Hit","Home Page","Joke", "Japan", "Inbox","Internet","IP","IP Address","Moon","Meta Tag","Mars","Wallpaper","Mercury","Youtube","Alarm","Pi","News","Time","Distance","Weather","Song","Search Engine","Social Networking","Socket","Spam","Spider","Spoofing","SSH","SSL","Static Website","Twitter", "Venus","XHTML"];
-    }
-    
+        
     function readFile(filename) {
         if (PlasmaLa.FileReader.file_exists_local(filename)) {
             try {
@@ -200,45 +203,38 @@ Item {
             return 0;
         }
     }
-
-    function quicksearch(inputvalue){
-          var inputTerms = inputvalue
-          var results = [];
-          var termsArray = inputTerms
-          var prefix = termsArray;
-          var terms = termsArray[termsArray.length -1];
-
-          for (var i = 0; i < searchIndex.length; i++) {
-            var a = searchIndex[i].toLowerCase(),
-                t = a.indexOf(terms);
-
-            if (t > -1) {
-              results.push(a);
-            }
-          }
-            evaluateResults(results, inputTerms, terms);
-    }
-        
-    function evaluateResults(intresult, intinterms, intterms) {
-          var results = intresult
-          var inputTerms = intinterms
-          var terms = intterms
-          if (results.length > 0 && inputTerms.length > 0 && terms.length !== 0) {
-              if (results.length > 1) {
-            suggst.suggest1 = results[0];
-            suggst.suggest2 = results[1];
-            suggst.suggest3 = results[2];
-            }
-           else {
-              //Should not show undefined
-              }
-          }
-          else if (inputTerms.length > 0 && terms.length !== 0) {
-            //Should show no results
-          }
-    }
-
     
+       function playwaitanim(recoginit){
+       switch(recoginit){ //"mycroft.skill.handler.start":
+       case "recognizer_loop:record_begin":
+               drawer.open()
+               waitanimoutter.cstanim.visible = true
+               waitanimoutter.cstanim.running = true
+               break
+           case "recognizer_loop:audio_output_start":
+               drawer.close()
+               waitanimoutter.cstanim.visible = false
+               waitanimoutter.cstanim.running = false
+               break
+       }
+   }
+   
+       function autoAppend(model, getinputstring, setinputstring) {
+        for(var i = 0; i < model.count; ++i)
+            if (getinputstring(model.get(i))){
+                console.log(model.get(i))
+                    return true
+                }
+              return null
+            }
+
+    function evalAutoLogic() {
+        if (suggestionsBox.currentIndex === -1) {
+        } else {
+            suggestionsBox.complete(suggestionsBox.currentItem)
+        }
+    }
+
 Timer {
            id: timer
        }
@@ -265,28 +261,47 @@ Item {
     }
     
         
-Rectangle {
+Item {
     id: topBarBGrect
     anchors.fill: parent
-    color: Qt.darker(theme.backgroundColor, 1.8)
     z: 101
-        
+         
+Image {
+        id: barAnim
+        anchors.left: parent.left
+        anchors.leftMargin: units.gridUnit * 0.1
+        anchors.verticalCenter: parent.verticalCenter
+        source: "../images/mycroftsmaller.png"
+        width: units.gridUnit * 1.6
+        height: units.gridUnit * 1.6
+    }
     
-LeftBarAnim {
-    id: barAnim
-    anchors.left: parent.left
-    anchors.leftMargin: -units.gridUnit * 1
-    anchors.verticalCenter: parent.verticalCenter
-    z: 6
-    transformOrigin: Item.Center
-    width: units.gridUnit * 4
-    height: units.gridUnit * 4
-}
+    PlasmaCore.SvgItem {
+        id: topbarLeftDividerline
+        anchors {
+            left: barAnim.right
+            leftMargin: units.gridUnit * 0.35
+            top: parent.top
+            topMargin: 0
+            bottom: parent.bottom
+            bottomMargin: 0
+        }
+
+        width: linetopleftvertSvg.elementSize("vertical-line").width
+        z: 110
+        elementId: "vertical-line"
+
+        svg: PlasmaCore.Svg {
+            id: linetopleftvertSvg;
+            imagePath: "widgets/line"
+        }
+    }  
+
 
     PlasmaComponents.Label {
                 anchors.top: parent.top
                 anchors.topMargin: 4
-                anchors.left: barAnim.right
+                anchors.left: topbarLeftDividerline.right
                 anchors.leftMargin: 2
                 id: statusId
                 text: i18n("Mycroft is disabled")
@@ -300,7 +315,6 @@ TopBarAnim {
     anchors.verticalCenter: parent.verticalCenter
     anchors.left: statusId.left
     anchors.right:  topbarDividerline.left
-    //width: units.gridUnit * 4
     height: units.gridUnit * 4
     z: 6
 }    
@@ -331,17 +345,12 @@ TopBarAnim {
                 anchors.right: qinputmicbx.left
                 anchors.verticalCenter: topBarBGrect.verticalCenter
                 id: mycroftstartservicebutton
-                //iconSource: "media-playback-start"
-                //tooltip: i18n("Start Mycroft")
-                //flat: true
                 checked: false
-                //focus: false
                 width: Math.round(units.gridUnit * 2)
                 height: width
                 z: 102
                 
                 onClicked: {
-                    //mycroftstartservicebutton.checked = !mycroftstartservicebutton.checked
                     if (mycroftstartservicebutton.checked === false) {
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
                         convoLmodel.clear()
@@ -432,11 +441,8 @@ Item {
     WebSocket {
         id: mycroftStatusCheckSocket
         url: innerset.wsurl
-        onTextMessageReceived: {
-            //console.log("Mycroft Status Ping");
-        }
-            active: true
-            onStatusChanged: 
+        active: true
+        onStatusChanged: 
             if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
             console.log("Activated")
             socket.active = true
@@ -455,17 +461,19 @@ Item {
             }
         }
         
-        WebSocket {
+    WebSocket {
         id: socket
         url: innerset.wsurl
         onTextMessageReceived: {
             var somestring = JSON.parse(message)
             var msgType = somestring.type;
+            playwaitanim(msgType);
             qinput.focus = false;
             
             if (msgType === "recognizer_loop:utterance") {
                 var intpost = somestring.data.utterances;
                 qinput.text = intpost.toString()
+                convoLmodel.append({"itemType": "AskType", "InputQuery": intpost.toString()})
                 midbarAnim.wsistalking()
             }
             
@@ -489,7 +497,7 @@ Item {
                 var notiftext = " "+ post;
                 PlasmaLa.Notify.mycroftResponse(title, notiftext);
             }
-             barAnim.wsocmsganimtoggle()
+            
              midbarAnim.wsistalking()
         }
                 
@@ -499,21 +507,17 @@ Item {
                                 mycroftstartservicebutton.circolour = "red"
                                 console.log(socket.errorString)
                                 retryConn()
-                                barAnim.wsocmsganimtoggle()
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Open) {
                                 statusId.text = "Mycroft is Ready"
                                 statusId.color = "green"
                                 mycroftstartservicebutton.circolour = "green"
-                                barAnim.wsocmsganimtoggle()
-                                //midbarAnim.topanimrun = false;
                                 mycroftStatusCheckSocket.active = false;
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Closed) {
                                 statusId.text = "Mycroft is Disabled"
                                 statusId.color = "#f4bf42"
                                 mycroftstartservicebutton.circolour = Qt.lighter(theme.backgroundColor, 1.5)
-                                barAnim.wsocmsganimtoggle()
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Connecting) {
                                 statusId.text = "Starting Up"
@@ -525,7 +529,6 @@ Item {
                                 statusId.color = "grey"
                                 midbarAnim.showstatsId()
                          }
-        //active: false;
     }    
         
     ColumnLayout {
@@ -618,550 +621,546 @@ Item {
         }
     }        
                 
-ColumnLayout {
-id: mycroftcolumntab    
-visible: tabBar.currentTab == mycroftTab;
-anchors.top: root.top
-anchors.left: sidebar.right
-anchors.leftMargin: units.gridUnit * 0.25
-anchors.right: root.right
-anchors.bottom: root.bottom
+    ColumnLayout {
+    id: mycroftcolumntab    
+    visible: tabBar.currentTab == mycroftTab;
+    anchors.top: root.top
+    anchors.left: sidebar.right
+    anchors.leftMargin: units.gridUnit * 0.25
+    anchors.right: root.right
+    anchors.bottom: root.bottom
 
- Rectangle {
-                id: rectangle2
-                color: "#00000000"
-                anchors.top: mycroftcolumntab.top
-                anchors.topMargin:15
-                anchors.left: mycroftcolumntab.left
-                anchors.right: mycroftcolumntab.right
-                anchors.bottom: mycroftcolumntab.bottom
-               
-DropArea {           
-       anchors.fill: parent;
-       id: dragTarget
-       onEntered: {
-        for(var i = 0; i < drag.urls.length; i++)
-            if(validateFileExtension(drag.urls[i]))
-            return
-            console.log("No valid files, refusing drag event")
-            drag.accept()
-            dragTarget.enabled = false
-       }
-       
-       onDropped: {
-        for(var i = 0; i < drop.urls.length; i++){
-        var ext = getFileExtenion(drop.urls[i]);
-        if(ext === "jpg" || ext === "png" || ext === "jpeg"){
-           var durl = String(drop.urls[i]);
-           console.log(durl)
-           convoLmodel.append({
-               "itemType": "DropImg",
-               "InputQuery": durl
-               })
-               inputlistView.positionViewAtEnd();
+    Rectangle {
+                    id: rectangle2
+                    color: "#00000000"
+                    anchors.top: mycroftcolumntab.top
+                    anchors.topMargin:15
+                    anchors.left: mycroftcolumntab.left
+                    anchors.right: mycroftcolumntab.right
+                    anchors.bottom: mycroftcolumntab.bottom
+                
+    DropArea {           
+        anchors.fill: parent;
+        id: dragTarget
+        onEntered: {
+            for(var i = 0; i < drag.urls.length; i++)
+                if(validateFileExtension(drag.urls[i]))
+                return
+                console.log("No valid files, refusing drag event")
+                drag.accept()
+                dragTarget.enabled = false
+        }
+        
+        onDropped: {
+            for(var i = 0; i < drop.urls.length; i++){
+            var ext = getFileExtenion(drop.urls[i]);
+            if(ext === "jpg" || ext === "png" || ext === "jpeg"){
+            var durl = String(drop.urls[i]);
+            console.log(durl)
+            convoLmodel.append({
+                "itemType": "DropImg",
+                "InputQuery": durl
+                })
+                inputlistView.positionViewAtEnd();
 
 
-           var irecogmsgsend = innerset.customrecog
-           var socketmessage = {};
-           socketmessage.type = "recognizer_loop:utterance";
-           socketmessage.data = {};
-           socketmessage.data.utterances = [irecogmsgsend + " " + durl];
-           socket.sendTextMessage(JSON.stringify(socketmessage));
-           console.log(irecogmsgsend + " " + durl);
+            var irecogmsgsend = innerset.customrecog
+            var socketmessage = {};
+            socketmessage.type = "recognizer_loop:utterance";
+            socketmessage.data = {};
+            socketmessage.data.utterances = [irecogmsgsend + " " + durl];
+            socket.sendTextMessage(JSON.stringify(socketmessage));
+            console.log(irecogmsgsend + " " + durl);
+                }
+            
+            if(ext === 'mp3'){
+                console.log('mp3');
+                }
+            }
+        }
+        
+        
+        Disclaimer{
+            id: disclaimbox
+            visible: true
             }
         
-        if(ext === 'mp3'){
-            console.log('mp3');
-            }
+        ListModel{
+        id: convoLmodel
         }
-    }
-    
-    
-       Disclaimer{
-           id: disclaimbox
-           visible: true
-        }
-    
-       ListModel{
-       id: convoLmodel
-       }
 
-        Rectangle {
-            id: messageBox
-            anchors.fill: parent
-            anchors.right: rectangle2.right
-            anchors.left: rectangle2.left
-            color: "#00000000"
-
-            ColumnLayout {
-                id: colconvo
+            Rectangle {
+                id: messageBox
                 anchors.fill: parent
+                anchors.right: rectangle2.right
+                anchors.left: rectangle2.left
+                color: "#00000000"
 
-            ListView {
-                id: inputlistView
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                verticalLayoutDirection: ListView.TopToBottom
-                spacing: 12
-                model: convoLmodel
-                ScrollBar.vertical: ScrollBar {}
-                delegate:  Component {
-                           Loader {
-                               source: switch(itemType) {
-                                       case "NonVisual": return "SimpleMessageType.qml"
-                                       case "WebViewType": return "WebViewType.qml"
-                                       case "CurrentWeather": return "CurrentWeatherType.qml"
-                                       case "DropImg" : return "ImgRecogType.qml"
-                                       }
-                                property var metacontent : dataContent
-                               }
-                       }
+                ColumnLayout {
+                    id: colconvo
+                    anchors.fill: parent
 
-            onCountChanged: {
-                inputlistView.positionViewAtEnd();
-                            }
+                ListView {
+                    id: inputlistView
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    verticalLayoutDirection: ListView.TopToBottom
+                    spacing: 12
+                    clip: true
+                    model: convoLmodel
+                    ScrollBar.vertical: ScrollBar {}
+                    delegate:  Component {
+                            Loader {
+                                source: switch(itemType) {
+                                        case "NonVisual": return "SimpleMessageType.qml"
+                                        case "WebViewType": return "WebViewType.qml"
+                                        case "CurrentWeather": return "CurrentWeatherType.qml"
+                                        case "DropImg" : return "ImgRecogType.qml"
+                                        case "AskType" : return "AskMessageType.qml"
+                                        }
+                                    property var metacontent : dataContent
+                                }
+                        }
+
+                onCountChanged: {
+                    inputlistView.positionViewAtEnd();
                                 }
                                     }
                                         }
                                             }
                                                 }
                                                     }
+                                                        }
                                                     
-ColumnLayout {
-id: mycroftSkillscolumntab    
-visible: tabBar.currentTab == mycroftSkillsTab;
-anchors.top: root.top
-anchors.left: sidebar.right
-anchors.leftMargin: units.gridUnit * 0.25
-anchors.right: root.right
-anchors.bottom: root.bottom
+    ColumnLayout {
+    id: mycroftSkillscolumntab    
+    visible: tabBar.currentTab == mycroftSkillsTab;
+    anchors.top: root.top
+    anchors.left: sidebar.right
+    anchors.leftMargin: units.gridUnit * 0.25
+    anchors.right: root.right
+    anchors.bottom: root.bottom
 
 
-Rectangle {
-        anchors.top: mycroftSkillscolumntab.top
-        anchors.left: mycroftSkillscolumntab.left
-        anchors.right: mycroftSkillscolumntab.right
-        id: skillsrectmain
-        color: "#00000000"
-        
-    Component {
-            id: skillDelegate
-            Rectangle {
-                id: skillcontent
-                Layout.fillWidth: true;
-                anchors { left: parent.left; right: parent.right }
-                height: 80 
-                border.width: 0        
-                border.color: "lightsteelblue"
-                radius: 2
-                color: theme.backgroundColor
-                z: -99
-
-                RowLayout {
-                id: skillTopRowLayout
-                spacing: 5
-                anchors.fill: parent
-           
-                PlasmaComponents.Label {
-                    id: innerskllname
-                    anchors.top: parent.top
-                    anchors.topMargin: 2
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    wrapMode: Text.WordWrap; 
-                    font.bold: true; 
-                    text: i18n('<b>Skill:</b>' + Skill) 
-                }
-           
+    Rectangle {
+            anchors.top: mycroftSkillscolumntab.top
+            anchors.left: mycroftSkillscolumntab.left
+            anchors.right: mycroftSkillscolumntab.right
+            id: skillsrectmain
+            color: "#00000000"
+            
+        Component {
+                id: skillDelegate
                 Rectangle {
-                    id: skilltipsimage
-                    anchors.left: parent.left
-                    anchors.top: innerskllname.bottom
-                    anchors.bottom: parent.bottom
-                    width: units.gridUnit * 1.2
+                    id: skillcontent
+                    Layout.fillWidth: true;
+                    anchors { left: parent.left; right: parent.right }
+                    height: 80 
+                    border.width: 0        
+                    border.color: "lightsteelblue"
+                    radius: 2
                     color: theme.backgroundColor
-                    
-                Image {
-                 id: innerskImg
-                 source: Pic
-                 width: units.gridUnit * 1.2
-                 height: units.gridUnit * 1.2
-                 anchors.centerIn: parent
-                    }
-                    
-                PlasmaCore.SvgItem {
-                    anchors {
-                    left: innerskImg.right
-                    leftMargin: 4
-                    top: parent.top
-                    topMargin: 0
-                    bottom: parent.bottom
-                    bottomMargin: 0
-                    }
+                    z: -99
 
-                    width: lineskillpgSvg.elementSize("vertical-line").width
-                    z: 110
-                    elementId: "vertical-line"
+                    RowLayout {
+                    id: skillTopRowLayout
+                    spacing: 5
+                    anchors.fill: parent
+            
+                    PlasmaComponents.Label {
+                        id: innerskllname
+                        anchors.top: parent.top
+                        anchors.topMargin: 2
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        wrapMode: Text.WordWrap; 
+                        font.bold: true; 
+                        text: i18n('<b>Skill:</b>' + Skill) 
+                    }
+            
+                    Rectangle {
+                        id: skilltipsimage
+                        anchors.left: parent.left
+                        anchors.top: innerskllname.bottom
+                        anchors.bottom: parent.bottom
+                        width: units.gridUnit * 1.2
+                        color: theme.backgroundColor
+                        
+                    Image {
+                    id: innerskImg
+                    source: Pic
+                    width: units.gridUnit * 1.2
+                    height: units.gridUnit * 1.2
+                    anchors.centerIn: parent
+                        }
+                        
+                    PlasmaCore.SvgItem {
+                        anchors {
+                        left: innerskImg.right
+                        leftMargin: 4
+                        top: parent.top
+                        topMargin: 0
+                        bottom: parent.bottom
+                        bottomMargin: 0
+                        }
 
-                    svg: PlasmaCore.Svg {
-                    id: lineskillpgSvg;
-                    imagePath: "widgets/line"
+                        width: lineskillpgSvg.elementSize("vertical-line").width
+                        z: 110
+                        elementId: "vertical-line"
+
+                        svg: PlasmaCore.Svg {
+                        id: lineskillpgSvg;
+                        imagePath: "widgets/line"
+                        }
+                            }     
+                        
                     }
-                        }     
                     
-                }
-                
-                Rectangle {
-                id: skilltipsinner
-                anchors.left: skilltipsimage.right
-                anchors.leftMargin: 10
-                anchors.right: parent.right
-                color: theme.backgroundColor
-                anchors.top: innerskllname.bottom
-                anchors.bottom: parent.bottom
-                
-                Column{
-                    id: innerskillscolumn
-                    spacing: 2
+                    Rectangle {
+                        id: skilltipsinner
+                        anchors.left: skilltipsimage.right
+                        anchors.leftMargin: 10
+                        anchors.right: parent.right
+                        color: theme.backgroundColor
+                        anchors.top: innerskllname.bottom
+                        anchors.bottom: parent.bottom
                     
-                PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(0).Commands)}
-                PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(1).Commands)}
-                    }
+                    Column{
+                        id: innerskillscolumn
+                        spacing: 2
+                        
+                        PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(0).Commands)}
+                        PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(1).Commands)}
                         }
                             }
                                 }
                                     }
                                         }
+                                            }
 
-            ListView {
-                id: skillslistmodelview
-                anchors.top: parent.top
-                anchors.topMargin: 5
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                model: SkillModel{}
-                delegate: skillDelegate
-                spacing: 4
-                focus: false
-                interactive: true
-                clip: true;
-            }
+                ListView {
+                    id: skillslistmodelview
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    model: SkillModel{}
+                    delegate: skillDelegate
+                    spacing: 4
+                    focus: false
+                    interactive: true
+                    clip: true;
+                }
 
-    }
+        }
 
-ColumnLayout {
-id: mycroftSettingsColumn
-visible: tabBar.currentTab == mycroftSettingsTab;
-anchors.top: root.top
-anchors.left: sidebar.right
-anchors.leftMargin: units.gridUnit * 0.25
-anchors.right: root.right
-anchors.bottom: root.bottom
+    ColumnLayout {
+    id: mycroftSettingsColumn
+    visible: tabBar.currentTab == mycroftSettingsTab;
+    anchors.top: root.top
+    anchors.left: sidebar.right
+    anchors.leftMargin: units.gridUnit * 0.25
+    anchors.right: root.right
+    anchors.bottom: root.bottom
 
-Item {
-                id: settingscontent
-                Layout.fillWidth: true;
-                Layout.fillHeight: true;
-                anchors.fill: parent;
-                //color: theme.backgroundColor
+    Item {
+                    id: settingscontent
+                    Layout.fillWidth: true;
+                    Layout.fillHeight: true;
+                    anchors.fill: parent;
 
-Flickable {
-    id: settingFlick
-    anchors.fill: parent;
-    contentWidth: mycroftSettingsColumn.width
-    contentHeight: units.gridUnit * 22
-    clip: true;
-    
+    Flickable {
+        id: settingFlick
+        anchors.fill: parent;
+        contentWidth: mycroftSettingsColumn.width
+        contentHeight: units.gridUnit * 22
+        clip: true;
+        
                 PlasmaComponents.Label {
                     id: settingsTabUnits
                     anchors.top: parent.top;
                     anchors.topMargin: 5
                     text: i18n("<i>Your Mycroft Core Installation Path</i>")
+                    }
+                    
+                PlasmaComponents.ButtonColumn {
+                    id: radiobuttonColoumn
+                    anchors.top: settingsTabUnits.bottom
+                    anchors.topMargin: 5
+                    
+                    PlasmaComponents.RadioButton {
+                        id: settingsTabUnitsOpZero
+                        exclusiveGroup: installPathGroup
+                        text: i18n("Default Path")
+                        checked: true
+                        
+                        onCheckedChanged: {
+                            
+                            if (settingsTabUnitsOpZero.checked === true && coreinstallstartpath === packagemcorestartcmd) {
+                                coreinstallstartpath = defaultmcorestartpath;
+                            }
+                            else if (settingsTabUnitsOpZero.checked === true && coreinstallstartpath === customlocstartpath) {
+                                coreinstallstartpath = defaultmcorestartpath;   
+                            }
+                            
+                            if (settingsTabUnitsOpZero.checked === true && coreinstallstoppath === packagemcorestopcmd) {
+                                coreinstallstoppath = defaultmcorestoppath;
+                            }
+                            
+                            else if (settingsTabUnitsOpZero.checked === true && coreinstallstoppath === customlocstoppath) {
+                                coreinstallstoppath = defaultmcorestoppath;   
+                            }
+                        }
+                    }
+                    
+                    PlasmaComponents.RadioButton {
+                        id: settingsTabUnitsOpOne
+                        exclusiveGroup: installPathGroup
+                        text: i18n("Installed Using Mycroft Package")
+                        checked: false
+                        
+                        onCheckedChanged: {
+                            
+                            if (settingsTabUnitsOpOne.checked === true && coreinstallstartpath === defaultmcorestartpath) {
+                                coreinstallstartpath = packagemcorestartcmd;
+                            }
+                            else if (settingsTabUnitsOpOne.checked === true && coreinstallstartpath === customlocstartpath) {
+                                coreinstallstartpath = packagemcorestartcmd;   
+                            }
+                            
+                            if (settingsTabUnitsOpOne.checked === true && coreinstallstoppath === defaultmcorestoppath) {
+                                coreinstallstoppath = packagemcorestopcmd;
+                            }
+                            
+                            else if (settingsTabUnitsOpOne.checked === true && coreinstallstoppath === customlocstoppath) {
+                                coreinstallstoppath = packagemcorestopcmd;   
+                            }
+                        }
+                    }
+                    
+                    PlasmaComponents.RadioButton {
+                        id: settingsTabUnitsOpTwo
+                        exclusiveGroup: installPathGroup
+                        text: i18n("Location of Mycroft-Core Directory")
+                        checked: false
+                        
+                        onCheckedChanged: {
+                            
+                            if (settingsTabUnitsOpTwo.checked === true && coreinstallstartpath === defaultmcorestartpath) {
+                                coreinstallstartpath = customlocstartpath;
+                            }
+                            else if (settingsTabUnitsOpTwo.checked === true && coreinstallstartpath === packagemcorestartcmd) {
+                                coreinstallstartpath = customlocstartpath;   
+                            }
+                            
+                            if (settingsTabUnitsOpTwo.checked === true && coreinstallstoppath === defaultmcorestoppath) {
+                                coreinstallstoppath = customlocstoppath;
+                            }
+                            
+                            else if (settingsTabUnitsOpTwo.checked === true && coreinstallstoppath === packagemcorestopcmd) {
+                                coreinstallstoppath = customlocstoppath;   
+                            }
+                            
+                        }
+                    } 
+                        }
+                    
+                    PlasmaComponents.TextField {
+                        id: settingsTabUnitsOpThree
+                        width: settingscontent.width / 1.1
+                        anchors.top: radiobuttonColoumn.bottom
+                        anchors.topMargin: 10
+                        placeholderText: i18n("<custom location>/mycroft-core/")
+                        text: ""
+                        
+                        onTextChanged: {
+                            var cstloc = settingsTabUnitsOpThree.text
+                            customloc = cstloc
+                            
+                        }
+                    }
+                    
+                PlasmaComponents.Button {
+                    id: acceptcustomPath
+                    anchors.left: settingsTabUnitsOpThree.right
+                    anchors.verticalCenter: settingsTabUnitsOpThree.verticalCenter
+                    anchors.right: parent.right
+                    iconSource: "checkbox"
+                    
+                    onClicked: {
+                        var cstlocl = customloc
+                        var ctstart = cstlocl + "start-mycroft.sh all" 
+                        var ctstop = cstlocl + "stop-mycroft.sh" 
+                            startsrvcustom.text = ctstart
+                            stopsrvcustom.text = ctstop
+                            console.log(startsrvcustom.text)                    
+                        }
+                    } 
+                    
+                PlasmaComponents.TextField {
+                        id: settingsTabUnitsWSpath
+                        width: settingscontent.width / 1.1
+                        anchors.top: settingsTabUnitsOpThree.bottom
+                        anchors.topMargin: 10
+                        placeholderText: i18n("ws://0.0.0.0:8181/core")
+                        text: i18n("ws://0.0.0.0:8181/core")
+                    }
+                    
+                PlasmaComponents.Button {
+                    id: acceptcustomWSPath
+                    anchors.left: settingsTabUnitsWSpath.right
+                    anchors.verticalCenter: settingsTabUnitsWSpath.verticalCenter
+                    anchors.right: parent.right
+                    iconSource: "checkbox"
+                    
+                    onClicked: { 
+                        innerset.wsurl = settingsTabUnitsWSpath.text
+                        }
+                    }
+                    
+                                
+                PlasmaComponents.TextField {
+                        id: settingsTabUnitsIRCmd
+                        width: settingscontent.width / 1.1
+                        anchors.top: settingsTabUnitsWSpath.bottom
+                        anchors.topMargin: 10
+                        placeholderText: i18n("Your Custom Image Recognition Skill Voc Keywords")
+                        text: i18n("search image url")
+                    }
+                    
+                PlasmaComponents.Button {
+                    id: acceptcustomIRCmd
+                    anchors.left: settingsTabUnitsIRCmd.right
+                    anchors.verticalCenter: settingsTabUnitsIRCmd.verticalCenter
+                    anchors.right: parent.right
+                    iconSource: "checkbox"
+                }    
+                    
+                    
+                PlasmaComponents.Switch {
+                        id: notificationswitch
+                        anchors.top: settingsTabUnitsIRCmd.bottom
+                        anchors.topMargin: 10
+                        text: i18n("Enable Notifications")
+                        checked: true
+                    }
+                    
+                    
+                PlasmaExtras.Paragraph {
+                        id: settingsTabTF2
+                        anchors.top: notificationswitch.bottom
+                        anchors.topMargin: 15
+                        text: i18n("<i>Please Note: Default path is set to /home/$USER/mycroft-core/. Change the above settings to match your installation</i>")
+                    }
+                    
+                PlasmaComponents.Label {
+                    id: startsrvcustom
+                    visible: false
                 }
                 
-               PlasmaComponents.ButtonColumn {
-                id: radiobuttonColoumn
-                anchors.top: settingsTabUnits.bottom
-                anchors.topMargin: 5
-                   
-                PlasmaComponents.RadioButton {
-                    id: settingsTabUnitsOpZero
-                    exclusiveGroup: installPathGroup
-                    text: i18n("Default Path")
-                    checked: true
-                    
-                    onCheckedChanged: {
-                        
-                        if (settingsTabUnitsOpZero.checked === true && coreinstallstartpath === packagemcorestartcmd) {
-                            coreinstallstartpath = defaultmcorestartpath;
-                        }
-                        else if (settingsTabUnitsOpZero.checked === true && coreinstallstartpath === customlocstartpath) {
-                            coreinstallstartpath = defaultmcorestartpath;   
-                        }
-                        
-                        if (settingsTabUnitsOpZero.checked === true && coreinstallstoppath === packagemcorestopcmd) {
-                            coreinstallstoppath = defaultmcorestoppath;
-                        }
-                        
-                        else if (settingsTabUnitsOpZero.checked === true && coreinstallstoppath === customlocstoppath) {
-                            coreinstallstoppath = defaultmcorestoppath;   
-                        }
-                    }
-                }
-                
-                PlasmaComponents.RadioButton {
-                    id: settingsTabUnitsOpOne
-                    exclusiveGroup: installPathGroup
-                    text: i18n("Installed Using Mycroft Package")
-                    checked: false
-                    
-                    onCheckedChanged: {
-                        
-                        if (settingsTabUnitsOpOne.checked === true && coreinstallstartpath === defaultmcorestartpath) {
-                            coreinstallstartpath = packagemcorestartcmd;
-                        }
-                        else if (settingsTabUnitsOpOne.checked === true && coreinstallstartpath === customlocstartpath) {
-                            coreinstallstartpath = packagemcorestartcmd;   
-                        }
-                        
-                        if (settingsTabUnitsOpOne.checked === true && coreinstallstoppath === defaultmcorestoppath) {
-                            coreinstallstoppath = packagemcorestopcmd;
-                        }
-                        
-                        else if (settingsTabUnitsOpOne.checked === true && coreinstallstoppath === customlocstoppath) {
-                            coreinstallstoppath = packagemcorestopcmd;   
-                        }
-                    }
-                }
-                
-                PlasmaComponents.RadioButton {
-                    id: settingsTabUnitsOpTwo
-                    exclusiveGroup: installPathGroup
-                    text: i18n("Location of Mycroft-Core Directory")
-                    checked: false
-                    
-                    onCheckedChanged: {
-                        
-                        if (settingsTabUnitsOpTwo.checked === true && coreinstallstartpath === defaultmcorestartpath) {
-                            coreinstallstartpath = customlocstartpath;
-                        }
-                        else if (settingsTabUnitsOpTwo.checked === true && coreinstallstartpath === packagemcorestartcmd) {
-                            coreinstallstartpath = customlocstartpath;   
-                        }
-                        
-                        if (settingsTabUnitsOpTwo.checked === true && coreinstallstoppath === defaultmcorestoppath) {
-                            coreinstallstoppath = customlocstoppath;
-                        }
-                        
-                        else if (settingsTabUnitsOpTwo.checked === true && coreinstallstoppath === packagemcorestopcmd) {
-                            coreinstallstoppath = customlocstoppath;   
-                        }
-                        
-                    }
-                } 
-                    }
+                PlasmaComponents.Label {
+                    id: stopsrvcustom
+                    visible: false
+                }   
+            }
+        }
+    }
+
+    ColumnLayout {
+    id: mycroftMsmColumn
+    visible: tabBar.currentTab == mycroftMSMinstTab;
+    anchors.top: root.top
+    anchors.left: sidebar.right
+    anchors.leftMargin: units.gridUnit * 0.25
+    anchors.right: root.right
+    anchors.bottom: root.bottom
+            
+            Item { 
+                id: msmtabtopbar
+                width: parent.width
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: units.gridUnit * 2
                 
                 PlasmaComponents.TextField {
-                    id: settingsTabUnitsOpThree
-                    width: settingscontent.width / 1.1
-                    anchors.top: radiobuttonColoumn.bottom
-                    anchors.topMargin: 10
-                    placeholderText: i18n("<custom location>/mycroft-core/")
-                    text: ""
-                    
-                    onTextChanged: {
-                        var cstloc = settingsTabUnitsOpThree.text
-                        customloc = cstloc
-                        
-                    }
-                }
-                
-               PlasmaComponents.Button {
-                   id: acceptcustomPath
-                   anchors.left: settingsTabUnitsOpThree.right
-                   anchors.verticalCenter: settingsTabUnitsOpThree.verticalCenter
-                   anchors.right: parent.right
-                   iconSource: "checkbox"
-                   
-                   onClicked: {
-                       var cstlocl = customloc
-                       var ctstart = cstlocl + "start-mycroft.sh all" 
-                       var ctstop = cstlocl + "stop-mycroft.sh" 
-                        startsrvcustom.text = ctstart
-                        stopsrvcustom.text = ctstop
-                        console.log(startsrvcustom.text)                    
-                    }
-                } 
-                
-             PlasmaComponents.TextField {
-                    id: settingsTabUnitsWSpath
-                    width: settingscontent.width / 1.1
-                    anchors.top: settingsTabUnitsOpThree.bottom
-                    anchors.topMargin: 10
-                    placeholderText: i18n("ws://0.0.0.0:8181/core")
-                    text: i18n("ws://0.0.0.0:8181/core")
-                }
-                
-            PlasmaComponents.Button {
-                   id: acceptcustomWSPath
-                   anchors.left: settingsTabUnitsWSpath.right
-                   anchors.verticalCenter: settingsTabUnitsWSpath.verticalCenter
-                   anchors.right: parent.right
-                   iconSource: "checkbox"
-                   
-                   onClicked: { 
-                       innerset.wsurl = settingsTabUnitsWSpath.text
-                    }
-                }
-                
-                            
-             PlasmaComponents.TextField {
-                    id: settingsTabUnitsIRCmd
-                    width: settingscontent.width / 1.1
-                    anchors.top: settingsTabUnitsWSpath.bottom
-                    anchors.topMargin: 10
-                    placeholderText: i18n("Your Custom Image Recognition Skill Voc Keywords")
-                    text: i18n("search image url")
-                }
-                
-            PlasmaComponents.Button {
-                   id: acceptcustomIRCmd
-                   anchors.left: settingsTabUnitsIRCmd.right
-                   anchors.verticalCenter: settingsTabUnitsIRCmd.verticalCenter
-                   anchors.right: parent.right
-                   iconSource: "checkbox"
-                   
-                   onClicked: { 
-    
-                    }
-                }    
-                  
-                
-               PlasmaComponents.Switch {
-                    id: notificationswitch
-                    anchors.top: settingsTabUnitsIRCmd.bottom
-                    anchors.topMargin: 10
-                    text: i18n("Enable Notifications")
-                    checked: true
-                }
-                
-                
-               PlasmaExtras.Paragraph {
-                    id: settingsTabTF2
-                    anchors.top: notificationswitch.bottom
-                    anchors.topMargin: 15
-                    text: i18n("<i>Please Note: Default path is set to /home/$USER/mycroft-core/. Change the above settings to match your installation</i>")
-                }
-                
-              PlasmaComponents.Label {
-                  id: startsrvcustom
-                  visible: false
-            }
-            
-            PlasmaComponents.Label {
-                  id: stopsrvcustom
-                  visible: false
-            }   
-        }
-    }
-
-    }
-
-ColumnLayout {
-id: mycroftMsmColumn
-visible: tabBar.currentTab == mycroftMSMinstTab;
-anchors.top: root.top
-anchors.left: sidebar.right
-anchors.leftMargin: units.gridUnit * 0.25
-anchors.right: root.right
-anchors.bottom: root.bottom
-        
-        Item { 
-            id: msmtabtopbar
-            width: parent.width
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: units.gridUnit * 2
-            
-            PlasmaComponents.TextField {
-            id: msmsearchfld
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: getskillsbx.left
-            placeholderText: i18n("Search Skills")
-            clearButtonShown: true
-            
-            onTextChanged: {
-            if(text.length > 0 ) {
-                msmskillsModel.applyFilter(text.toLowerCase());
-            } else {
-                msmskillsModel.reload();
-            }
-        }
-    }    
-        
-        PlasmaComponents.ToolButton {
-                id: getskillsbx
-                anchors.right: parent.right
+                id: msmsearchfld
+                anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                iconSource: "view-refresh"
-                tooltip: i18n("Refresh List")
-                flat: true
-                width: Math.round(units.gridUnit * 2)
-                height: width
-                z: 102
-    
-                onClicked: {
-                        msmskillsModel.clear();
-                        refreshAllSkills();
-                    }    
-                }
-        }
-        
-        ListModel {
-            id: msmskillsModel
-            
-            Component.onCompleted: {
-                reload();
-                console.log('Completing too early?'); 
-            }
-            
-             function reload() {
-                var skList = getAllSkills();
-                msmskillsModel.clear();
-                for( var i=0; i < skList.length ; ++i ) {
-                    msmskillsModel.append(skList[i]);
-                }
-            }
-
-            function applyFilter(skName) {
-                var skList = getSkillByName(skName);
-                msmskillsModel.clear();
-                for( var i=0; i < skList.length ; ++i ) {
-                    msmskillsModel.append(skList[i]);
-                }
-            }
-        }
-        
-        ListView {
-            id: msmlistView    
-            anchors.top: msmtabtopbar.bottom
-            anchors.topMargin: 5
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            model: msmskillsModel
-            delegate: MsmView{}
-            spacing: 4
-            focus: false
-            interactive: true
-            clip: true;
+                anchors.right: getskillsbx.left
+                placeholderText: i18n("Search Skills")
+                clearButtonShown: true
                 
+                onTextChanged: {
+                if(text.length > 0 ) {
+                    msmskillsModel.applyFilter(text.toLowerCase());
+                } else {
+                    msmskillsModel.reload();
+                }
             }
-    }
+        }    
+            
+            PlasmaComponents.ToolButton {
+                    id: getskillsbx
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    iconSource: "view-refresh"
+                    tooltip: i18n("Refresh List")
+                    flat: true
+                    width: Math.round(units.gridUnit * 2)
+                    height: width
+                    z: 102
+        
+                    onClicked: {
+                            msmskillsModel.clear();
+                            refreshAllSkills();
+                        }    
+                    }
+            }
+            
+            ListModel {
+                id: msmskillsModel
+                
+                Component.onCompleted: {
+                    reload();
+                    console.log('Completing too early?'); 
+                }
+                
+                function reload() {
+                    var skList = getAllSkills();
+                    msmskillsModel.clear();
+                    for( var i=0; i < skList.length ; ++i ) {
+                        msmskillsModel.append(skList[i]);
+                    }
+                }
+
+                function applyFilter(skName) {
+                    var skList = getSkillByName(skName);
+                    msmskillsModel.clear();
+                    for( var i=0; i < skList.length ; ++i ) {
+                        msmskillsModel.append(skList[i]);
+                    }
+                }
+            }
+            
+            ListView {
+                id: msmlistView    
+                anchors.top: msmtabtopbar.bottom
+                anchors.topMargin: 5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                model: msmskillsModel
+                delegate: MsmView{}
+                spacing: 4
+                focus: false
+                interactive: true
+                clip: true;
+                    
+                }
+        }
 }
 
 SourceModel {
@@ -1194,60 +1193,99 @@ Item {
     anchors.bottom: main.bottom
     z: 110
     
-    Rectangle {
-    id: suggestionbottombox
-    anchors.top: parent.top
-    anchors.bottom: qinput.top
-    anchors.right: parent.right
-    anchors.left: parent.left
-    color: theme.backgroundColor
-    //height: 40;
-            
-    Suggestions {
-    id: suggst
-    visible: true;
-    }
-
+    ListModel {
+        id: completionItems
     }
     
+    Drawer {
+         id: drawer
+          width: parent.width
+          height: units.gridUnit * 4
+          edge: Qt.BottomEdge
+ 
+          Rectangle {
+            color: theme.backgroundColor
+            anchors.fill: parent
+          }
+
+     CustomIndicator {
+              id: waitanimoutter
+              height: 70
+              width: 70
+              anchors.verticalCenter: parent.verticalCenter
+              anchors.horizontalCenter: parent.horizontalCenter
+                  }
+          }
+    
+    Rectangle {
+        id: suggestionbottombox
+        anchors.top: parent.top
+        anchors.bottom: qinput.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        color: theme.backgroundColor
+            
+        Suggestions {
+            id: suggst
+            visible: true;
+        }
+    }
     
     PlasmaComponents.TextField {
-                id: qinput
-                anchors.left: parent.left
-                //anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
-                clearButtonShown: true
-                
-                onAccepted: {
-                    suggst.visible = true;
-                    //conversationInputList.append({"InputQuery": qinput.text});
-                    //inputlistView.positionViewAtEnd();
-                    
-                    var socketmessage = {};
-                    socketmessage.type = "recognizer_loop:utterance";
-                    socketmessage.data = {};
-                    socketmessage.data.utterances = [qinput.text];
-                    socket.sendTextMessage(JSON.stringify(socketmessage));
-                    qinput.text = ""; 
-                }
-                
-                onTextChanged: {
-                    var terms = getTermsForSearchString(qinput.text);
-                }
+        id: qinput
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
+        clearButtonShown: true
+        
+        onAccepted: {
+            var doesExist = autoAppend(autoCompModel, function(item) { return item.name === qinput.text }, qinput.text)
+            var evaluateExist = doesExist
+            if(evaluateExist === null){
+                        autoCompModel.append({"name": qinput.text});
+            }
+            suggst.visible = true;
+            var socketmessage = {};
+            socketmessage.type = "recognizer_loop:utterance";
+            socketmessage.data = {};
+            socketmessage.data.utterances = [qinput.text];
+            socket.sendTextMessage(JSON.stringify(socketmessage));
+            qinput.text = ""; 
+            }
+        
+        onTextChanged: {
+            //var terms = getTermsForSearchString(qinput.text);
+            evalAutoLogic();
+        }
+    }
+    
+    AutocompleteBox {
+        id: suggestionsBox
+        model: completionItems
+        width: qinput.width
+        anchors.bottom: qinput.top
+        anchors.left: qinput.left
+        anchors.right: qinput.right
+        filter: textInput.text
+        property: "name"
+        onItemSelected: complete(item)
+
+        function complete(item) {
+            if (item !== undefined)
+                textInput.text = item.name
+            }
     }
 }
 
-Settings {
-    id: innerset
-    property alias wsurl: settingsTabUnitsWSpath.text
-    property alias customrecog: settingsTabUnitsIRCmd.text
-    property alias customsetuppath: settingsTabUnitsOpThree.text
-    property alias notifybool: notificationswitch.checked
-    property alias radiobt1: settingsTabUnitsOpOne.checked
-    property alias radiobt2: settingsTabUnitsOpTwo.checked
-    property alias radiobt3: settingsTabUnitsOpZero.checked
-}
-
+    Settings {
+            id: innerset
+            property alias wsurl: settingsTabUnitsWSpath.text
+            property alias customrecog: settingsTabUnitsIRCmd.text
+            property alias customsetuppath: settingsTabUnitsOpThree.text
+            property alias notifybool: notificationswitch.checked
+            property alias radiobt1: settingsTabUnitsOpOne.checked
+            property alias radiobt2: settingsTabUnitsOpTwo.checked
+            property alias radiobt3: settingsTabUnitsOpZero.checked
+    }
 }

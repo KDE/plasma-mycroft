@@ -29,3 +29,6 @@ python-pyqt5
 pyqt5-dev 
 python-sip 
 python-sip-dev
+qml-module-qtgraphicaleffects
+libqt5dbus5
+libkf5dbusaddons-dev

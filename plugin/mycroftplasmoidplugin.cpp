@@ -17,11 +17,14 @@
  */
 
 #include "mycroftplasmoidplugin.h"
+#include "mycroftplasmoid_dbus.h"
 #include "launchapp.h"
 #include "notify.h"
 #include "filereader.h"
 #include "msmapp.h"
 #include <QtQml>
+#include <QtDebug>
+#include <QtDBus>
 
 static QObject *notify_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -54,4 +57,11 @@ void MycroftPlasmoidPlugin::registerTypes(const char *uri)
     qmlRegisterSingletonType<LaunchApp>(uri, 1, 0, "LaunchApp", launchapp_singleton);
     qmlRegisterSingletonType<FileReader>(uri, 1, 0, "FileReader", filereader_singleton);    
     qmlRegisterType<MsmApp>(uri, 1, 0, "MsmApp");
+}
+
+void MycroftPlasmoidPlugin::initializeEngine(QQmlEngine* engine, const char* uri)
+{
+  QQmlExtensionPlugin::initializeEngine(engine, uri);
+  auto mycroftDbusAdapterInterface = new MycroftDbusAdapterInterface(engine);
+  engine->rootContext()->setContextProperty("main2", mycroftDbusAdapterInterface);
 }
