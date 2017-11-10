@@ -121,6 +121,12 @@ Item {
         }
     }
     
+    function filtervisualObj(metadata){
+                convoLmodel.append({"itemType": "LoaderType", "InputQuery": metadata.url})
+                inputlistView.positionViewAtEnd();
+          }
+
+    
     function isBottomEdge() {
         return plasmoid.location == PlasmaCore.Types.BottomEdge;
     }
@@ -214,6 +220,10 @@ Item {
            case "recognizer_loop:audio_output_start":
                drawer.close()
                waitanimoutter.cstanim.visible = false
+               waitanimoutter.cstanim.running = false
+               break
+           case "mycroft.skill.handler.complete":
+               drawer.close()
                waitanimoutter.cstanim.running = false
                break
        }
@@ -486,10 +496,15 @@ Item {
                 filterSpeak(somestring.data.utterance);
             }
 
-            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined') {
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "data") {
                 dataContent = somestring.data.desktop
                 filterincoming(smintent, dataContent)
             }
+
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "visualObject") {
+                dataContent = somestring.data.desktop
+                filtervisualObj(dataContent)
+            }            
             
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
@@ -717,6 +732,7 @@ Item {
                                         case "CurrentWeather": return "CurrentWeatherType.qml"
                                         case "DropImg" : return "ImgRecogType.qml"
                                         case "AskType" : return "AskMessageType.qml"
+                                        case "LoaderType" : return "LoaderType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
