@@ -290,7 +290,7 @@ Image {
         id: topbarLeftDividerline
         anchors {
             left: barAnim.right
-            leftMargin: units.gridUnit * 0.35
+            leftMargin: units.gridUnit * 0.34
             top: parent.top
             topMargin: 0
             bottom: parent.bottom
@@ -548,7 +548,7 @@ Item {
         
     ColumnLayout {
     id: sidebar
-    Layout.fillHeight: true;
+    height: units.gridUnit * 6
     width: units.gridUnit * 2
     
     PlasmaComponents.TabBar {
@@ -757,103 +757,6 @@ Item {
     anchors.right: root.right
     anchors.bottom: root.bottom
 
-
-    Rectangle {
-            anchors.top: mycroftSkillscolumntab.top
-            anchors.left: mycroftSkillscolumntab.left
-            anchors.right: mycroftSkillscolumntab.right
-            id: skillsrectmain
-            color: "#00000000"
-            
-        Component {
-                id: skillDelegate
-                Rectangle {
-                    id: skillcontent
-                    Layout.fillWidth: true;
-                    anchors { left: parent.left; right: parent.right }
-                    height: 80 
-                    border.width: 0        
-                    border.color: "lightsteelblue"
-                    radius: 2
-                    color: theme.backgroundColor
-                    z: -99
-
-                    RowLayout {
-                    id: skillTopRowLayout
-                    spacing: 5
-                    anchors.fill: parent
-            
-                    PlasmaComponents.Label {
-                        id: innerskllname
-                        anchors.top: parent.top
-                        anchors.topMargin: 2
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        wrapMode: Text.WordWrap; 
-                        font.bold: true; 
-                        text: i18n('<b>Skill:</b>' + Skill) 
-                    }
-            
-                    Rectangle {
-                        id: skilltipsimage
-                        anchors.left: parent.left
-                        anchors.top: innerskllname.bottom
-                        anchors.bottom: parent.bottom
-                        width: units.gridUnit * 1.2
-                        color: theme.backgroundColor
-                        
-                    Image {
-                    id: innerskImg
-                    source: Pic
-                    width: units.gridUnit * 1.2
-                    height: units.gridUnit * 1.2
-                    anchors.centerIn: parent
-                        }
-                        
-                    PlasmaCore.SvgItem {
-                        anchors {
-                        left: innerskImg.right
-                        leftMargin: 4
-                        top: parent.top
-                        topMargin: 0
-                        bottom: parent.bottom
-                        bottomMargin: 0
-                        }
-
-                        width: lineskillpgSvg.elementSize("vertical-line").width
-                        z: 110
-                        elementId: "vertical-line"
-
-                        svg: PlasmaCore.Svg {
-                        id: lineskillpgSvg;
-                        imagePath: "widgets/line"
-                        }
-                            }     
-                        
-                    }
-                    
-                    Rectangle {
-                        id: skilltipsinner
-                        anchors.left: skilltipsimage.right
-                        anchors.leftMargin: 10
-                        anchors.right: parent.right
-                        color: theme.backgroundColor
-                        anchors.top: innerskllname.bottom
-                        anchors.bottom: parent.bottom
-                    
-                    Column{
-                        id: innerskillscolumn
-                        spacing: 2
-                        
-                        PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(0).Commands)}
-                        PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(1).Commands)}
-                        }
-                            }
-                                }
-                                    }
-                                        }
-                                            }
-
                 ListView {
                     id: skillslistmodelview
                     anchors.top: parent.top
@@ -862,7 +765,7 @@ Item {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     model: SkillModel{}
-                    delegate: skillDelegate
+                    delegate: SkillView{}
                     spacing: 4
                     focus: false
                     interactive: true
