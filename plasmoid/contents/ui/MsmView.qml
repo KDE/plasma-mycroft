@@ -34,8 +34,7 @@ Rectangle {
                     left: parent.left;
                     leftMargin: 0.5;
                     right: parent.right 
-                    
-                }
+                    }
                 height: units.gridUnit * 4
                 border.width: 1        
                 border.color: Qt.darker(theme.linkColor, 1.2)
@@ -46,12 +45,24 @@ Rectangle {
                     return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
                 }
                 
+                function getSkillInfoLocal() {
+                    var customFold = '/opt/mycroft/skills/'
+                    var skillPath = customFold + model.name
+                    if(PlasmaLa.FileReader.file_exists_local(skillPath)){
+                        installLabl.text = "Installed"
+                        getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
+                        installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
+                        skillcontent.border.color = Qt.lighter(theme.textColor, 1.2)
+                    }
+                }
+                
                 PlasmaLa.MsmApp{
                     id: launchinstaller
                 }
                 
                 Component.onCompleted: {
                     msmSkillInstallProgBar.visible = false;
+                    getSkillInfoLocal();
                 }
                 
                 PlasmaComponents.Label {
@@ -72,8 +83,8 @@ Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.bottomMargin: 2
                         color: Qt.darker(theme.linkColor, 1.2)
+                            }
                         }
-                }
 
                 PlasmaComponents.Label {
                 id: urlskllable
@@ -97,9 +108,8 @@ Rectangle {
                     }
                     onExited: {
                         urlskllable.color = theme.textColor
+                        }
                     }
-                }
-                
                 }
 
                 Rectangle {
@@ -129,21 +139,41 @@ Rectangle {
                     anchors.fill:  parent
                     hoverEnabled: true
                     onEntered: {
-                        getskillviamsmRect.color = Qt.lighter(theme.backgroundColor, 1.2)
-                        installLabl.color = Qt.darker(theme.linkColor, 1.2)
-                        getskillviamsmRect.border.width = 1        
-                        getskillviamsmRect.border.color = Qt.darker(theme.linkColor, 1.2)
+                        switch(installLabl.text){
+                            case "Install":
+                                getskillviamsmRect.color = Qt.lighter(theme.backgroundColor, 1.2)
+                                installLabl.color = Qt.darker(theme.linkColor, 1.2)
+                                getskillviamsmRect.border.width = 1        
+                                getskillviamsmRect.border.color = Qt.darker(theme.linkColor, 1.2)
+                                break
+                            case "Installed":
+                                getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
+                                installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
+                                getskillviamsmRect.border.width = 0        
+                                getskillviamsmRect.border.color = Qt.darker(theme.backgroundColor, 1.2)
+                                skillcontent.border.color = Qt.darker(theme.textColor, 1.2)
+                                break
+                        }
                     }
                     onExited: {
-                        getskillviamsmRect.color = Qt.darker(theme.linkColor, 1.2)
-                        installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
-                        getskillviamsmRect.border.width = 0
+                        switch(installLabl.text){
+                            case "Install":
+                                getskillviamsmRect.color = Qt.darker(theme.linkColor, 1.2)
+                                installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
+                                getskillviamsmRect.border.width = 0
+                                break
+                            case "Installed":
+                                getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
+                                installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
+                                getskillviamsmRect.border.width = 0
+                                getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
+                                skillcontent.border.color = Qt.lighter(theme.textColor, 1.2)
+                                break
+                        }
                     }
                     onClicked: {
-                        console.log(model.url)
                         var msmprogress = exec()
                         var getcurrentprogress = msmprogress.split("\n")
-                        console.log(getcurrentprogress);
                         if(getcurrentprogress.indexOf("Cloning repository") != -1)
                             {
                              installLabl.visible = false
@@ -155,9 +185,10 @@ Rectangle {
                             msmSkillInstallProgBar.visible = false
                             installLabl.visible = true
                             installLabl.text = "Installed"
-                                }
+                            getSkillInfoLocal()
                             }
                         }
                     }
+                }
             }
                     

@@ -25,9 +25,16 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 Item {
 anchors.fill: parent
 
+Rectangle{
+id: disclaimerHeadingBg
+color: theme.linkColor
+anchors.left: parent.left
+anchors.top: parent.top
+anchors.right: parent.right
+height: units.gridUnit * 3
+
     Text {
         id: disclaimerHeading1
-        width: 0
         height: 28
         text: "Let's Continue ?"
         font.pointSize: 24
@@ -36,13 +43,12 @@ anchors.fill: parent
         wrapMode: Text.WrapAnywhere
         font.bold: true
         renderType: Text.QtRendering
-        horizontalAlignment: Text.AlignHCenter
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
-        color: "steelblue"
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: units.gridUnit * 0.5
+        color: theme.backgroundColor
      }
+}
 
 
      Text {
@@ -54,7 +60,7 @@ anchors.fill: parent
         wrapMode: Text.Wrap
         renderType: Text.QtRendering
         horizontalAlignment: Text.AlignHCenter
-        anchors.top: disclaimerHeading1.bottom
+        anchors.top: disclaimerHeadingBg.bottom
         anchors.topMargin: 18
         anchors.right: parent.right
         anchors.rightMargin: 5
@@ -63,13 +69,12 @@ anchors.fill: parent
         color: theme.textColor
      }
 
-     Rectangle {
+     Item {
      id: noticemsg
      anchors.top: disclaimerBody1.bottom
      anchors.topMargin: 20
      anchors.right: parent.right
      anchors.left: parent.left
-     color: theme.backgroundColor
      height: disclaimerBody2.contentHeight
      
      Text {
