@@ -85,6 +85,23 @@ Item {
         }
     }
     
+    function toggleInputMethod(selection){
+        switch(selection){
+        case "KeyboardSetActive":
+            qinput.visible = true
+            suggestionbottombox.visible = true
+            customMicIndicator.visible = false
+            keybindic.color = "green"
+            break
+        case "KeyboardSetDisable":
+            qinput.visible = false
+            suggestionbottombox.visible = false
+            customMicIndicator.visible = true
+            keybindic.color = theme.textColor
+            break
+        }
+   }
+    
     function retryConn(){
         socket.active = true
         if (socket.active = false){
@@ -1152,7 +1169,7 @@ Item {
     
     PlasmaComponents.TextField {
         id: qinput
-        anchors.left: parent.left
+        anchors.left: keyboardactivaterect.right
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
@@ -1177,6 +1194,12 @@ Item {
             //var terms = getTermsForSearchString(qinput.text);
             evalAutoLogic();
         }
+    }
+    
+    CustomMicIndicator {
+        id: customMicIndicator
+        anchors.centerIn: parent
+        visible: false
     }
     
     AutocompleteBox {
