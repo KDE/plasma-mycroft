@@ -1167,6 +1167,52 @@ Item {
         }
     }
     
+        Rectangle {
+        id: keyboardactivaterect
+        color: theme.backgroundColor
+        border.width: 1
+        border.color: Qt.lighter(theme.backgroundColor, 1.2)
+        width: units.gridUnit * 2
+        height: qinput.height
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+
+        PlasmaComponents.ToolButton {
+            id: keybdImg
+            iconSource: "input-keyboard"
+            anchors.centerIn: parent
+            width: units.gridUnit * 2
+            height: units.gridUnit * 2
+        }
+
+        Rectangle {
+            id: keybindic
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 4
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
+            height: 2
+            color: "green"
+        }
+
+        MouseArea{
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: {}
+            onExited: {}
+            onClicked: {
+                if(qinput.visible === false){
+                    toggleInputMethod("KeyboardSetActive")
+                    }
+                else if(qinput.visible === true){
+                    toggleInputMethod("KeyboardSetDisable")
+                    }
+                }
+            }
+        }
+    
     PlasmaComponents.TextField {
         id: qinput
         anchors.left: keyboardactivaterect.right
