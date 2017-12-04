@@ -43,7 +43,6 @@ Item {
     Component.onCompleted: {
         mycroftStatusCheckSocket.active = true
         refreshAllSkills();
-        wordIndex();
     }
     
     property var skillList: []
@@ -67,7 +66,6 @@ Item {
     Connections {
         target: main2
         onSendShowMycroft: {
-            console.log("senttorootbydbus");
             plasmoid.expanded = !plasmoid.expanded
             tabBar.currentTab = mycroftTab
         }
@@ -219,7 +217,6 @@ Item {
                 var content = PlasmaLa.FileReader.read(filename).toString("utf-8");
                 return content;
             } catch (e) {
-                console.log('Mycroft UI - Read File' + e);
                 return 0;
             }
         } else {
@@ -506,7 +503,6 @@ Item {
             
             if (somestring && somestring.data && typeof somestring.data.intent_type !== 'undefined'){
                 smintent = somestring.data.intent_type;
-                console.log('intent type: ' + smintent);
             }
             
             if(somestring && somestring.data && typeof somestring.data.utterance !== 'undefined' && somestring.type === 'speak'){
@@ -537,7 +533,6 @@ Item {
                                 statusId.text = "Connection Error"
                                 statusId.color = "red"
                                 mycroftstartservicebutton.circolour = "red"
-                                console.log(socket.errorString)
                                 retryConn()
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Open) {
@@ -688,7 +683,6 @@ Item {
             var ext = getFileExtenion(drop.urls[i]);
             if(ext === "jpg" || ext === "png" || ext === "jpeg"){
             var durl = String(drop.urls[i]);
-            console.log(durl)
             convoLmodel.append({
                 "itemType": "DropImg",
                 "InputQuery": durl
@@ -702,7 +696,6 @@ Item {
             socketmessage.data = {};
             socketmessage.data.utterances = [irecogmsgsend + " " + durl];
             socket.sendTextMessage(JSON.stringify(socketmessage));
-            console.log(irecogmsgsend + " " + durl);
                 }
             
             if(ext === 'mp3'){
@@ -724,8 +717,8 @@ Item {
             Rectangle {
                 id: messageBox
                 anchors.fill: parent
-                anchors.right: rectangle2.right
-                anchors.left: rectangle2.left
+                anchors.right: parent.right
+                anchors.left: parent.left
                 color: "#00000000"
 
                 ColumnLayout {
@@ -908,12 +901,10 @@ Item {
                         anchors.top: radiobuttonColoumn.bottom
                         anchors.topMargin: 10
                         placeholderText: i18n("<custom location>/mycroft-core/")
-                        text: ""
                         
                         onTextChanged: {
                             var cstloc = settingsTabUnitsOpThree.text
                             customloc = cstloc
-                            
                         }
                     }
                     
@@ -1061,7 +1052,6 @@ Item {
                 
                 Component.onCompleted: {
                     reload();
-                    console.log('Completing too early?'); 
                 }
                 
                 function reload() {
@@ -1237,7 +1227,6 @@ Item {
             }
         
         onTextChanged: {
-            //var terms = getTermsForSearchString(qinput.text);
             evalAutoLogic();
         }
     }
