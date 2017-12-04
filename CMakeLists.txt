@@ -9,6 +9,10 @@ set(KF5_MIN_VERSION "5.0.0")
 # and http://api.kde.org/ecm/manual/ecm-kde-modules.7.html 
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_MODULE_PATH})
+set(VERSION 2.1.0)
+set(AUTHOR "Aditya Mehra")
+set(EMAIL "aix.m@outlook.com")
+set(BUG_ADDRESS "https://bugs.kde.org/describecomponents.cgi?product=plasma-mycroft")
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
