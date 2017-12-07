@@ -1,9 +1,24 @@
 [Global]
 IconName=mycroft-plasma-appicon
 Comment=Mycroft Plasmoid
+Comment[ca]=Plasmoide Mycroft
+Comment[pt]=Plasmóide do Mycroft
+Comment[sv]=Mycroft Plasmoid
+Comment[uk]=Плазмоїд Mycroft
+Comment[x-test]=xxMycroft Plasmoidxx
 
 [Event/MycroftResponse]
 Name=Mycroft Response
+Name[ca]=Resposta del Mycroft
+Name[pt]=Resposta do Mycroft
+Name[sv]=Mycroft svar
+Name[uk]=Відповідь Mycroft
+Name[x-test]=xxMycroft Responsexx
 Comment=Connection to device failed
+Comment[ca]=Ha fallat la connexió al dispositiu
+Comment[pt]=A ligação ao dispositivo foi mal-sucedida
+Comment[sv]=Anslutning till enhet misslyckades
+Comment[uk]=Не вдалося встановити з’єднання із пристроєм
+Comment[x-test]=xxConnection to device failedxx
 Icon=mycroft-plasma-appicon
 Action=Popup

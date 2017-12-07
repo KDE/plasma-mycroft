@@ -1,7 +1,17 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=MycroftPlasmoid
+Name[ca]=MycroftPlasmoid
+Name[pt]=MycroftPlasmoid
+Name[sv]=Mycroft Plasmoid
+Name[uk]=Плазмоїд Mycroft
+Name[x-test]=xxMycroftPlasmoidxx
 Comment=Mycroft applet for plasma desktop
+Comment[ca]=Miniaplicació Mycroft per l'escriptori Plasma
+Comment[pt]='Applet' do Mycroft para o ambiente de trabalho Plasma
+Comment[sv]=Mycroft miniprogram för Plasma-skrivbordet
+Comment[uk]=Аплет Mycroft для стільниці Плазми
+Comment[x-test]=xxMycroft applet for plasma desktopxx
 Type=Service
 X-KDE-ParentApp=
 X-KDE-PluginInfo-Author=Aditya Mehra
