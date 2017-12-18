@@ -1,4 +1,3 @@
-
 /* Copyright 2016 Aditya Mehra <aix.m@outlook.com>                            
 
     This library is free software; you can redistribute it and/or

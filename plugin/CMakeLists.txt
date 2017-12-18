@@ -1,5 +1,3 @@
-find_package(PkgConfig)
-
 kde_enable_exceptions()
 
 set(mycroftplasmoidplugin_SRCS mycroftplasmoidplugin.cpp launchapp.cpp notify.cpp filereader.cpp msmapp.cpp mycroftplasmoid_dbus.cpp)

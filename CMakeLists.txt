@@ -10,13 +10,11 @@ set(KF5_MIN_VERSION "5.0.0")
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_MODULE_PATH})
 set(VERSION 2.1.0)
-set(AUTHOR "Aditya Mehra")
-set(EMAIL "aix.m@outlook.com")
-set(BUG_ADDRESS "https://bugs.kde.org/describecomponents.cgi?product=plasma-mycroft")
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMInstallIcons)
 
 # Locate plasma_install_package macro.
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -33,9 +31,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 )
 
 add_subdirectory(plugin)
-
+add_subdirectory(icons)
 plasma_install_package(plasmoid org.kde.plasma.mycroftplasmoid)
 
-install( DIRECTORY image/breeze DESTINATION ${ICON_INSTALL_DIR})
-install( DIRECTORY image/breeze-dark DESTINATION ${ICON_INSTALL_DIR})
-install( DIRECTORY mycroft DESTINATION /etc )
+install( DIRECTORY mycroft DESTINATION ${SYSCONF_INSTALL_DIR})
