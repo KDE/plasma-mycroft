@@ -22,6 +22,7 @@ import QtQml.Models 2.2
 import QtQuick.Controls 2.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Column {
         spacing: 6
@@ -35,6 +36,67 @@ Column {
             radius: 2
             height: messageText.implicitHeight + 24
             color: theme.linkColor
+            
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                propagateComposedEvents: true
+                onEntered: { 
+                    removeItemButton.visible = true
+                    searchItemButton.visible = true
+                }
+                onExited: { 
+                    removeItemButton.visible = false
+                    searchItemButton.visible = false
+                }
+            }
+            
+            PlasmaCore.IconItem {
+                id: removeItemButton
+                source: "window-close"
+                width: units.gridUnit * 1.5
+                height: units.gridUnit * 1.5
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.bottomMargin: -units.gridUnit * 0.75
+                visible: false
+                
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    onEntered: { 
+                        removeItemButton.visible = true
+                    }
+                    onClicked: {
+                        convoLmodel.remove(index)
+                    }
+                }
+            }
+            
+                PlasmaCore.IconItem {
+                        id: searchItemButton
+                        source: "system-search"
+                        width: units.gridUnit * 1.5
+                        height: units.gridUnit * 1.5
+                        anchors.bottom: parent.bottom
+                        anchors.right: removeItemButton.right
+                        anchors.rightMargin: units.gridUnit * 1.0
+                        anchors.bottomMargin: -units.gridUnit * 0.75
+                        visible: false
+                        
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            propagateComposedEvents: true
+                            onEntered: { 
+                                searchItemButton.visible = true
+                            }
+                            onClicked: {
+                                Qt.openUrlExternally("https://duckduckgo.com/?q=" + model.InputQuery)
+                            }
+                        }
+                    }
             
         PlasmaComponents.Label {
             id: messageText
