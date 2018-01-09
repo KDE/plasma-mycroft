@@ -30,6 +30,7 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
 import org.kde.plasma.private.volume 0.1
 import QtWebKit 3.0
+import QtQuick.Window 2.0
 
 Item {
     id: main
@@ -62,6 +63,7 @@ Item {
     property var dataContent
     property alias autoCompModel: completionItems
     property alias textInput: qinput
+    property alias plcLmodel: placesListModel
     
     Connections {
         target: main2
@@ -140,6 +142,33 @@ Item {
                 convoLmodel.append({"itemType": "LoaderType", "InputQuery": metadata.url})
                 inputlistView.positionViewAtEnd();
           }
+          
+    function filterplacesObj(metadata){
+        var filteredData = JSON.parse(metadata.data);
+        convoLmodel.clear()
+        placesListModel.clear()
+        for (var i = 0; i < filteredData.results.items.length; i++){
+            var itemsInPlaces = JSON.stringify(filteredData.results.items[i])
+            var fltritemsinPlc = JSON.parse(itemsInPlaces)
+            var fltrtags = getTags(filteredData.results.items[i].tags)
+            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags})
+        }
+        convoLmodel.append({"itemType": "PlacesType", "InputQuery": ""});
+    }
+
+    function getTags(fltrTags){
+                        if(fltrTags){
+                            var tags = '';
+                            for (var i = 0; i < fltrTags.length; i++){
+                                    if(tags)
+                                        tags += ', ' + fltrTags[i].title;
+                                    else
+                                        tags += fltrTags[i].title;
+                            }
+                            return tags;
+                        }
+                        return '';
+    }       
 
     
     function isBottomEdge() {
@@ -259,6 +288,10 @@ Item {
         }
     }
 
+ListModel {
+        id: placesListModel
+    }
+    
 Timer {
            id: timer
        }
@@ -432,7 +465,6 @@ TopBarAnim {
         onCheckedChanged: plasmoid.hideOnWindowDeactivate = !checked
         z: 102
     }
-    
     }    
 }
 
@@ -517,7 +549,13 @@ Item {
             if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "visualObject") {
                 dataContent = somestring.data.desktop
                 filtervisualObj(dataContent)
-            }            
+            }
+            
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "placesObject") {
+                dataContent = somestring.data.desktop
+                filterplacesObj(dataContent)
+            }
+
             
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
@@ -743,6 +781,7 @@ Item {
                                         case "DropImg" : return "ImgRecogType.qml"
                                         case "AskType" : return "AskMessageType.qml"
                                         case "LoaderType" : return "LoaderType.qml"
+                                        case "PlacesType" : return "PlacesType.qml"    
                                         }
                                     property var metacontent : dataContent
                                 }
