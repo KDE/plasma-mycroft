@@ -64,6 +64,7 @@ Item {
     property alias autoCompModel: completionItems
     property alias textInput: qinput
     property alias plcLmodel: placesListModel
+    property bool intentfailure: false
     
     Connections {
         target: main2
@@ -254,20 +255,39 @@ Item {
     }
     
        function playwaitanim(recoginit){
-       switch(recoginit){ //"mycroft.skill.handler.start":
+       switch(recoginit){
        case "recognizer_loop:record_begin":
                drawer.open()
-               waitanimoutter.cstanim.visible = true
-               waitanimoutter.cstanim.running = true
+               waitanimoutter.aniRunWorking()
                break
+           case "recognizer_loop:wakeword":
+                waitanimoutter.aniRunHappy()
+                break
+           case "intent_failure":
+                waitanimoutter.aniRunError()
+                intentfailure = true
+                break
            case "recognizer_loop:audio_output_start":
-               drawer.close()
-               waitanimoutter.cstanim.visible = false
-               waitanimoutter.cstanim.running = false
+               if (intentfailure === false){
+                   drawer.close()
+               }
+               else {
+                delay(1500, function() {
+                        drawer.close()
+                        intentfailure = false;
+                    }) 
+                }
                break
            case "mycroft.skill.handler.complete":
-               drawer.close()
-               waitanimoutter.cstanim.running = false
+               if (intentfailure === false){
+                   drawer.close()
+               }
+               else {
+                delay(1500, function() {
+                        drawer.close()
+                        intentfailure = false;
+                    }) 
+                }
                break
        }
    }
@@ -571,14 +591,24 @@ Item {
                                 statusId.text = "Connection Error"
                                 statusId.color = "red"
                                 mycroftstartservicebutton.circolour = "red"
-                                retryConn()
                                 midbarAnim.showstatsId()
+                                drawer.open()
+                                waitanimoutter.aniRunError()
+                                delay(1250, function() {
+                                    drawer.close()
+                                })
+
                          } else if (socket.status == WebSocket.Open) {
                                 statusId.text = "Mycroft is Ready"
                                 statusId.color = "green"
                                 mycroftstartservicebutton.circolour = "green"
                                 mycroftStatusCheckSocket.active = false;
                                 midbarAnim.showstatsId()
+                                drawer.open()
+                                waitanimoutter.aniRunHappy()
+                                delay(1250, function() {
+                                    drawer.close()
+                                })
                          } else if (socket.status == WebSocket.Closed) {
                                 statusId.text = "Mycroft is Disabled"
                                 statusId.color = "#f4bf42"
@@ -1165,7 +1195,7 @@ Item {
     Drawer {
          id: drawer
           width: parent.width
-          height: units.gridUnit * 4
+          height: units.gridUnit * 5.5
           edge: Qt.BottomEdge
  
           Rectangle {
