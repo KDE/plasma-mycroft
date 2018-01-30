@@ -48,6 +48,8 @@ Item {
     
     property var skillList: []
     property alias cbwidth: rectangle2.width
+    property alias cbheight: rectangle2.height
+    property var cbdrawercontentheight: parent.height + units.gridUnit * 0.5 - rectanglebottombar.height
     property string defaultmcorestartpath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/startservice.sh"
     property string defaultmcorestoppath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/stopservice.sh"
     property string packagemcorestartcmd: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/pkgstartservice.sh"
@@ -146,13 +148,17 @@ Item {
           
     function filterplacesObj(metadata){
         var filteredData = JSON.parse(metadata.data);
+        var locallat = JSON.parse(metadata.locallat);
+        var locallong = JSON.parse(metadata.locallong);
+        var hereappid = metadata.appid
+        var hereappcode = metadata.appcode;
         convoLmodel.clear()
         placesListModel.clear()
         for (var i = 0; i < filteredData.results.items.length; i++){
             var itemsInPlaces = JSON.stringify(filteredData.results.items[i])
             var fltritemsinPlc = JSON.parse(itemsInPlaces)
             var fltrtags = getTags(filteredData.results.items[i].tags)
-            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags})
+            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags, placelocallat: locallat, placelocallong: locallong, placeappid: hereappid, placeappcode: hereappcode})
         }
         convoLmodel.append({"itemType": "PlacesType", "InputQuery": ""});
     }

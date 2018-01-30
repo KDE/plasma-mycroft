@@ -13,6 +13,27 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         width: placesmodelview.view.width
+        
+        function getRouteInformation(llat, llong, dlat, dlong, oappid, oappcode){
+            var routedoc = new XMLHttpRequest()
+            var url = "https://route.cit.api.here.com/routing/7.2/calculateroute.json?waypoint0=" + llat + "," + llong + "&waypoint1=" + dlat + "," + dlong + "&mode=fastest;car;&app_id=" + oappid + "&app_code=" + oappcode + "&depature=now"
+            routedoc.open("GET", url, true);
+            routedoc.send()
+
+            routedoc.onreadystatechange = function() {
+                 if (routedoc.readyState === XMLHttpRequest.DONE && routedoc.responseText !== "undefined") {
+                     var reqroute = routedoc.responseText
+                     if (reqroute !== "undefined") {
+                            var filterRouteDict = JSON.parse(reqroute)
+                            for (var i = 0; i<filterRouteDict.response.route[0].leg[0].maneuver.length; i++){
+                            var getRouteDict = filterRouteDict.response.route[0].leg[0].maneuver[i].instruction
+                            console.log(JSON.stringify(getRouteDict))
+                            routeLmodel.append({navInstruction: getRouteDict});
+                          }
+                       }
+                    }
+                }
+            }
 
         ColumnLayout {
             id: contentdlgtitem
@@ -80,10 +101,13 @@ Rectangle {
 
                        onClicked: {
                          var navpos = placeposition.replace(/[[\]]/g,'').split(",");
-                         Qt.openUrlExternally("https://www.google.co.in/maps/place/" + placetitle + "/@" + navpos[0] + "," + navpos[1] + ",17z");
+                         getRouteInformation(placelocallat, placelocallong, navpos[0], navpos[1], placeappid, placeappcode)
+                         var formatedurl =   "https://image.maps.cit.api.here.com/mia/1.6/mapview?c=" + placelocallat + "," + placelocallong + "&z=16&poi=" + navpos[0] + "," + navpos[1] + "&poithm=0&app_id=" + placeappid + "&app_code=" + placeappcode + "&h=" + cbheight / 2 + "&w=" + cbwidth + "&ppi=500ppi=120&t=7&f=2&i=true"
+                         navMapDrawer.open()
+                         navMapDrawer.getURL = formatedurl
                        }
                     }
-              }
+                }
                     }
 
             PlasmaComponents.Label {
