@@ -66,7 +66,13 @@ Item {
     property alias autoCompModel: completionItems
     property alias textInput: qinput
     property alias plcLmodel: placesListModel
+    property alias dashLmodel: dashListModel
     property bool intentfailure: false
+    property var geoLat
+    property var geoLong
+    property var globalcountrycode
+    property string newsCardSource
+    property string weatherCardSource
     
     Connections {
         target: main2
@@ -148,33 +154,29 @@ Item {
           
     function filterplacesObj(metadata){
         var filteredData = JSON.parse(metadata.data);
-        var locallat = JSON.parse(metadata.locallat);
-        var locallong = JSON.parse(metadata.locallong);
-        var hereappid = metadata.appid
-        var hereappcode = metadata.appcode;
         convoLmodel.clear()
         placesListModel.clear()
         for (var i = 0; i < filteredData.results.items.length; i++){
             var itemsInPlaces = JSON.stringify(filteredData.results.items[i])
             var fltritemsinPlc = JSON.parse(itemsInPlaces)
             var fltrtags = getTags(filteredData.results.items[i].tags)
-            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags, placelocallat: locallat, placelocallong: locallong, placeappid: hereappid, placeappcode: hereappcode})
+            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags})
         }
         convoLmodel.append({"itemType": "PlacesType", "InputQuery": ""});
     }
 
     function getTags(fltrTags){
-                        if(fltrTags){
-                            var tags = '';
-                            for (var i = 0; i < fltrTags.length; i++){
-                                    if(tags)
-                                        tags += ', ' + fltrTags[i].title;
-                                    else
-                                        tags += fltrTags[i].title;
-                            }
-                            return tags;
-                        }
-                        return '';
+        if(fltrTags){
+            var tags = '';
+            for (var i = 0; i < fltrTags.length; i++){
+                if(tags)
+                    tags += ', ' + fltrTags[i].title;
+                else
+                    tags += fltrTags[i].title;
+            }
+            return tags;
+        }
+        return '';
     }       
 
     
@@ -260,7 +262,7 @@ Item {
         }
     }
     
-       function playwaitanim(recoginit){
+    function playwaitanim(recoginit){
        switch(recoginit){
        case "recognizer_loop:record_begin":
                drawer.open()
@@ -298,7 +300,7 @@ Item {
        }
    }
    
-       function autoAppend(model, getinputstring, setinputstring) {
+    function autoAppend(model, getinputstring, setinputstring) {
         for(var i = 0; i < model.count; ++i)
             if (getinputstring(model.get(i))){
                 console.log(model.get(i))
@@ -313,6 +315,82 @@ Item {
             suggestionsBox.complete(suggestionsBox.currentItem)
         }
     }
+    
+    function fetchDashNews(){
+        var doc = new XMLHttpRequest()
+        var url = 'https://newsapi.org/v2/top-headlines?' +
+                'country=' + globalcountrycode + '&' +
+                'apiKey=a1091945307b434493258f3dd6f36698';
+        doc.open("GET", url, true);
+        doc.send();
+
+        doc.onreadystatechange = function() {
+            if (doc.readyState === XMLHttpRequest.DONE) {
+                var req = doc.responseText;
+                dashLmodel.append({"iType": "DashNews", "iObj": req})
+            }
+        }
+    }
+    
+    function fetchDashWeather(){
+        var doc = new XMLHttpRequest()
+        var url = 'https://api.openweathermap.org/data/2.5/weather?' +
+        'lat=' + geoLat + '&lon=' + geoLong +
+        '&APPID=7af5277aee7a659fc98322c4517d3df7';
+
+            doc.open("GET", url, true);
+            doc.send();
+
+        doc.onreadystatechange = function() {
+            if (doc.readyState === XMLHttpRequest.DONE) {
+                var req = doc.responseText;
+                dashLmodel.append({"iType": "DashWeather", "iObj": req})
+            }
+        }   
+    }
+    
+    function setDisclaimer(){
+        dashLmodel.append({"iType": "Disclaimer", "iObj": "none"})
+    }
+    
+    function globalDashRun(){
+            if(disclaimercardswitch.checked == true){
+                if(disclaimercardswitch.checked == true){
+                 setDisclaimer()   
+                }
+                if(newscardswitch.checked == true){
+                 fetchDashNews()
+                }
+                if(weathercardswitch.checked == true){
+                 fetchDashWeather()
+                }
+                    convoLmodel.append({"itemType": "DashboardType", "InputQuery": ""})
+            }
+            else {
+                convoLmodel.clear()
+                disclaimbox.visible = true
+            }
+        }
+    
+PlasmaCore.DataSource {
+            id: dataSource
+            dataEngine: "geolocation"
+            connectedSources: ["location"]
+
+            onNewData: {
+                if (sourceName == "location"){
+                geoLat = data.latitude
+                geoLong = data.longitude
+                var globalcountry = data.country
+                globalcountrycode = globalcountry.substring(0, 2)
+                globalDashRun()
+                    }
+                }
+    }
+
+ListModel {
+         id: dashListModel
+    }
 
 ListModel {
         id: placesListModel
@@ -320,7 +398,7 @@ ListModel {
     
 Timer {
            id: timer
-       }
+    }
 
        function delay(delayTime, cb) {
                timer.interval = delayTime;
@@ -781,7 +859,7 @@ Item {
         
         Disclaimer{
             id: disclaimbox
-            visible: true
+            visible: false
             }
         
         ListModel{
@@ -817,7 +895,8 @@ Item {
                                         case "DropImg" : return "ImgRecogType.qml"
                                         case "AskType" : return "AskMessageType.qml"
                                         case "LoaderType" : return "LoaderType.qml"
-                                        case "PlacesType" : return "PlacesType.qml"    
+                                        case "PlacesType" : return "PlacesType.qml"
+                                        case "DashboardType" : return "DashboardType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
@@ -867,12 +946,36 @@ Item {
     anchors.leftMargin: units.gridUnit * 0.25
     anchors.right: root.right
     anchors.bottom: root.bottom
+    
+        PlasmaComponents.TabBar {
+        id: settingstabBar
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent. right
+        height: units.gridUnit * 2
+        tabPosition: Qt.TopEdge;
+        
+        PlasmaComponents.TabButton {
+                id: generalSettingsTab
+                text: "General"
+        }
+        
+        PlasmaComponents.TabButton {
+            id: dashSettingsTab
+            text: "Dash"
+            }
+        }
 
     Item {
                     id: settingscontent
                     Layout.fillWidth: true;
                     Layout.fillHeight: true;
-                    anchors.fill: parent;
+                    anchors.top: settingstabBar.bottom
+                    anchors.topMargin: units.gridUnit * 0.50
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    visible: settingstabBar.currentTab == generalSettingsTab;
 
     Flickable {
         id: settingFlick
@@ -1065,6 +1168,102 @@ Item {
                     id: stopsrvcustom
                     visible: false
                 }   
+            }
+        }
+        
+    Item {
+        id: dashsettingscontent
+        Layout.fillWidth: true;
+        Layout.fillHeight: true;
+        anchors.top: settingstabBar.bottom
+        anchors.topMargin: units.gridUnit * 0.50
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        visible: settingstabBar.currentTab == dashSettingsTab;
+
+    Flickable {
+        id: dashsettingFlick
+        anchors.fill: parent;
+        contentWidth: mycroftSettingsColumn.width
+        contentHeight: units.gridUnit * 22
+        clip: true;
+
+        Column {
+        spacing: 6
+        
+        PlasmaComponents.Switch {
+            id: dashswitch
+            text: i18n("Enable / Disable Dashboard")
+            checked: true
+                }
+
+        PlasmaComponents.Label {
+                id: dashSettingsLabel1
+                text: i18n("Card Settings:")
+                font.bold: true;
+            }
+            
+        PlasmaComponents.Switch {
+            id: disclaimercardswitch
+            text: i18n("Enable / Disable Disclaimer Card")
+            checked: true
+        }
+            
+        PlasmaComponents.Switch {
+            id: newscardswitch
+            text: i18n("Enable / Disable News Card")
+            checked: true
+        }
+                    
+        Row {
+        spacing: 2
+           PlasmaComponents.Label { 
+                id: newsApiKeyLabelFld
+                text: "NewsApi App_Key:"
+            }
+            PlasmaComponents.TextField{
+                id: newsApiKeyTextFld
+                width: units.gridUnit * 12
+                text: "a1091945307b434493258f3dd6f36698"
+            }
+        }
+                    
+        PlasmaComponents.Switch {
+            id: weathercardswitch
+            text: i18n("Enable / Disable Weather Card")
+            checked: true
+        }
+                    
+        Row {
+        spacing: 2
+           PlasmaComponents.Label { 
+                id: owmApiKeyLabelFld
+                text: "Open Weather Map App_ID:"
+            }
+            PlasmaComponents.TextField{
+                id: owmApiKeyTextFld
+                width: units.gridUnit * 12
+                text: "7af5277aee7a659fc98322c4517d3df7"
+            }
+        }
+        
+        Row {
+        spacing: 2
+           PlasmaComponents.RadioButton { 
+                id: owmApiKeyMetricCel
+                text: i18n("Celcius")
+                checked: true
+                exclusiveGroup: owmMetricsGroup
+            }
+            PlasmaComponents.RadioButton{
+                id: owmApiKeyMetricFar
+                text: i18n("Farahanite")
+                exclusiveGroup: owmMetricsGroup
+            }
+        }
+                    
+                }
             }
         }
     }
@@ -1339,5 +1538,11 @@ Item {
             property alias radiobt1: settingsTabUnitsOpOne.checked
             property alias radiobt2: settingsTabUnitsOpTwo.checked
             property alias radiobt3: settingsTabUnitsOpZero.checked
+            property alias dashboardSetting: dashswitch.checked
+            property alias disclaimerCardSetting: disclaimercardswitch.checked
+            property alias newsCardSetting: newscardswitch.checked
+            property alias newsCardAPIKey: newsApiKeyLabelFld.text
+            property alias weatherCardSetting: weathercardswitch.checked
+            property alias weatherCardAPIKey: owmApiKeyLabelFld.text
     }
 }
