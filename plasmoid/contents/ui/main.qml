@@ -154,13 +154,17 @@ Item {
           
     function filterplacesObj(metadata){
         var filteredData = JSON.parse(metadata.data);
+        var locallat = JSON.parse(metadata.locallat);
+        var locallong = JSON.parse(metadata.locallong);
+        var hereappid = metadata.appid
+        var hereappcode = metadata.appcode;
         convoLmodel.clear()
         placesListModel.clear()
         for (var i = 0; i < filteredData.results.items.length; i++){
             var itemsInPlaces = JSON.stringify(filteredData.results.items[i])
             var fltritemsinPlc = JSON.parse(itemsInPlaces)
             var fltrtags = getTags(filteredData.results.items[i].tags)
-            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags})
+            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placetags: fltrtags, placelocallat: locallat, placelocallong: locallong, placeappid: hereappid, placeappcode: hereappcode})
         }
         convoLmodel.append({"itemType": "PlacesType", "InputQuery": ""});
     }
