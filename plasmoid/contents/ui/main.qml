@@ -1262,7 +1262,7 @@ Item {
             }
             PlasmaComponents.RadioButton{
                 id: owmApiKeyMetricFar
-                text: i18n("Farahanite")
+                text: i18n("Fahrenheit")
                 exclusiveGroup: owmMetricsGroup
             }
         }
