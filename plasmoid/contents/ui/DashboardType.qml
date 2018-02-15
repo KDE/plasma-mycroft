@@ -31,6 +31,7 @@ Rectangle {
     width: cbwidth
     color: theme.backgroundColor
     property alias dashlvmodel: dashboardmodelview.model
+    property alias dashlvdelegate: dashboardmodelview.delegate
 
 ListView {
      id: dashboardmodelview

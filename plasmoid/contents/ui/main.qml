@@ -71,8 +71,7 @@ Item {
     property var geoLat
     property var geoLong
     property var globalcountrycode
-    property string newsCardSource
-    property string weatherCardSource
+    property var weatherMetric: "metric"
     
     Connections {
         target: main2
@@ -324,7 +323,7 @@ Item {
         var doc = new XMLHttpRequest()
         var url = 'https://newsapi.org/v2/top-headlines?' +
                 'country=' + globalcountrycode + '&' +
-                'apiKey=a1091945307b434493258f3dd6f36698';
+                'apiKey=' + newsApiKeyTextFld.text;
         doc.open("GET", url, true);
         doc.send();
 
@@ -339,8 +338,8 @@ Item {
     function fetchDashWeather(){
         var doc = new XMLHttpRequest()
         var url = 'https://api.openweathermap.org/data/2.5/weather?' +
-        'lat=' + geoLat + '&lon=' + geoLong +
-        '&APPID=7af5277aee7a659fc98322c4517d3df7';
+        'lat=' + geoLat + '&lon=' + geoLong + '&units=' + weatherMetric +
+        '&APPID=' + owmApiKeyTextFld.text;
 
             doc.open("GET", url, true);
             doc.send();
@@ -353,12 +352,18 @@ Item {
         }   
     }
     
+    function updateCardData(){
+        tabBar.currentTab = mycroftTab
+        convoLmodel.clear()
+        showDash("setVisible")
+    }
+    
     function setDisclaimer(){
         dashLmodel.append({"iType": "Disclaimer", "iObj": "none"})
     }
     
     function globalDashRun(){
-            if(disclaimercardswitch.checked == true){
+            if(dashswitch.checked == true){
                 if(disclaimercardswitch.checked == true){
                  setDisclaimer()   
                 }
@@ -375,6 +380,19 @@ Item {
                 disclaimbox.visible = true
             }
         }
+        
+    function showDash(dashState){
+        switch(dashState){
+            case "setVisible":
+                dashLmodel.clear()
+                globalDashRun()
+                break
+            case "setHide":
+                dashLmodel.clear()
+                convoLmodel.clear()
+                break
+        }
+    }
     
 PlasmaCore.DataSource {
             id: dataSource
@@ -387,7 +405,7 @@ PlasmaCore.DataSource {
                 geoLong = data.longitude
                 var globalcountry = data.country
                 globalcountrycode = globalcountry.substring(0, 2)
-                globalDashRun()
+                showDash("setVisible")
                     }
                 }
     }
@@ -522,21 +540,22 @@ TopBarAnim {
                         suggst.visible = true;
                         socket.active = false;
                         midbarAnim.showstatsId()
+                        showDash("setVisible")
                     }
                     
                     if (mycroftstartservicebutton.checked === true) {
                         disclaimbox.visible = false;
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
+                        if(dashswitch.checked == "false"){
                         convoLmodel.clear()
+                        }
                         suggst.visible = true;
                         delay(15000, function() {
                         socket.active = true;
                         })
                     }
-
                 }
-                
-                }
+            }
                 
         PlasmaComponents.ToolButton {
                 id: qinputmicbx
@@ -557,10 +576,8 @@ TopBarAnim {
                         qinputmicbx.iconSource = "mic-on"
                     }
                     muteMicrophone()
-                }    
+                    }    
                 }
-    
-    
     
     PlasmaComponents.ToolButton {
         id: pinButton
@@ -572,7 +589,7 @@ TopBarAnim {
         iconSource: "window-pin"
         onCheckedChanged: plasmoid.hideOnWindowDeactivate = !checked
         z: 102
-    }
+        }
     }    
 }
 
@@ -639,6 +656,10 @@ Item {
                 qinput.text = intpost.toString()
                 convoLmodel.append({"itemType": "AskType", "InputQuery": intpost.toString()})
                 midbarAnim.wsistalking()
+            }
+            
+            if (msgType === "recognizer_loop:utterance" && dashLmodel.count != 0){
+                showDash("setHide")
             }
             
             if (somestring && somestring.data && typeof somestring.data.intent_type !== 'undefined'){
@@ -1200,7 +1221,18 @@ Item {
             id: dashswitch
             text: i18n("Enable / Disable Dashboard")
             checked: true
+            
+            onCheckedChanged:   {
+                console.log(dashswitch.checked)
+                if(dashswitch.checked){
+                    showDash("setVisible")
                 }
+                else if(!dashswitch.checked){
+                    convoLmodel.clear()
+                }
+            }
+            
+        }
 
         PlasmaComponents.Label {
                 id: dashSettingsLabel1
@@ -1238,32 +1270,39 @@ Item {
             text: i18n("Enable / Disable Weather Card")
             checked: true
         }
-                    
+        
         Row {
         spacing: 2
            PlasmaComponents.Label { 
                 id: owmApiKeyLabelFld
                 text: "Open Weather Map App_ID:"
-            }
+                }
             PlasmaComponents.TextField{
                 id: owmApiKeyTextFld
                 width: units.gridUnit * 12
                 text: "7af5277aee7a659fc98322c4517d3df7"
-            }
+                }
         }
-        
-        Row {
+            
+        Row{
+        id: weatherCardMetricsRowList
         spacing: 2
-           PlasmaComponents.RadioButton { 
+        
+           PlasmaComponents.Button { 
                 id: owmApiKeyMetricCel
                 text: i18n("Celcius")
-                checked: true
-                exclusiveGroup: owmMetricsGroup
+                onClicked: {
+                    weatherMetric = "metric"
+                    updateCardData()
+                }
             }
-            PlasmaComponents.RadioButton{
+            PlasmaComponents.Button{
                 id: owmApiKeyMetricFar
                 text: i18n("Fahrenheit")
-                exclusiveGroup: owmMetricsGroup
+                onClicked: {
+                    weatherMetric = "imperial"
+                    updateCardData()
+                }
             }
         }
                     
@@ -1548,5 +1587,7 @@ Item {
             property alias newsCardAPIKey: newsApiKeyLabelFld.text
             property alias weatherCardSetting: weathercardswitch.checked
             property alias weatherCardAPIKey: owmApiKeyLabelFld.text
+            property alias weatherMetricC: owmApiKeyMetricCel.checked
+            property alias weatherMetricF: owmApiKeyMetricFar.checked
     }
 }

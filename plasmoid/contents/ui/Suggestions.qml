@@ -226,6 +226,9 @@ Rectangle {
 
             onClicked: {
                 convoLmodel.clear()
+                if(dashswitch.checked == true && dashLmodel.count == 0){
+                    showDash("setVisible")
+                }
             }
         }
 

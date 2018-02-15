@@ -34,7 +34,6 @@ Rectangle {
     property alias dashweatherLmodel: dashweatherListModel
 
     Component.onCompleted: {
-        //console.log(iType, iObj)
         filterSwitchDash(iType, iObj)
     }
 
@@ -42,7 +41,6 @@ Rectangle {
         switch(iType){
             case "Disclaimer":
                 filterDashDisclaimerObj()
-                console.log("Disclaimer HERE")
                 break
             case "DashNews":
                 filterDashNewsObj(iObj)
@@ -59,10 +57,17 @@ Rectangle {
     }
 
     function filterDashWeatherObj(weatherobj){
+        var filteredMetric
+        if(weatherMetric.indexOf('metric') != -1){
+                filteredMetric = "°c"
+        }
+        else if (weatherMetric.indexOf('imperial') != -1){
+                filteredMetric = "°k"  
+        }
           if(weatherobj){
               var filteredWeatherObject = JSON.parse(weatherobj)
               dashdelegatelview.model = dashweatherLmodel
-              dashweatherLmodel.append({itemType: "DashWeather", itemWeatherTemp: filteredWeatherObject.main.temp, itemWeatherTempMin: filteredWeatherObject.main.temp_min, itemWeatherTempMax: filteredWeatherObject.main.temp_max, itemWeatherTempType: filteredWeatherObject.weather[0].main})
+              dashweatherLmodel.append({itemType: "DashWeather", itemWeatherTemp: filteredWeatherObject.main.temp, itemWeatherTempMin: filteredWeatherObject.main.temp_min, itemWeatherTempMax: filteredWeatherObject.main.temp_max, itemWeatherTempType: filteredWeatherObject.weather[0].main, itemWeatherMetricType: filteredMetric})
           }
     }
 
@@ -74,7 +79,86 @@ Rectangle {
                   dashnewsLmodel.append({itemType: "DashNews", newsSource: filteredNewsObject.articles[i].source.name, newsTitle: filteredNewsObject.articles[i].title, newsDescription: filteredNewsObject.articles[i].description, newsURL: filteredNewsObject.articles[i].url, newsImgURL: filteredNewsObject.articles[i].urlToImage})
               }
             }
-          }
+        }
+    
+    function removeChildCard(){
+        dashLmodel.remove(index)
+    }
+
+Drawer {
+    id:  sharePagePopup
+    width: parent.width
+    height: units.gridUnit * 4
+    edge: Qt.TopEdge
+    dragMargin: 0
+    
+    Rectangle {
+    anchors.fill: parent
+    color: theme.backgroundColor
+
+                        Column {
+                        id: menuRectColumn
+                        anchors.fill: parent
+                        
+                        Rectangle {
+                            id: shareViaEmailRectbtn
+                            width: parent.width
+                            height: units.gridUnit * 2
+                            color: theme.backgroundColor
+                            
+                            Row {
+                               spacing: 5
+                                PlasmaCore.IconItem {
+                                   id: shareViaEmailIcon
+                                   anchors.verticalCenter: parent.verticalCenter
+                                   source: "mail-signed-part"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
+                               }
+                               Rectangle {
+                                   id: shareViaEmailSeperater
+                                   width: 1
+                                   height: parent.height
+                                   color: theme.linkColor
+                               }
+                               PlasmaComponents.Label {
+                                   id: shareViaEmailLabel
+                                   anchors.verticalCenter: parent.verticalCenter
+                                   text: "Share Via Email"
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                    onEntered: {
+                                        shareViaEmailLabel.color = theme.linkColor
+                                    }
+                                    onExited:{
+                                        shareViaEmailLabel.color = theme.textColor
+                                    }
+                                    onClicked:{
+                                        Qt.openUrlExternally("mailto://");
+                                    }
+                                }
+                            }
+                        
+                        Rectangle {
+                            id: btnshorzSeprEnd
+                            width: parent.width
+                            height: units.gridUnit * 0.75
+                            color: theme.linkColor
+                            
+                            PlasmaCore.IconItem {
+                                   id: closemenuDrawer
+                                   anchors.centerIn: parent
+                                   source: "go-up"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
+                                    }
+                                }
+                            }
+                        }
+                    }
 
 ListModel {
         id: dashnewsListModel
@@ -94,17 +178,17 @@ ListView {
      focus: false
      interactive: true
      clip: true;
-     delegate: Component{
-               Loader{
+     delegate: Loader{
+                id: dashcardLoader
                 source: switch(itemType){
                                case "Disclaimer": return "DisclaimerCardDelegate.qml"
                                case "DashNews": return "DashNewsDelegate.qml"
                                case "DashWeather": return "DashWeatherDelegate.qml"
                 }
-            }
         }
 
      onCountChanged: {
+         if (dashdelegatelview.model.count != 0){
          var root = dashdelegatelview.visibleChildren[0]
          var listViewHeight = 0
          var listViewWidth = 0
@@ -114,6 +198,7 @@ ListView {
              listViewWidth  = Math.max(listViewWidth, root.visibleChildren[i].width)
          }
          dashdelegatelview.height = listViewHeight + units.gridUnit * 2
+        }
      }
    }
 }

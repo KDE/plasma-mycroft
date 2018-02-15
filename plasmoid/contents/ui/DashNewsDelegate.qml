@@ -173,84 +173,232 @@ Rectangle {
         Drawer {
                 id: mcmenuItem
                 width: parent.width
-                height: units.gridUnit * 5
+                height: audionewsCardRectbtn.height + shareCardRectbtn.height + removeCardRectbtn.height + disableCardRectbtn.height 
                 edge: Qt.TopEdge
                 dragMargin: 0
 
                 Rectangle {
+                    id: menuRectItem
                     anchors.fill: parent
-                    color: theme.textColor
-
+                    color: theme.backgroundColor
+            
+                    Column {
+                        id: menuRectColumn
+                        anchors.fill: parent
+                        
                         Rectangle {
-                            id: readaloudRectbtn
+                            id: audionewsCardRectbtn
                             width: parent.width
                             height: units.gridUnit * 2
-                            color: theme.textColor
-                            anchors.top: parent.top
-                            anchors.topMargin: units.gridUnit * 0.25
+                            color: theme.backgroundColor
+                            
                             Row {
                                spacing: 5
-                               Image {
-                                   id: readAloudIcon
+                                PlasmaCore.IconItem {
+                                   id: audionewsCardIcon
                                    anchors.verticalCenter: parent.verticalCenter
-                                   source: "../images/readaloud.png"
-                                   width: 32
-                                   height: 32
+                                   source: "media-playback-start"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
                                }
                                Rectangle {
-                                   id: readAloudSeperater
+                                   id: audionewsCardSeperater
                                    width: 1
                                    height: parent.height
                                    color: theme.linkColor
                                }
-                               Label {
-                                   id: readAloudLabel
+                               PlasmaComponents.Label {
+                                   id: audionewsCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Listen To/Play The Selected Article"
-                                   color: theme.backgroundColor
-                               }
+                                   text: "Play / Listen To News Article"
+                                }
                             }
-                        }
-
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                    onEntered: {
+                                        audionewsCardLabel.color = theme.linkColor
+                                    }
+                                    onExited:{
+                                        audionewsCardLabel.color = theme.textColor
+                                    }
+                                    onClicked:{
+                                    mcmenuItem.close()
+                                    var sendnewsurl = "getarticle newsurl " + newsURL
+                                    var socketmessage = {};
+                                        socketmessage.type = "recognizer_loop:utterance";
+                                        socketmessage.data = {};
+                                        socketmessage.data.utterances = [sendnewsurl];
+                                        socket.sendTextMessage(JSON.stringify(socketmessage));
+                                    }
+                                }
+                            }
+                        
                         Rectangle {
-                            id: btnshorzSepr
+                            id: btnshorzSepr1
                             width: parent.width
                             height: 1
                             color: theme.linkColor
-                            anchors.top: readaloudRectbtn.bottom
-                            anchors.topMargin: units.gridUnit * 0.25
                         }
-
-                        Rectangle{
-                            id: shareNwsBtn
+                        
+                        Rectangle {
+                            id: shareCardRectbtn
                             width: parent.width
                             height: units.gridUnit * 2
-                            color: theme.textColor
-                            anchors.top: btnshorzSepr.bottom
-                            anchors.topMargin: units.gridUnit * 0.25
+                            color: theme.backgroundColor
+                            
                             Row {
                                spacing: 5
-                               Image {
-                                   id: shareNewsIcon
+                                PlasmaCore.IconItem {
+                                   id: shareCardIcon
                                    anchors.verticalCenter: parent.verticalCenter
-                                   source: "../images/share.png"
-                                   width: 32
-                                   height: 32
+                                   source: "retweet"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
                                }
                                Rectangle {
-                                   id: shareNewsSeperater
+                                   id: shareCardSeperater
                                    width: 1
                                    height: parent.height
                                    color: theme.linkColor
                                }
-                               Label {
-                                   id: shareNewsLabel
+                               PlasmaComponents.Label {
+                                   id: shareCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Share"
-                                   color: theme.backgroundColor
+                                   text: "Share News Link"
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                    onEntered: {
+                                        shareCardLabel.color = theme.linkColor
+                                    }
+                                    onExited:{
+                                        shareCardLabel.color = theme.textColor
+                                    }
+                                    onClicked:{
+                                        mcmenuItem.close()
+                                        sharePagePopup.open()
+                                    }
+                                }
+                            }
+
+                        
+                        Rectangle {
+                            id: btnshorzSepr2
+                            width: parent.width
+                            height: 1
+                            color: theme.linkColor
+                        }
+                        
+                        Rectangle {
+                            id: removeCardRectbtn
+                            width: parent.width
+                            height: units.gridUnit * 2
+                            color: theme.backgroundColor
+                            
+                            Row {
+                               spacing: 5
+                                PlasmaCore.IconItem {
+                                   id: removeCardIcon
+                                   anchors.verticalCenter: parent.verticalCenter
+                                   source: "archive-remove"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
+                               }
+                               Rectangle {
+                                   id: removeCardSeperater
+                                   width: 1
+                                   height: parent.height
+                                   color: theme.linkColor
+                               }
+                               PlasmaComponents.Label {
+                                   id: removeCardLabel
+                                   anchors.verticalCenter: parent.verticalCenter
+                                   text: "Remove Card"
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                    onEntered: {
+                                        removeCardLabel.color = theme.linkColor
+                                    }
+                                    onExited:{
+                                        removeCardLabel.color = theme.textColor
+                                    }
+                                    onClicked:{
+                                        dashnewsListModel.remove(index)
+                                    }
+                                }
+                            }
+                            
+                        Rectangle {
+                            id: btnshorzSepr3
+                            width: parent.width
+                            height: 1
+                            color: theme.linkColor
+                        }
+                            
+                        Rectangle {
+                            id: disableCardRectbtn
+                            width: parent.width
+                            height: units.gridUnit * 2
+                            color: theme.backgroundColor
+                            
+                            Row {
+                               spacing: 5
+                                PlasmaCore.IconItem {
+                                   id: disableCardIcon
+                                   anchors.verticalCenter: parent.verticalCenter
+                                   source: "document-close"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
+                               }
+                               Rectangle {
+                                   id: disableCardSeperater
+                                   width: 1
+                                   height: parent.height
+                                   color: theme.linkColor
+                               }
+                               PlasmaComponents.Label {
+                                   id: disableCardLabel
+                                   anchors.verticalCenter: parent.verticalCenter
+                                   text: "Disable News Cards"
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                    onEntered: {
+                                        disableCardLabel.color = theme.linkColor
+                                    }
+                                    onExited:{
+                                        disableCardLabel.color = theme.textColor
+                                    }
+                                    onClicked:{
+                                        dashnewsListModel.remove(index)
+                                        removeChildCard()
+                                        newscardswitch.checked = false
+                                        }
+                                    }
+                                }
+                        Rectangle {
+                            id: btnshorzSeprEnd
+                            width: parent.width
+                            height: units.gridUnit * 0.75
+                            color: theme.linkColor
+                            
+                            PlasmaCore.IconItem {
+                                   id: closemenuDrawer
+                                   anchors.centerIn: parent
+                                   source: "go-up"
+                                   width: units.gridUnit * 2
+                                   height: units.gridUnit * 2
                                }
                             }
                         }
                     }
                 }
-                        }
+            }
