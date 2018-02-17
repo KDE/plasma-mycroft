@@ -1,7 +1,7 @@
 [Global]
 IconName=mycroft-plasma-appicon
 Comment=Mycroft Plasmoid
-Comment[ca]=Plasmoide Mycroft
+Comment[ca]=Plasmoide del Mycroft
 Comment[ca@valencia]=Plasmoide Mycroft
 Comment[de]=Mycroft-Plasmoid
 Comment[en_GB]=Mycroft Plasmoid
