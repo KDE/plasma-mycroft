@@ -67,6 +67,8 @@ Item {
     property alias textInput: qinput
     property alias plcLmodel: placesListModel
     property alias dashLmodel: dashListModel
+    property alias recipeLmodel: recipesListModel
+    property alias recipeReadLmodel: recipeReadListModel
     property bool intentfailure: false
     property var geoLat
     property var geoLong
@@ -137,7 +139,6 @@ Item {
                     itemType = "CurrentWeather"
                     break;
                 }
-
               convoLmodel.append({"itemType": itemType, "itemData": metadata})
                 }
 
@@ -180,7 +181,25 @@ Item {
             return tags;
         }
         return '';
-    }       
+    }
+    
+    function filterRecipeObj(metadata){
+        var filteredData = JSON.parse(metadata.data);
+        convoLmodel.clear()
+        recipeLmodel.clear()
+        for (var i = 0; i < filteredData.hits.length; i++){
+            var itemsInRecipes = filteredData.hits[i].recipe
+            var itemsReadRecipe = itemsInRecipes.ingredientLines.join(",")
+            var itemsReadRecipeHealthTags = itemsInRecipes.healthLabels[0]
+            var itemsReadRecipeDietType = itemsInRecipes.dietLabels.join(",")
+            var itemsReadRecipeCalories = Math.round(itemsInRecipes.calories)
+            if(itemsReadRecipeDietType == ""){
+                itemsReadRecipeDietType = "Normal"
+            }
+            recipeLmodel.insert(i, {recipeLabel: itemsInRecipes.label, recipeSource: itemsInRecipes.source, recipeImageUrl: itemsInRecipes.image, recipeCalories: itemsReadRecipeCalories, recipeIngredientLines: itemsReadRecipe, recipeDiet: itemsReadRecipeDietType, recipeHealthTags: itemsReadRecipeHealthTags})
+        }
+        convoLmodel.append({"itemType": "RecipeType", "InputQuery": ""})
+    }
 
     
     function isBottomEdge() {
@@ -417,6 +436,15 @@ ListModel {
 ListModel {
         id: placesListModel
     }
+    
+ListModel{
+        id: recipesListModel
+    }
+
+ListModel {
+        id: recipeReadListModel
+    }
+
     
 Timer {
            id: timer
@@ -684,7 +712,11 @@ Item {
                 dataContent = somestring.data.desktop
                 filterplacesObj(dataContent)
             }
-
+            
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "recipesObject") {
+                dataContent = somestring.data.desktop
+                filterRecipeObj(dataContent)
+            }
             
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
@@ -921,6 +953,7 @@ Item {
                                         case "AskType" : return "AskMessageType.qml"
                                         case "LoaderType" : return "LoaderType.qml"
                                         case "PlacesType" : return "PlacesType.qml"
+                                        case "RecipeType" : return "RecipeType.qml"    
                                         case "DashboardType" : return "DashboardType.qml"
                                         }
                                     property var metacontent : dataContent
