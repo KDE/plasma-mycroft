@@ -677,9 +677,9 @@ Item {
             var somestring = JSON.parse(message)
             var msgType = somestring.type;
             playwaitanim(msgType);
-            qinput.focus = false;
             
             if (msgType === "recognizer_loop:utterance") {
+                qinput.focus = false;
                 var intpost = somestring.data.utterances;
                 qinput.text = intpost.toString()
                 convoLmodel.append({"itemType": "AskType", "InputQuery": intpost.toString()})
