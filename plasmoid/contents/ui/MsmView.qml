@@ -46,7 +46,7 @@ Rectangle {
                 }
                 
                 function getSkillInfoLocal() {
-                    var customFold = '/opt/mycroft/skills/'
+                    var customFold = launchinstaller.skillsPath() || '/opt/mycroft/skills/'
                     var skillPath = customFold + model.name
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
                         installLabl.text = "Installed"

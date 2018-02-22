@@ -19,8 +19,9 @@
 #include "msmapp.h"
 
 #include <QProcess>
+#include <QDir>
 
-MsmApp::MsmApp(QObject *parent) : 
+MsmApp::MsmApp(QObject *parent) :
     QObject(parent),
     m_process(new QProcess(this))
 {
@@ -34,4 +35,11 @@ QString MsmApp::msmapp(const QString &program)
     QString output = QString::fromLocal8Bit(bytes);
     return output;
 }
- 
+
+QString MsmApp::skillsPath()
+{
+    QString path = QDir::homePath()+"/.mycroft/skills";
+    QDir dir(path);
+    if (dir.exists()) return path;
+    return QStringLiteral("/opt/mycroft/skills");
+}
