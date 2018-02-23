@@ -44,8 +44,8 @@ Item {
     
     Component.onCompleted: {
         mycroftStatusCheckSocket.active = true
-        refreshAllSkills();
         detectInstallType();
+        refreshAllSkills();
     }
     
     property var skillList: []
@@ -102,6 +102,8 @@ Item {
     function detectInstallType(){
         if(locationUserSelected == false && PlasmaLa.FileReader.file_exists_local("/usr/bin/mycroft-messagebus")){
             settingsTabUnitsOpOne.checked = true
+            coreinstallstartpath = packagemcorestartcmd
+            coreinstallstoppath = packagemcorestopcmd
         }
     }
     
