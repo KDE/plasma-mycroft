@@ -18,6 +18,9 @@
 */
 
 import QtQuick 2.9
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Item {
 
@@ -164,7 +167,7 @@ Item {
                           opacity: 0
 
                           property color strokeStyle:  Qt.darker(fillStyle, 1.5)
-                          property color fillStyle: Qt.darker("deepskyblue", 1.1)
+                          property color fillStyle: Qt.darker(theme.linkColor, 1.1)
                           property real lineWidth: 1.6
                           property bool fill: true
                           property bool stroke: false
@@ -202,7 +205,7 @@ Item {
                                   ctxside.beginPath();
                                   ctxside.moveTo( oStartx, oStarty + amplitude * Math.sin( x / period + ( i  / 5 ) ) );
                                   ctxside.lineWidth = 1;
-                                  ctxside.strokeStyle = 'steelblue';
+                                  ctxside.strokeStyle = theme.linkColor;
 
                                   for(var Vx = oStartx; Vx < width * 0.95; Vx++) {
 

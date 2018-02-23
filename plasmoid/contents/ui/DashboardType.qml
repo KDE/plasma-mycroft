@@ -25,13 +25,19 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-Rectangle {
+Item {
     id: dashbdtypebg
     height: cbheight / 1.1
     width: cbwidth
-    color: theme.backgroundColor
     property alias dashlvmodel: dashboardmodelview.model
     property alias dashlvdelegate: dashboardmodelview.delegate
+    
+    PlasmaComponents.ScrollBar {
+        id: dashscrollBar
+        flickableItem: dashboardmodelview
+        orientation: Qt.Vertical
+        interactive: true
+    }
 
 ListView {
      id: dashboardmodelview
@@ -42,9 +48,6 @@ ListView {
      interactive: true
      clip: true;
      delegate: DashboardDelegate{}
-     ScrollBar.vertical: ScrollBar {
-        active: true
-      }
     }
 }
 

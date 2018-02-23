@@ -46,8 +46,9 @@ Rectangle {
                 }
                 
                 function getSkillInfoLocal() {
-                    var customFold = launchinstaller.skillsPath() || '/opt/mycroft/skills/'
-                    var skillPath = customFold + model.name
+                    var customFold = launchinstaller.skillsPath()
+                    var defaultFold = '/opt/mycroft/skills/'
+                    var skillPath = defaultFold + model.name || customFold + model.name
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
                         installLabl.text = "Installed"
                         getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)

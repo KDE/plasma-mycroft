@@ -19,13 +19,15 @@
 
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtGraphicalEffects 1.0
 
 Rectangle {
     id: container
-    implicitHeight: units.gridUnit * 4
+    implicitHeight: autoCompListView.implicitHeight
+    implicitWidth: cbwidth
     color: theme.backgroundColor
     border.width:  1
     border.color: Qt.lighter(theme.backgroundColor, 1.2);
@@ -52,7 +54,8 @@ Rectangle {
         id: autoCompListView
         anchors.fill: parent
         model: container.suggestionsModel
-        verticalLayoutDirection: ListView.BottomToTop
+        implicitHeight: contentItem.childrenRect.height
+        verticalLayoutDirection: ListView.TopToBottom
         keyNavigationEnabled: true
         keyNavigationWraps: true
         clip: true
@@ -62,7 +65,7 @@ Rectangle {
             property bool selected: itemMouseArea.containsMouse
             property variant suggestion: model
 
-            height: textComponent.height + 5
+            height: textComponent.height + units.gridUnit * 2
             width: container.width
 
             FocusScope{
@@ -73,22 +76,16 @@ Rectangle {
                 id: autdelRect
                 color: delegateItem.selected ? Qt.darker(theme.textColor, 1.2) : Qt.darker(theme.backgroundColor, 1.2)
                 width: parent.width
-                height: textComponent.height + 10
+                height: textComponent.height + units.gridUnit * 2
                 
-                Image {
+                PlasmaCore.IconItem {
                     id : smallIconV
-                    source: "../images/mycroftsmaller2.png"
+                    source: "text-speak"
                     width: units.gridUnit * 2
                     height: units.gridUnit * 2
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: units.gridUnit * 0.35
-                                     
-                    ColorOverlay {
-                     anchors.fill: smallIconV
-                     source: smallIconV
-                     color: Qt.darker(theme.textColor, 1.2);
-                  }
                 }
                 
                 PlasmaCore.SvgItem {

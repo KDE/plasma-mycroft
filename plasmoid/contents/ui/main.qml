@@ -31,6 +31,7 @@ import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
 import org.kde.plasma.private.volume 0.1
 import QtWebKit 3.0
 import QtQuick.Window 2.0
+import QtGraphicalEffects 1.0
 
 Item {
     id: main
@@ -44,11 +45,13 @@ Item {
     Component.onCompleted: {
         mycroftStatusCheckSocket.active = true
         refreshAllSkills();
+        detectInstallType();
     }
     
     property var skillList: []
     property alias cbwidth: rectangle2.width
     property alias cbheight: rectangle2.height
+    property var dwrpaddedwidth: main.width + units.gridUnit * 1
     property var cbdrawercontentheight: parent.height + units.gridUnit * 0.5 - rectanglebottombar.height
     property string defaultmcorestartpath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/startservice.sh"
     property string defaultmcorestoppath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/stopservice.sh"
@@ -70,6 +73,7 @@ Item {
     property alias recipeLmodel: recipesListModel
     property alias recipeReadLmodel: recipeReadListModel
     property bool intentfailure: false
+    property bool locationUserSelected: false
     property var geoLat
     property var geoLong
     property var globalcountrycode
@@ -95,6 +99,12 @@ Item {
         }
     }
     
+    function detectInstallType(){
+        if(locationUserSelected == false && PlasmaLa.FileReader.file_exists_local("/usr/bin/mycroft-messagebus")){
+            settingsTabUnitsOpOne.checked = true
+        }
+    }
+    
     function toggleInputMethod(selection){
         switch(selection){
         case "KeyboardSetActive":
@@ -115,7 +125,7 @@ Item {
     function retryConn(){
         socket.active = true
         if (socket.active = false){
-                console.log(socket.errorString)
+               convoLmodel.append({"itemType": "NonVisual", "InputQuery": socket.errorString})
         }
     }
     
@@ -477,14 +487,20 @@ Item {
     anchors.fill: parent
     z: 101
          
-Image {
-        id: barAnim
-        anchors.left: parent.left
-        anchors.leftMargin: units.gridUnit * 0.1
-        anchors.verticalCenter: parent.verticalCenter
-        source: "../images/mycroftsmaller.png"
-        width: units.gridUnit * 1.6
-        height: units.gridUnit * 1.6
+    Image {
+            id: barAnim
+            anchors.left: parent.left
+            anchors.leftMargin: units.gridUnit * 0.1
+            anchors.verticalCenter: parent.verticalCenter
+            source: "../images/mycroftsmaller.png"
+            width: units.gridUnit * 1.6
+            height: units.gridUnit * 1.6
+        }
+        
+    ColorOverlay {
+                    anchors.fill: barAnim
+                    source: barAnim
+                    color: theme.linkColor
     }
     
     PlasmaCore.SvgItem {
@@ -513,12 +529,30 @@ Image {
                 anchors.top: parent.top
                 anchors.topMargin: 4
                 anchors.left: topbarLeftDividerline.right
-                anchors.leftMargin: 2
+                anchors.leftMargin: units.gridUnit * 0.25
+                font.capitalization: Font.SmallCaps 
                 id: statusId
-                text: i18n("Mycroft is disabled")
+                text: i18n("<b>Mycroft is disabled</b>")
                 font.bold: false;
                 font.pixelSize: 14
-                color: "#fff"
+                color: theme.textColor
+    }
+    
+    PlasmaComponents.Button {
+        id: statusRetryBtn
+        anchors.top: parent.top
+        anchors.topMargin: 1
+        anchors.left: statusId.right
+        anchors.leftMargin: units.gridUnit * 0.50
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: units.gridUnit * 0.25
+        text: i18n("Reconnect")
+        width: units.gridUnit * 6
+        visible: false
+        
+        onClicked: {
+            retryConn()
+        }
     }
     
 TopBarAnim {
@@ -563,6 +597,7 @@ TopBarAnim {
                 
                 onClicked: {
                     if (mycroftstartservicebutton.checked === false) {
+                        statusRetryBtn.visible = false
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
                         convoLmodel.clear()
                         suggst.visible = true;
@@ -578,6 +613,9 @@ TopBarAnim {
                         convoLmodel.clear()
                         }
                         suggst.visible = true;
+                        statusId.color = theme.linkColor
+                        statusId.text = i18n("<b>Starting up..please wait</b>")
+                        statusId.visible = true
                         delay(15000, function() {
                         socket.active = true;
                         })
@@ -653,19 +691,18 @@ Item {
         active: true
         onStatusChanged: 
             if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
-            console.log("Activated")
             socket.active = true
             disclaimbox.visible = false;
             mycroftstartservicebutton.checked = true
-            statusId.text = i18n("Mycroft is Ready")
+            statusId.text = i18n("<b>Mycroft is ready</b>")
             statusId.color = "green"
             statusId.visible = true
             }
 
             else if (mycroftStatusCheckSocket.status == WebSocket.Error) {
             mycroftstartservicebutton.checked = false
-            statusId.text = i18n("Mycroft is Disabled")
-            statusId.color = "#f4bf42"
+            statusId.text = i18n("<b>Mycroft is disabled</b>")
+            statusId.color = theme.textColor
             statusId.visible = true
             }
         }
@@ -729,10 +766,11 @@ Item {
         }
                 
         onStatusChanged: if (socket.status == WebSocket.Error) {
-                                statusId.text = "Connection Error"
+                                statusId.text = i18n("<b>Connection error</b>")
                                 statusId.color = "red"
                                 mycroftstartservicebutton.circolour = "red"
                                 midbarAnim.showstatsId()
+                                statusRetryBtn.visible = true
                                 drawer.open()
                                 waitanimoutter.aniRunError()
                                 delay(1250, function() {
@@ -740,8 +778,9 @@ Item {
                                 })
 
                          } else if (socket.status == WebSocket.Open) {
-                                statusId.text = "Mycroft is Ready"
+                                statusId.text = i18n("<b>Mycroft is ready</b>")
                                 statusId.color = "green"
+                                statusRetryBtn.visible = false
                                 mycroftstartservicebutton.circolour = "green"
                                 mycroftStatusCheckSocket.active = false;
                                 midbarAnim.showstatsId()
@@ -751,18 +790,18 @@ Item {
                                     drawer.close()
                                 })
                          } else if (socket.status == WebSocket.Closed) {
-                                statusId.text = "Mycroft is Disabled"
-                                statusId.color = "#f4bf42"
+                                statusId.text = i18n("<b>Mycroft is disabled</b>")
+                                statusId.color = theme.textColor
                                 mycroftstartservicebutton.circolour = Qt.lighter(theme.backgroundColor, 1.5)
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Connecting) {
-                                statusId.text = "Starting Up"
-                                statusId.color = "grey"
+                                statusId.text = i18n("<b>Starting up..please wait</b>")
+                                statusId.color = theme.linkColor
                                 mycroftstartservicebutton.circolour = "steelblue"
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Closing) {
-                                statusId.text = "Shutting Down"
-                                statusId.color = "grey"
+                                statusId.text = i18n("<b>Shutting down</b>")
+                                statusId.color = theme.textColor
                                 midbarAnim.showstatsId()
                          }
     }    
@@ -1061,7 +1100,7 @@ Item {
                         checked: true
                         
                         onCheckedChanged: {
-                            
+                            locationUserSelected = true
                             if (settingsTabUnitsOpZero.checked === true && coreinstallstartpath === packagemcorestartcmd) {
                                 coreinstallstartpath = defaultmcorestartpath;
                             }
@@ -1111,7 +1150,7 @@ Item {
                         checked: false
                         
                         onCheckedChanged: {
-                            
+                            locationUserSelected = true
                             if (settingsTabUnitsOpTwo.checked === true && coreinstallstartpath === defaultmcorestartpath) {
                                 coreinstallstartpath = customlocstartpath;
                             }
@@ -1475,7 +1514,7 @@ Item {
     
     Drawer {
          id: drawer
-          width: parent.width
+          width: dwrpaddedwidth
           height: units.gridUnit * 5.5
           edge: Qt.BottomEdge
  
@@ -1517,12 +1556,12 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
 
-        PlasmaComponents.ToolButton {
+        PlasmaCore.IconItem {
             id: keybdImg
-            iconSource: "input-keyboard"
+            source: "input-keyboard"
             anchors.centerIn: parent
-            width: units.gridUnit * 2
-            height: units.gridUnit * 2
+            width: units.gridUnit * 1.5
+            height: units.gridUnit * 1.5
         }
 
         Rectangle {
@@ -1590,10 +1629,10 @@ Item {
     AutocompleteBox {
         id: suggestionsBox
         model: completionItems
-        width: qinput.width
+        width: parent.width
         anchors.bottom: qinput.top
-        anchors.left: qinput.left
-        anchors.right: qinput.right
+        anchors.left: parent.left
+        anchors.right: parent.right
         filter: textInput.text
         property: "name"
         onItemSelected: complete(item)

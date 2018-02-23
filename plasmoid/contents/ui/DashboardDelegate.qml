@@ -25,11 +25,10 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-Rectangle {
+Item {
     id: dashdelegteType
     height: dashdelegatelview.height
     width: parent.width
-    color: theme.backgroundColor
     property alias dashnewsLmodel: dashnewsListModel
     property alias dashweatherLmodel: dashweatherListModel
 
@@ -66,8 +65,9 @@ Rectangle {
         }
           if(weatherobj){
               var filteredWeatherObject = JSON.parse(weatherobj)
+              var weatherIcnType = "http://openweathermap.org/img/w/" + filteredWeatherObject.weather[0].icon + ".png"
               dashdelegatelview.model = dashweatherLmodel
-              dashweatherLmodel.append({itemType: "DashWeather", itemWeatherTemp: filteredWeatherObject.main.temp, itemWeatherTempMin: filteredWeatherObject.main.temp_min, itemWeatherTempMax: filteredWeatherObject.main.temp_max, itemWeatherTempType: filteredWeatherObject.weather[0].main, itemWeatherMetricType: filteredMetric})
+              dashweatherLmodel.append({itemType: "DashWeather", itemWeatherTemp: filteredWeatherObject.main.temp, itemWeatherTempMin: filteredWeatherObject.main.temp_min, itemWeatherTempMax: filteredWeatherObject.main.temp_max, itemWeatherTempType: filteredWeatherObject.weather[0].main, itemWeatherMetricType: filteredMetric, itemWeatherIconType: weatherIcnType, itemWeatherWind: filteredWeatherObject.wind.speed, itemWeatherCity: filteredWeatherObject.name})
           }
     }
 
@@ -173,7 +173,7 @@ ListModel {
 
 ListView {
      id: dashdelegatelview
-     width: cbwidth
+     width: cbwidth - units.gridUnit * 0.25
      spacing: units.gridUnit * 0.5
      focus: false
      interactive: true

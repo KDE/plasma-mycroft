@@ -19,59 +19,95 @@
 
 import QtQuick 2.9
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import QtGraphicalEffects 1.0
 
 Item {
     anchors.fill: parent
-
-    Rectangle {
-         id: innerCircleSurround
-         anchors.centerIn: parent
-         color: "#404682b4"
-         border.color: "#00000000"
-         border.width: units.gridUnit * 0.2
-         radius: 100
-         implicitWidth: units.gridUnit * 2.7
-         implicitHeight: units.gridUnit * 2.7
+    anchors.topMargin: units.gridUnit * 0.25
+    
+    SequentialAnimation {
+        id: cstMicSeq
+        running: false
+        loops: Animation.Infinite
+        
+        ParallelAnimation{
+            PropertyAnimation {
+                target: cstMicIconLeftHandle
+                property: "opacity";
+                from: 1
+                to: 0
+                duration: 1000
+            }
+            PropertyAnimation {
+                target: cstMicIconRightHandle
+                property: "opacity";
+                from: 1
+                to: 0
+                duration: 1000
+            }
         }
+    }
+    
+    Image {
+        id: cstMicIconLeftHandle
+        width: units.gridUnit * 1.5
+        height: units.gridUnit * 3
+        opacity: 0.50
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: cstMicIcon.left
+        anchors.rightMargin: -units.gridUnit * 1
+        smooth: true
+        mipmap: true
+        source: "../images/mleftsmallanim.png"
+    }
+    
+    ColorOverlay {
+        anchors.fill: cstMicIconLeftHandle
+        source: cstMicIconLeftHandle
+        color: theme.linkColor
+    }
+    
+    Image {
+        id: cstMicIconRightHandle
+        width: units.gridUnit * 1.5
+        height: units.gridUnit * 3
+        opacity: 0.50
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: cstMicIcon.right
+        anchors.leftMargin: -units.gridUnit * 1
+        smooth: true
+        mipmap: true
+        source: "../images/mrightsmallanim.png"
+    }
+    
+    ColorOverlay {
+        anchors.fill: cstMicIconRightHandle
+        source: cstMicIconRightHandle
+        color: theme.linkColor
+    }
 
-    Rectangle {
-         id: innerCircleSurroundOutterRing
-         anchors.centerIn: parent
-         color: "#00000000"
-         border.color: "lightblue"
-         border.width: units.gridUnit * 0.2
-         radius: 100
-         implicitWidth: units.gridUnit * 2.7
-         implicitHeight: units.gridUnit * 2.7
-        }
-
-    Rectangle {
-         id: innerCircleIn
-         anchors.centerIn: parent
-         color: "lightblue"
-         border.color: "steelblue"
-         border.width: units.gridUnit * 0.1
-         radius: 100
-         implicitWidth: units.gridUnit * 1.7
-         implicitHeight: units.gridUnit * 1.7
-        }
-
-    Rectangle {
-         id: innerCircleInMic
-         anchors.centerIn: parent
-         color: "#00000000"
-         border.color: "#00000000"
-         border.width: units.gridUnit * 0.1
-         radius: 100
-         implicitWidth: units.gridUnit * 1.7
-         implicitHeight: units.gridUnit * 1.7
-
-         PlasmaComponents.ToolButton {
-            id: innerImgInnerCirc
-            anchors.centerIn: parent
-            iconSource: "audio-input-microphone"
-            width: units.gridUnit * 2
-            height: units.gridUnit * 2
+    Image {
+        id: cstMicIcon
+        anchors.centerIn: parent
+        width: units.gridUnit * 3.5
+        height: units.gridUnit * 3.5
+        smooth: true
+        mipmap: true
+        source: "../images/mycroftmic.png"
+        
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            
+            onEntered: {
+                clovrLyCSTmic.color = theme.textColor
+                cstMicSeq.running = true
+            }
+            
+            onExited: {
+                clovrLyCSTmic.color = theme.linkColor
+                cstMicSeq.running = false
+            }
             
             onClicked: {
                 var socketmessage = {};
@@ -79,34 +115,15 @@ Item {
                 socketmessage.data = {};
                 socketmessage.data.utterances = [];
                 socket.sendTextMessage(JSON.stringify(socketmessage));
-                }
             }
         }
-
-    ScaleAnimator {
-        target: innerCircleSurround
-        running: true
-        from: 1.2
-        to: 0.8
-        duration: 3600
-        loops: Animation.Infinite
-        }
-
-    ScaleAnimator {
-        target: innerCircleSurroundOutterRing
-        running: true
-        from: 1
-        to: 0.9
-        duration: 3600
-        loops: Animation.Infinite
-        }
-
-    ScaleAnimator {
-        target: innerCircleIn
-        running: true
-        from: 0.8
-        to: 1
-        duration: 3600
-        loops: Animation.Infinite
-        }
+    }
+    
+    ColorOverlay {
+        id: clovrLyCSTmic
+        anchors.fill: cstMicIcon
+        source: cstMicIcon
+        color: theme.linkColor
+    }
+    
 }

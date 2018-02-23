@@ -26,11 +26,10 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtGraphicalEffects 1.0
 
-Rectangle {
+Item {
         id: dashDelegateItm
         height: skillTopRowLayout.height + dashinner.height + dashItemSrcMeta.height + units.gridUnit * 0.5
         width: cbwidth
-        color: theme.backgroundColor
 
         Item {
             id: contentdlgtitem
@@ -46,29 +45,47 @@ Rectangle {
             
             Text {
                 id: dashHeader
-                anchors.left: parent.left
-                anchors.leftMargin: 2
-                anchors.right: contxtnewsitemmenu.left
+                anchors.left: dashHeaderSeprtr.right
+                anchors.leftMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - Math.round(contxtnewsitemmenu.width + units.gridUnit * 1.25)
                 wrapMode: Text.Wrap;
                 font.bold: true;
                 text: newsTitle
                 color: theme.textColor
             }
+            
+            PlasmaCore.SvgItem {
+                id: dashHeaderSeprtr
+                anchors {
+                    left: contxtnewsitemmenu.right
+                    leftMargin: units.gridUnit * 0.25
+                    verticalCenter: parent.verticalCenter
+                }
+                height: units.gridUnit * 1
+                width: linetopleftvertSvg.elementSize("vertical-line").width
+                z: 110
+                elementId: "vertical-line"
+
+                svg: PlasmaCore.Svg {
+                    id: dashhdrvertSvg;
+                    imagePath: "widgets/line"
+                }
+            }
 
             ToolButton {
                 id: contxtnewsitemmenu
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
+                anchors.left: parent.left
                 width: units.gridUnit * 1
                 height: units.gridUnit * 1
                 Image {
                     id: innrnewitemcontxmenuimage
                     source: "../images/ctxmenu.png"
-                    anchors.top: parent.top
+                    anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: units.gridUnit * 0.7
-                    height: units.gridUnit * 0.7
+                    width: units.gridUnit * 0.60
+                    height: units.gridUnit * 0.50
                 }
                 ColorOverlay {
                     anchors.fill: innrnewitemcontxmenuimage
@@ -172,7 +189,7 @@ Rectangle {
         
         Drawer {
                 id: mcmenuItem
-                width: parent.width
+                width: dwrpaddedwidth
                 height: audionewsCardRectbtn.height + shareCardRectbtn.height + removeCardRectbtn.height + disableCardRectbtn.height 
                 edge: Qt.TopEdge
                 dragMargin: 0

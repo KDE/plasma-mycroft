@@ -23,6 +23,7 @@ import QtQuick.Controls 2.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.core 2.0 as PlasmaCore
+import QtGraphicalEffects 1.0
 
 Column {
                     spacing: 6
@@ -35,11 +36,22 @@ Column {
                         id: messageRow
                         spacing: 6
                         
-                    Image {
-                        id: repImg
+                    Item {
+                        id: repImgBox
                         width: units.gridUnit * 2
                         height: units.gridUnit * 2
-                        source: "../images/mycroftsmaller2.png"
+                        
+                        Image {
+                            id: repImg
+                            anchors.fill: parent
+                            source: "../images/mycroftsmaller2.png"
+                        }
+                        
+                        ColorOverlay {
+                            anchors.fill: repImg
+                            source: repImg
+                            color: theme.linkColor
+                        }
                     }
                     
                     Rectangle {
