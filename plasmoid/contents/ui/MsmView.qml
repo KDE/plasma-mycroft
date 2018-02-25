@@ -41,14 +41,19 @@ Rectangle {
                 color: Qt.darker(theme.backgroundColor, 1.2)
                 
                 function exec(msmparam) {
+                    if(main.coreinstallstartpath == packagemcorestartcmd){
+                    var bscrpt = "/usr/bin/msm"
+                    }
+                    else {
                     var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                    }
                     return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
                 }
                 
                 function getSkillInfoLocal() {
                     var customFold = launchinstaller.skillsPath()
                     var defaultFold = '/opt/mycroft/skills/'
-                    var skillPath = defaultFold + model.name || customFold + model.name
+                    var skillPath = (defaultFold || customFold) + model.name
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
                         installLabl.text = "Installed"
                         getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
