@@ -42,18 +42,18 @@ Rectangle {
                 
                 function exec(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
-                    var bscrpt = "/usr/bin/msm"
+                        return launchinstaller.msmapp("konsole --hold -e msm install " + model.url)
                     }
                     else {
-                    var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                        var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                        return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
                     }
-                    return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
                 }
                 
                 function getSkillInfoLocal() {
                     var customFold = launchinstaller.skillsPath()
-                    var defaultFold = '/opt/mycroft/skills/'
-                    var skillPath = (defaultFold || customFold) + model.name
+                    var defaultFold = '/opt/mycroft/skills'
+                    var skillPath = (customFold || defaultFold) + "/" + model.name
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
                         installLabl.text = "Installed"
                         getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
