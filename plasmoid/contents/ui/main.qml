@@ -81,6 +81,8 @@ Item {
     
     Connections {
         target: main2
+        ignoreUnknownSignals: true
+        
         onSendShowMycroft: {
             plasmoid.expanded = !plasmoid.expanded
             tabBar.currentTab = mycroftTab
@@ -91,7 +93,7 @@ Item {
                 plasmoid.expanded
             }
         }
-        onSendShowSkillsInstaller: {
+        onInstallList: {
             tabBar.currentTab = mycroftMSMinstTab
             if(plasmoid.expanded = !plasmoid.expanded){
                 plasmoid.expanded

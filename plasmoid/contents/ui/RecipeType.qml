@@ -31,6 +31,22 @@ Rectangle {
     width: cbwidth
     color: theme.backgroundColor
     property alias recipeReadLVModel: recipeReadListView.model
+    
+    Connections {
+        target: main2
+        ignoreUnknownSignals: true
+        
+        onRecipeMethod: {
+            var getRecipeTitle = msgRecipeMethod
+            for (var i = 0; i < recipeLmodel.count; i++) {
+                var recipemodelLables = recipeLmodel.get(i).recipeLabel.toLowerCase();
+                recipemodelLables.replace(/\W/g, '');
+                if (recipemodelLables == getRecipeTitle) {
+                    recipesmodelview.contentItem.children[i].viewbtnClickItem.clicked()
+                }
+            }
+        }
+    }
 
 ListView {
      id: recipesmodelview

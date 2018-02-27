@@ -45,12 +45,18 @@ class MycroftDbusAdapterInterface: public QDBusAbstractAdaptor
 "    <signal name=\"sendShowSkills\">\n"
 "      <arg direction=\"out\" type=\"s\" name=\"msgShowSkills\"/>\n"
 "    </signal>\n"
-"    <signal name=\"sendShowInstallSkills\">\n"
+"    <signal name=\"installList\">\n"
 "      <arg direction=\"out\" type=\"s\" name=\"msgShowInstallSkills\"/>\n"
+"    </signal>\n"
+"    <signal name=\"recipeMethod\">\n"
+"      <arg direction=\"out\" type=\"s\" name=\"msgRecipeMethod\"/>\n"
 "    </signal>\n"
 "    <method name=\"showMycroft\"/>\n"
 "    <method name=\"showSkills\"/>\n"
 "    <method name=\"showSkillsInstaller\"/>\n"
+"    <method name=\"showRecipeMethod\">\n"
+"      <arg direction=\"in\" type=\"s\" name=\"recipeName\"/>\n"
+"     </method>\n"
 "  </interface>\n"
         "")
 public:
@@ -63,10 +69,12 @@ public Q_SLOTS: // METHODS
     void showMycroft();
     void showSkills();
     void showSkillsInstaller();
+    void showRecipeMethod(const QString &recipeName);
 Q_SIGNALS: // SIGNALS
-    void sendShowInstallSkills(const QString &msgShowInstallSkills);
     void sendShowMycroft(const QString &msgShowMycroft);
     void sendShowSkills(const QString &msgShowSkills);
+    void installList(const QString &msgShowInstallSkills);
+    void recipeMethod(const QString &msgRecipeMethod);
 };
 
 #endif

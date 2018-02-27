@@ -32,6 +32,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         width: cbwidth
+        property alias viewbtnClickItem: recipeViewBtn
 
         Column {
             id: contentdlgtitem
