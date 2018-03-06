@@ -39,6 +39,7 @@ Rectangle {
                 border.width: 1        
                 border.color: Qt.darker(theme.linkColor, 1.2)
                 color: Qt.darker(theme.backgroundColor, 1.2)
+                property var configPath
                 
                 function exec(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
@@ -46,19 +47,46 @@ Rectangle {
                     }
                     else {
                         var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
+                        return launchinstaller.msmapp("konsole -e bash " + bscrpt + " install " + model.url)
                     }
+                }
+                
+                function execUninstall(msmparam) {
+                    if(main.coreinstallstartpath == packagemcorestartcmd){
+                        return launchinstaller.msmapp("konsole --hold -e msm remove " + model.url)
+                    }
+                    else {
+                        var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                        return launchinstaller.msmapp("konsole -e bash " + bscrpt + " remove " + model.url)
+                    }
+                }
+                
+                function execUpdate(msmparam) {
+                    if(main.coreinstallstartpath == packagemcorestartcmd){
+                        return launchinstaller.msmapp("konsole --hold -e msm update " + model.name)
+                    }
+                    else {
+                        var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                        return launchinstaller.msmapp("konsole -e bash " + bscrpt + " update " + model.name)
+                    }
+                }
+                
+                function execConfiguration(msmparam) {
+                        var openConfigUrl = Qt.resolvedUrl(configPath)
+                        Qt.openUrlExternally(openConfigUrl)
                 }
                 
                 function getSkillInfoLocal() {
                     var customFold = launchinstaller.skillsPath()
                     var defaultFold = '/opt/mycroft/skills'
-                    var skillPath = (customFold || defaultFold) + "/" + model.name
+                    var skillPath = (defaultFold || customFold) + "/" + model.name
+                    configPath = (defaultFold || customFold) + "/" + model.name + "/" + "settingsmeta.json"
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
-                        installLabl.text = "Installed"
-                        getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
-                        installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
-                        skillcontent.border.color = Qt.lighter(theme.textColor, 1.2)
+                        installUpdateLabl.text = "Uninstall"
+                        updateskillviamsm.enabled = true
+                    }
+                    if(PlasmaLa.FileReader.file_exists_local(configPath)){
+                        configureSkillLabl.enabled = true
                     }
                 }
                 
@@ -67,7 +95,6 @@ Rectangle {
                 }
                 
                 Component.onCompleted: {
-                    msmSkillInstallProgBar.visible = false;
                     getSkillInfoLocal();
                 }
                 
@@ -117,84 +144,69 @@ Rectangle {
                         }
                     }
                 }
-
                 Rectangle {
                     id: getskillviamsmRect
                     width: parent.width
-                    height: units.gridUnit * 1
+                    height: units.gridUnit * 2.5
                     anchors.bottom: parent.bottom
                     color: Qt.darker(theme.linkColor, 1.2)
 
-                    PlasmaComponents.Label{
-                       id: installLabl
-                       wrapMode: Text.WordWrap
-                       anchors.centerIn: parent
+                    PlasmaComponents.Button{
+                       id: installUpdateLabl
+                       width: parent.width / 4
+                       height: parent.height
+                       anchors.left: parent.left
                        text: "Install"
-                       color: Qt.darker(theme.backgroundColor, 1.2)
-                    }
-
-                    PlasmaComponents.ProgressBar {
-                        anchors.centerIn: parent
-                        width: parent.width / 1.2
-                        id: msmSkillInstallProgBar
-                        visible: false
-                        indeterminate: false
-                      }
-
-                    MouseArea  {
-                    anchors.fill:  parent
-                    hoverEnabled: true
-                    onEntered: {
-                        switch(installLabl.text){
-                            case "Install":
-                                getskillviamsmRect.color = Qt.lighter(theme.backgroundColor, 1.2)
-                                installLabl.color = Qt.darker(theme.linkColor, 1.2)
-                                getskillviamsmRect.border.width = 1        
-                                getskillviamsmRect.border.color = Qt.darker(theme.linkColor, 1.2)
-                                break
-                            case "Installed":
-                                getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
-                                installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
-                                getskillviamsmRect.border.width = 0        
-                                getskillviamsmRect.border.color = Qt.darker(theme.backgroundColor, 1.2)
-                                skillcontent.border.color = Qt.darker(theme.textColor, 1.2)
-                                break
-                        }
-                    }
-                    onExited: {
-                        switch(installLabl.text){
-                            case "Install":
-                                getskillviamsmRect.color = Qt.darker(theme.linkColor, 1.2)
-                                installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
-                                getskillviamsmRect.border.width = 0
-                                break
-                            case "Installed":
-                                getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
-                                installLabl.color = Qt.darker(theme.backgroundColor, 1.2)
-                                getskillviamsmRect.border.width = 0
-                                getskillviamsmRect.color = Qt.lighter(theme.textColor, 1.2)
-                                skillcontent.border.color = Qt.lighter(theme.textColor, 1.2)
-                                break
-                        }
-                    }
-                    onClicked: {
-                        var msmprogress = exec()
-                        var getcurrentprogress = msmprogress.split("\n")
-                        if(getcurrentprogress.indexOf("Cloning repository") != -1)
-                            {
-                             installLabl.visible = false
-                             msmSkillInstallProgBar.visible = true;
-                             msmSkillInstallProgBar.indeterminate = true;
-                            }
-                        if(getcurrentprogress.indexOf("Skill installed!") != -1)
-                            {
-                            msmSkillInstallProgBar.visible = false
-                            installLabl.visible = true
-                            installLabl.text = "Installed"
-                            getSkillInfoLocal()
+                       
+                       onClicked:{
+                           switch(installUpdateLabl.text){
+                                case "Install":
+                                     var msmprogress = exec()
+                                     break
+                                case "Uninstall":
+                                     var msmprogress = execUninstall()
+                                     break
                             }
                         }
                     }
+                    
+                    PlasmaComponents.Button{
+                       id: updateskillviamsm
+                       width: parent.width / 4
+                       height: parent.height
+                       anchors.left: installUpdateLabl.right
+                       text: "Update"
+                       enabled: false
+                       
+                       onClicked:{
+                            execUpdate()
+                        }
+                    }
+                    
+                    PlasmaComponents.Button{
+                       id: viewGit
+                       width: parent.width / 4
+                       height: parent.height
+                       anchors.left: updateskillviamsm.right
+                       text: "Readme"
+                       
+                       onClicked: {
+                           Qt.openUrlExternally(model.url)
+                        }
+                    }
+                        
+                    PlasmaComponents.Button{
+                       id: configureSkillLabl
+                       width: parent.width / 4
+                       anchors.right: parent.right
+                       height: parent.height
+                       text: "Configure"
+                       enabled: false
+                       
+                       onClicked: {
+                            execConfiguration()
+                        }
+                    }    
                 }
             }
                     
