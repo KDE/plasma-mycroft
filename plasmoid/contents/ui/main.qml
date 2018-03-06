@@ -214,6 +214,23 @@ Item {
         }
         convoLmodel.append({"itemType": "RecipeType", "InputQuery": ""})
     }
+    
+    function filterBalooObj(metadata){
+        var BalooObj = metadata;
+        var baloosearchTerm = metadata.searchType
+        convoLmodel.clear()
+        for (var i = 0; i < BalooObj.data.length; i++){
+            if(baloosearchTerm == "type:audio"){
+                convoLmodel.append({"itemType": "AudioFileType", "InputQuery": metadata.data[i]})   
+            }
+            if(baloosearchTerm == "type:video"){
+                convoLmodel.append({"itemType": "VideoFileType", "InputQuery": metadata.data[i]})   
+            }
+            if(baloosearchTerm == "type:document" || baloosearchTerm == "type:spreadsheet" || baloosearchTerm == "type:presentation" || baloosearchTerm == "type:archive" ){
+                convoLmodel.append({"itemType": "DocumentFileType", "InputQuery": metadata.data[i]})   
+            }
+        }
+    }
 
     
     function isBottomEdge() {
@@ -759,6 +776,11 @@ Item {
                 filterRecipeObj(dataContent)
             }
             
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "balooObject") {
+                dataContent = somestring.data.desktop
+                filterBalooObj(dataContent)
+            }
+            
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
                 var title = "Mycroft's Reply:"
@@ -998,6 +1020,9 @@ Item {
                                         case "PlacesType" : return "PlacesType.qml"
                                         case "RecipeType" : return "RecipeType.qml"    
                                         case "DashboardType" : return "DashboardType.qml"
+                                        case "AudioFileType" : return "AudioFileDelegate.qml"
+                                        case "VideoFileType" : return "VideoFileDelegate.qml"
+                                        case "DocumentFileType" : return "DocumentFileDelegate.qml"      
                                         }
                                     property var metacontent : dataContent
                                 }
