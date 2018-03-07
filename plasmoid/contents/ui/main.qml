@@ -74,10 +74,20 @@ Item {
     property alias recipeReadLmodel: recipeReadListModel
     property bool intentfailure: false
     property bool locationUserSelected: false
+    property bool connectCtx: false
     property var geoLat
     property var geoLong
     property var globalcountrycode
     property var weatherMetric: "metric"
+    
+    Connections {
+        target: plasmoid
+        onExpandedChanged: {
+            if (plasmoid.expanded) {
+                checkDashStatus()
+            }
+        }
+    }
     
     Connections {
         target: main2
@@ -107,6 +117,26 @@ Item {
             coreinstallstartpath = packagemcorestartcmd
             coreinstallstoppath = packagemcorestopcmd
         }
+    }
+    
+    function checkDashStatus(){
+        if(dashListModel.count == 0){
+            checkConnectionStatus()
+        }
+    }
+    
+    function checkConnectionStatus(){
+        var isConnected = PlasmaLa.ConnectionCheck.checkConnection()
+        if(!isConnected){
+               if(!connectCtx){
+               var conError = i18n("I am not connected to the 🌐 internet, Please check your network connection")
+               convoLmodel.append({"itemType": "NonVisual", "InputQuery": conError});
+               connectCtx = true
+               }
+            }
+        else {
+            geoDataSource.connectedSources = ["location"]
+            }
     }
     
     function toggleInputMethod(selection){
@@ -445,20 +475,24 @@ Item {
     }
     
 PlasmaCore.DataSource {
-            id: dataSource
-            dataEngine: "geolocation"
-            connectedSources: ["location"]
-
-            onNewData: {
-                if (sourceName == "location"){
-                geoLat = data.latitude
-                geoLong = data.longitude
-                var globalcountry = data.country
-                globalcountrycode = globalcountry.substring(0, 2)
-                showDash("setVisible")
-                    }
+        id: geoDataSource
+        dataEngine: "geolocation"
+    
+        onSourceAdded: {
+            connectSource(source)
+        }
+        
+        onNewData: {
+            convoLmodel.clear()
+            if (sourceName == "location"){
+            geoLat = data.latitude
+            geoLong = data.longitude
+            var globalcountry = data.country
+            globalcountrycode = globalcountry.substring(0, 2)
+            showDash("setVisible")
                 }
-    }
+            }
+        }
 
 ListModel {
          id: dashListModel

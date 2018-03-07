@@ -28,6 +28,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Core
     Qml
     DBus
+    Network
 )
 
 add_subdirectory(plugin)
