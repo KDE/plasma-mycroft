@@ -43,31 +43,31 @@ Rectangle {
                 
                 function exec(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
-                        return launchinstaller.msmapp("konsole --hold -e msm install " + model.url)
+                        return launchinstaller.msmapp("bash msm install " + model.url)
                     }
                     else {
                         var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("konsole -e bash " + bscrpt + " install " + model.url)
+                        return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
                     }
                 }
                 
                 function execUninstall(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
-                        return launchinstaller.msmapp("konsole --hold -e msm remove " + model.url)
+                        return launchinstaller.msmapp("bash msm remove " + model.name)
                     }
                     else {
                         var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("konsole -e bash " + bscrpt + " remove " + model.url)
+                        return launchinstaller.msmapp("bash " + bscrpt + " remove " + model.name)
                     }
                 }
                 
                 function execUpdate(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
-                        return launchinstaller.msmapp("konsole --hold -e msm update " + model.name)
+                        return launchinstaller.msmapp("bash msm update " + model.name)
                     }
                     else {
                         var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("konsole -e bash " + bscrpt + " update " + model.name)
+                        return launchinstaller.msmapp("bash " + bscrpt + " update " + model.name)
                     }
                 }
                 

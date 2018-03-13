@@ -129,7 +129,7 @@ Item {
         var isConnected = PlasmaLa.ConnectionCheck.checkConnection()
         if(!isConnected){
                if(!connectCtx){
-               var conError = i18n("I am not connected to the 🌐 internet, Please check your network connection")
+               var conError = i18n("I am not connected to the internet, Please check your network connection")
                convoLmodel.append({"itemType": "NonVisual", "InputQuery": conError});
                connectCtx = true
                }
@@ -474,6 +474,11 @@ Item {
         }
     }
     
+    function getFallBackResult(failedQuery){
+      var url = "http://api.wolframalpha.com/v1/simple?appid=" + innerset.wolframKey + "&i=" + failedQuery + "&width=1024&fontsize=32"
+      convoLmodel.append({"itemType": "FallBackType", "InputQuery": url})
+    }
+    
 PlasmaCore.DataSource {
         id: geoDataSource
         dataEngine: "geolocation"
@@ -782,6 +787,12 @@ Item {
                 showDash("setHide")
             }
             
+            if (msgType === "intent_failure"){
+                if(wolframfallbackswitch.checked == true){
+                    getFallBackResult(qinput.text)
+                }
+            }
+            
             if (somestring && somestring.data && typeof somestring.data.intent_type !== 'undefined'){
                 smintent = somestring.data.intent_type;
             }
@@ -1056,7 +1067,8 @@ Item {
                                         case "DashboardType" : return "DashboardType.qml"
                                         case "AudioFileType" : return "AudioFileDelegate.qml"
                                         case "VideoFileType" : return "VideoFileDelegate.qml"
-                                        case "DocumentFileType" : return "DocumentFileDelegate.qml"      
+                                        case "DocumentFileType" : return "DocumentFileDelegate.qml"
+                                        case "FallBackType" : return "FallbackWebSearchType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
@@ -1312,9 +1324,25 @@ Item {
                     }
                     
                     
+                PlasmaComponents.Switch {
+                        id: wolframfallbackswitch
+                        anchors.top: notificationswitch.bottom
+                        anchors.topMargin: 10
+                        text: i18n("Enable Fallback To Wolfram Alpha Web-Search")
+                        checked: true
+                    }
+                
+                PlasmaComponents.TextField {
+                        id: wolframapikeyfld
+                        width: parent.width
+                        anchors.top: wolframfallbackswitch.bottom
+                        anchors.topMargin: 10
+                        text: i18n("RJVUY3-T6YLWQVXRR")
+                }
+                
                 PlasmaExtras.Paragraph {
                         id: settingsTabTF2
-                        anchors.top: notificationswitch.bottom
+                        anchors.top: wolframapikeyfld.bottom
                         anchors.topMargin: 15
                         text: i18n("<i>Please Note: Default path is set to /home/$USER/mycroft-core/. Change the above settings to match your installation</i>")
                     }
@@ -1713,6 +1741,8 @@ Item {
             property alias customrecog: settingsTabUnitsIRCmd.text
             property alias customsetuppath: settingsTabUnitsOpThree.text
             property alias notifybool: notificationswitch.checked
+            property alias wolffallbackbool: wolframfallbackswitch.checked
+            property alias wolframKey: wolframapikeyfld.text
             property alias radiobt1: settingsTabUnitsOpOne.checked
             property alias radiobt2: settingsTabUnitsOpTwo.checked
             property alias radiobt3: settingsTabUnitsOpZero.checked

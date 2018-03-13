@@ -1,0 +1,5 @@
+img {
+    object-fit: fill;
+    width: 100%  !important;
+    height: 100%  !important;
+}
