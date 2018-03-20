@@ -1007,15 +1007,7 @@ Item {
                 "InputQuery": durl
                 })
                 inputlistView.positionViewAtEnd();
-
-
-            var irecogmsgsend = innerset.customrecog
-            var socketmessage = {};
-            socketmessage.type = "recognizer_loop:utterance";
-            socketmessage.data = {};
-            socketmessage.data.utterances = [irecogmsgsend + " " + durl];
-            socket.sendTextMessage(JSON.stringify(socketmessage));
-                }
+            }
             
             if(ext === 'mp3'){
                 console.log('mp3');
@@ -1315,13 +1307,31 @@ Item {
                 }    
                     
                     
+                PlasmaComponents.TextField {
+                        id: settingsTabUnitsOCRCmd
+                        width: settingscontent.width / 1.1
+                        anchors.top: settingsTabUnitsIRCmd.bottom
+                        anchors.topMargin: 10
+                        placeholderText: i18n("Your Custom Image OCR Skill Voc Keywords")
+                        text: i18n("ocr image url")
+                    }
+                    
+                PlasmaComponents.Button {
+                    id: acceptcustomOCRCmd
+                    anchors.left: settingsTabUnitsOCRCmd.right
+                    anchors.verticalCenter: settingsTabUnitsOCRCmd.verticalCenter
+                    anchors.right: parent.right
+                    iconSource: "checkbox"
+                } 
+                    
+                    
                 PlasmaComponents.Switch {
                         id: notificationswitch
-                        anchors.top: settingsTabUnitsIRCmd.bottom
+                        anchors.top: settingsTabUnitsOCRCmd.bottom
                         anchors.topMargin: 10
                         text: i18n("Enable Notifications")
                         checked: true
-                    }
+                }
                     
                     
                 PlasmaComponents.Switch {
@@ -1739,6 +1749,7 @@ Item {
             id: innerset
             property alias wsurl: settingsTabUnitsWSpath.text
             property alias customrecog: settingsTabUnitsIRCmd.text
+            property alias customocrrecog: settingsTabUnitsOCRCmd.text
             property alias customsetuppath: settingsTabUnitsOpThree.text
             property alias notifybool: notificationswitch.checked
             property alias wolffallbackbool: wolframfallbackswitch.checked

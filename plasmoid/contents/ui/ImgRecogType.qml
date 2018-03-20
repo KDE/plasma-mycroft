@@ -19,6 +19,8 @@
 
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 Column {
                     id: colmsg
@@ -41,14 +43,53 @@ Column {
 
                     Image {
                         id: messageText
-                        anchors.fill: parent
+                        anchors.top: parent.top
+                        anchors.bottom: buttnRow.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         anchors.margins: 5
                         fillMode: Image.PreserveAspectCrop
                         source: model.InputQuery
                         sourceSize.width: cbwidth
                         sourceSize.height: units.gridUnit * 10
                         }
-                            }
+                        
+                    Row {
+                        id: buttnRow
+                        height: units.gridUnit * 2
+                        anchors.bottom: parent.bottom
+                        
+                        PlasmaComponents.Button {
+                                id: generalImgRecog
+                                width: cbwidth / 2
+                                height: units.gridUnit * 2
+                                text: "Broad Recognition"
+                                
+                                onClicked: {
+                                    var irecogmsgsend = innerset.customrecog
+                                    var socketmessage = {};
+                                    socketmessage.type = "recognizer_loop:utterance";
+                                    socketmessage.data = {};
+                                    socketmessage.data.utterances = [irecogmsgsend + " " + model.InputQuery];
+                                    socket.sendTextMessage(JSON.stringify(socketmessage));
                                 }
-                                    }
-
+                            }
+                        PlasmaComponents.Button {
+                                id: ocrImageRecog
+                                width: cbwidth / 2
+                                height: units.gridUnit * 2
+                                text: "OCR Recognition"
+                                
+                                onClicked: {
+                                    var irecogmsgsend = innerset.customocrrecog
+                                    var socketmessage = {};
+                                    socketmessage.type = "recognizer_loop:utterance";
+                                    socketmessage.data = {};
+                                    socketmessage.data.utterances = [irecogmsgsend + " " + model.InputQuery];
+                                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
