@@ -443,6 +443,22 @@ Item {
         }   
     }
     
+    function fetchDashCryptoCardData(){
+        var doc = new XMLHttpRequest
+        var url = "https://api.coindesk.com/v1/bpi/currentprice.json"
+        
+            doc.open("Get", url, true);
+            doc.send();
+        
+         doc.onreadystatechange = function() {
+            if (doc.readyState === XMLHttpRequest.DONE) {
+                 var req = doc.responseText;
+                 console.log(req)
+                 dashLmodel.append({"iType": "DashCryptoPrice", "iObj": req})
+            }
+        }
+    }
+    
     function updateCardData(){
         tabBar.currentTab = mycroftTab
         convoLmodel.clear()
@@ -463,6 +479,9 @@ Item {
                 }
                 if(weathercardswitch.checked == true){
                  fetchDashWeather()
+                }
+                if(cryptocardswitch.checked == true){
+                 fetchDashCryptoCardData()
                 }
                     convoLmodel.append({"itemType": "DashboardType", "InputQuery": ""})
             }
@@ -1443,6 +1462,12 @@ Item {
             id: newscardswitch
             text: i18n("Enable / Disable News Card")
             checked: true
+        }
+        
+        PlasmaComponents.Switch {
+            id: cryptocardswitch
+            text: i18n("Enable / Disable Cryptocurrency Card")
+            checked: false
         }
                     
         Row {

@@ -47,6 +47,9 @@ Item {
             case "DashWeather":
                 filterDashWeatherObj(iObj)
                 break
+            case "DashCryptoPrice":
+                filterDashCryptoObj(iObj)
+                break
         }
     }
     
@@ -61,7 +64,7 @@ Item {
                 filteredMetric = "°c"
         }
         else if (weatherMetric.indexOf('imperial') != -1){
-                filteredMetric = "°k"  
+                filteredMetric = "°f"  
         }
           if(weatherobj){
               var filteredWeatherObject = JSON.parse(weatherobj)
@@ -80,6 +83,14 @@ Item {
               }
             }
         }
+    
+    function filterDashCryptoObj(cryptobj){
+        if(cryptobj){
+         var filteredCryptObj = JSON.parse(cryptobj)
+         dashdelegatelview.model = dashCryptoPriceListModel
+         dashCryptoPriceListModel.append({itemType: "DashCryptoPrice", cryptoType: "Bitcoin", cryptoUSDSymbol: filteredCryptObj.bpi.USD.symbol, cryptoGBPSymbol: filteredCryptObj.bpi.GBP.symbol, cryptoEURSymbol: filteredCryptObj.bpi.EUR.symbol, cryptoUSDRate: filteredCryptObj.bpi.USD.rate, cryptoGBPRate: filteredCryptObj.bpi.GBP.rate, cryptoEURRate: filteredCryptObj.bpi.EUR.rate})
+        }
+    }
     
     function removeChildCard(){
         dashLmodel.remove(index)
@@ -170,6 +181,9 @@ ListModel {
 ListModel {
         id: disclaimerListModel
 }
+ListModel {
+        id: dashCryptoPriceListModel
+}
 
 ListView {
      id: dashdelegatelview
@@ -184,6 +198,7 @@ ListView {
                                case "Disclaimer": return "DisclaimerCardDelegate.qml"
                                case "DashNews": return "DashNewsDelegate.qml"
                                case "DashWeather": return "DashWeatherDelegate.qml"
+                               case "DashCryptoPrice": return "DashCryptoDelegate.qml"
                 }
         }
 
