@@ -72,6 +72,7 @@ Item {
     property alias dashLmodel: dashListModel
     property alias recipeLmodel: recipesListModel
     property alias recipeReadLmodel: recipeReadListModel
+    property alias stackLmodel: stackexListModel
     property bool intentfailure: false
     property bool locationUserSelected: false
     property bool connectCtx: false
@@ -261,8 +262,18 @@ Item {
             }
         }
     }
-
     
+    function filterstackObj(metadata){
+        var filterStackMeta = JSON.parse(metadata.data)
+        convoLmodel.clear()
+        stackexListModel.clear()
+        for (var i = 0; i < filterStackMeta.items.length; i++){
+            stackexListModel.insert(i, {sQuestion: filterStackMeta.items[i].title, sLink: filterStackMeta.items[i].link, sAuthor: filterStackMeta.items[i].owner.display_name, sIsAnswered: filterStackMeta.items[i].is_answered, sAnswerCount: filterStackMeta.items[i].answer_count})
+        }
+        convoLmodel.append({"itemType": "StackObjType", "InputQuery": ""})
+        inputlistView.positionViewAtEnd();
+    }
+
     function isBottomEdge() {
         return plasmoid.location == PlasmaCore.Types.BottomEdge;
     }
@@ -514,7 +525,10 @@ ListModel{
 ListModel {
         id: recipeReadListModel
     }
-
+    
+ListModel {
+        id: stackexListModel
+    }
     
 Timer {
            id: timer
@@ -826,6 +840,11 @@ Item {
                 filterBalooObj(dataContent)
             }
             
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "stackresponseObject") {
+                dataContent = somestring.data.desktop
+                filterstackObj(dataContent)
+            }
+            
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
                 var title = "Mycroft's Reply:"
@@ -1061,6 +1080,7 @@ Item {
                                         case "VideoFileType" : return "VideoFileDelegate.qml"
                                         case "DocumentFileType" : return "DocumentFileDelegate.qml"
                                         case "FallBackType" : return "FallbackWebSearchType.qml"
+                                        case "StackObjType" : return "StackObjType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
