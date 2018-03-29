@@ -27,7 +27,7 @@ ConnectionCheck::ConnectionCheck(QObject *parent)
 
 bool ConnectionCheck::checkConnection(){
     QNetworkAccessManager nam;
-    QNetworkRequest req(QUrl("http://www.example.com/"));
+    QNetworkRequest req(QUrl("http://www.mycroft.ai/"));
     QNetworkReply *reply = nam.get(req);
     QEventLoop loop;
     connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));

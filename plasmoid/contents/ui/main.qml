@@ -1381,11 +1381,20 @@ Item {
                         checked: true
                     }
                 
+                PlasmaComponents.Label {
+                    id: wolframkeylabel
+                    text: i18n("Wolfram Alpha API:")
+                    anchors.top: wolframfallbackswitch.bottom
+                    anchors.topMargin: 10
+                }
+                
                 PlasmaComponents.TextField {
                         id: wolframapikeyfld
-                        width: parent.width
-                        anchors.top: wolframfallbackswitch.bottom
-                        anchors.topMargin: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: units.gridUnit * 0.25
+                        anchors.left: wolframkeylabel.right
+                        anchors.leftMargin: units.gridUnit * 0.25
+                        anchors.verticalCenter: wolframkeylabel.verticalCenter
                         text: i18n("RJVUY3-T6YLWQVXRR")
                 }
                 
