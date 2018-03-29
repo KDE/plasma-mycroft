@@ -106,8 +106,74 @@ Rectangle {
                         id: innerskillscolumn
                         anchors.top: sepratrln1.bottom
                         
-                        PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(0).Commands)}
-                        PlasmaComponents.Label {wrapMode: Text.WordWrap; width: main.width; text: i18n('<b>Command:</b> ' + CommandList.get(1).Commands)}
+                        PlasmaComponents.Label {
+                            id: cmd0label
+                            wrapMode: Text.WordWrap; 
+                            width: main.width; 
+                            text: i18n('<b>Command:</b> ' + CommandList.get(0).Commands)
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                
+                                onEntered: {
+                                    cmd0label.color = theme.linkColor
+                                    cmd0label.font.underline = true
+                                    cmd0label.font.bold = true
+                                }
+                                onExited: {
+                                    cmd0label.color = theme.textColor
+                                    cmd0label.font.underline = false
+                                    cmd0label.font.bold = false
+                                }
+                                onClicked: {
+                                    var genExampleQuery = CommandList.get(0).Commands
+                                    var exampleQuery = genExampleQuery.toString().split(",")
+                                    var socketmessage = {};
+                                    socketmessage.type = "recognizer_loop:utterance";
+                                    socketmessage.data = {};
+                                    socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
+                                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                                    tabBar.currentTab = mycroftTab
+                                    qinput.text = ""; 
+                                }
+                            }
+                        }
+                        
+                        PlasmaComponents.Label {
+                            id: cmd1label
+                            wrapMode: Text.WordWrap; 
+                            width: main.width; 
+                            text: i18n('<b>Command:</b> ' + CommandList.get(1).Commands)
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                
+                                onEntered: {
+                                    cmd1label.color = theme.linkColor
+                                    cmd1label.font.underline = true
+                                    cmd1label.font.bold = true
+                                }
+                                onExited: {
+                                    cmd1label.color = theme.textColor
+                                    cmd1label.font.underline = false
+                                    cmd1label.font.bold = false
+                                }
+                                onClicked: {
+                                    tabBar.currentTab = mycroftTab
+                                    var genExampleQuery = CommandList.get(1).Commands
+                                    var exampleQuery = genExampleQuery.toString().split(",")
+                                    var socketmessage = {};
+                                    socketmessage.type = "recognizer_loop:utterance";
+                                    socketmessage.data = {};
+                                    socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
+                                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                                    tabBar.currentTab = mycroftTab
+                                    qinput.text = ""; 
+                                }
+                            }
+                        }
                             }
                         }
                     }
