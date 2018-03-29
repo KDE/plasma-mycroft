@@ -820,10 +820,10 @@ Item {
                 showDash("setHide")
             }
             
-            if (msgType === "intent_failure"){
-                if(wolframfallbackswitch.checked == true){
-                    getFallBackResult(qinput.text)
-                }
+            if (somestring.data.handler === "fallback" && somestring.data.fallback_handler === "WolframAlphaSkill.handle_fallback" && somestring.type === "mycroft.skill.handler.complete"){
+                        if(wolframfallbackswitch.checked == true){
+                            getFallBackResult(qinput.text)
+                    }
             }
             
             if (somestring && somestring.data && typeof somestring.data.intent_type !== 'undefined'){
