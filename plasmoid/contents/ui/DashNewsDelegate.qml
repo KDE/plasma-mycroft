@@ -26,14 +26,24 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtGraphicalEffects 1.0
 
-Item {
+Rectangle {
         id: dashDelegateItm
         height: skillTopRowLayout.height + dashinner.height + dashItemSrcMeta.height + units.gridUnit * 0.5
-        width: cbwidth
+        width: cbwidth - units.gridUnit * 0.50
+        color: theme.backgroundColor
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 10
+            samples: 32
+            spread: 0.1
+            color: Qt.rgba(0, 0, 0, 0.3)
+        }
 
         Item {
             id: contentdlgtitem
-            width: parent.width
+            width: parent.width - units.gridUnit * 0.05
             height: parent.height
             
             Item {
@@ -53,6 +63,23 @@ Item {
                 font.bold: true;
                 text: newsTitle
                 color: theme.textColor
+                
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    
+                    onEntered: {
+                        dashHeader.color = theme.linkColor
+                        dashHeader.font.underline = true
+                    }
+                    onExited: {
+                        dashHeader.color = theme.textColor
+                        dashHeader.font.underline = false
+                    }
+                    onClicked: {
+                        Qt.openUrlExternally(newsURL)
+                    }
+                }
             }
             
             PlasmaCore.SvgItem {
@@ -161,6 +188,7 @@ Item {
              id: dashItemSrcMeta
              implicitWidth: dashItemSrcName.implicitWidth + units.gridUnit * 1
              anchors.left: parent.left
+             anchors.leftMargin: units.gridUnit * 0.05
              anchors.top: nwsseprator2.bottom 
              anchors.topMargin: 1
              color: theme.linkColor
@@ -172,6 +200,23 @@ Item {
                   anchors.centerIn: parent
                   color: theme.textColor ;
                   text: newsSource
+                  
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    
+                            onEntered: {
+                               dashItemSrcMeta.color = theme.textColor
+                               dashItemSrcName.color = theme.backgroundColor
+                            }
+                            onExited: {
+                               dashItemSrcMeta.color = theme.linkColor
+                               dashItemSrcName.color = theme.textColor
+                            }
+                            onClicked: {
+                                Qt.openUrlExternally("https://" + newsSource)
+                            }
+                        }
                     }
                 }
                 
@@ -179,7 +224,7 @@ Item {
             id: dashItemPwrBy
             anchors.top: nwsseprator2.bottom 
             anchors.topMargin: 1
-            wrapMode: Text.Wrop;
+            wrapMode: Text.Wrap;
             anchors.right: parent.right
             color: theme.textColor;
             font.pixelSize: 10

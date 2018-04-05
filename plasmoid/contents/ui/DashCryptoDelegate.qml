@@ -26,10 +26,20 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtGraphicalEffects 1.0
 
-Item {
+Rectangle {
         id: dashDelegateItm
-        height: units.gridUnit * 2
-        width: cbwidth
+        height: units.gridUnit * 2.5
+        width: cbwidth - units.gridUnit * 0.50
+        color: theme.backgroundColor
+        layer.enabled: true
+        layer.effect: DropShadow {
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 10
+            samples: 32
+            spread: 0.1
+            color: Qt.rgba(0, 0, 0, 0.3)
+        }
         
         Item {
             id: contentdlgtitem
