@@ -30,7 +30,9 @@ Rectangle {
         id: dashDelegateItm
         height: skillTopRowLayout.height + dashinner.height + dashItemSrcMeta.height + units.gridUnit * 0.5
         width: cbwidth - units.gridUnit * 0.50
-        color: theme.backgroundColor
+        border.width: 1        
+        border.color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2)
+        color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2) 
         layer.enabled: true
         layer.effect: DropShadow {
             horizontalOffset: 0
@@ -61,8 +63,13 @@ Rectangle {
                 width: parent.width - Math.round(contxtnewsitemmenu.width + units.gridUnit * 1.25)
                 wrapMode: Text.Wrap;
                 font.bold: true;
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 text: newsTitle
-                color: theme.textColor
                 
                 MouseArea {
                     anchors.fill: parent
@@ -73,7 +80,7 @@ Rectangle {
                         dashHeader.font.underline = true
                     }
                     onExited: {
-                        dashHeader.color = theme.textColor
+                        dashHeader.color = PlasmaCore.ColorScope.textColor
                         dashHeader.font.underline = false
                     }
                     onClicked: {
@@ -148,7 +155,12 @@ Rectangle {
             anchors.right: ctxImgIcon.left
             anchors.left: parent.left
             anchors.leftMargin: 2
-            color: theme.textColor ;
+            font.pointSize: theme.defaultFont.pointSize
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            color: PlasmaCore.ColorScope.textColor
             text: newsDescription
             
             Component.onCompleted: {
@@ -198,7 +210,12 @@ Rectangle {
                   id: dashItemSrcName
                   wrapMode: Text.Wrap;
                   anchors.centerIn: parent
-                  color: theme.textColor ;
+                  font.pointSize: theme.defaultFont.pointSize
+                  font.letterSpacing: theme.defaultFont.letterSpacing
+                  font.wordSpacing: theme.defaultFont.wordSpacing
+                  font.family: theme.defaultFont.family
+                  renderType: Text.NativeRendering 
+                  color: PlasmaCore.ColorScope.textColor
                   text: newsSource
                   
                 MouseArea {
@@ -226,7 +243,11 @@ Rectangle {
             anchors.topMargin: 1
             wrapMode: Text.Wrap;
             anchors.right: parent.right
-            color: theme.textColor;
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            color: PlasmaCore.ColorScope.textColor
             font.pixelSize: 10
             text: i18n("<i>Powered By: NewsAPI</i>")
             }

@@ -30,7 +30,9 @@ Rectangle {
         id: dashDelegateItm
         height: units.gridUnit * 2.5
         width: cbwidth - units.gridUnit * 0.50
-        color: theme.backgroundColor
+        border.width: 1        
+        border.color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2)
+        color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2) 
         layer.enabled: true
         layer.effect: DropShadow {
             horizontalOffset: 0
@@ -58,10 +60,15 @@ Rectangle {
                 anchors.left: dashHeaderSeprtr.right
                 anchors.leftMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter
-                wrapMode: Text.Wrap;
-                font.bold: true;
+                wrapMode: Text.Wrap
+                font.bold: true
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 text: i18n("Currency: " + model.cryptoType)
-                color: theme.textColor
             }
             
             PlasmaCore.SvgItem {
@@ -129,7 +136,12 @@ Rectangle {
             wrapMode: Text.Wrap;
             anchors.left: parent.left
             width: parent.width / 3
-            color: theme.textColor ;
+            font.pointSize: theme.defaultFont.pointSize
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            color: PlasmaCore.ColorScope.textColor
             text: i18n("USD: $" + model.cryptoUSDRate)
             }
         
@@ -138,7 +150,12 @@ Rectangle {
             wrapMode: Text.Wrap;
             anchors.left: nwsdesc.right
             width: parent.width / 3
-            color: theme.textColor ;
+            font.pointSize: theme.defaultFont.pointSize
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            color: PlasmaCore.ColorScope.textColor
             text: i18n("GBP: £" + model.cryptoUSDRate)
                 }
         
@@ -147,7 +164,12 @@ Rectangle {
             wrapMode: Text.Wrap;
             anchors.left: nwsdesc2.right
             width: parent.width / 3
-            color: theme.textColor ;
+            font.pointSize: theme.defaultFont.pointSize
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            color: PlasmaCore.ColorScope.textColor
             text: i18n("EURO: €" + model.cryptoUSDRate)
             }
         

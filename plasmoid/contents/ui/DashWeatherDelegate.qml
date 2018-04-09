@@ -29,7 +29,9 @@ Rectangle {
         id: dashDelegateItm
         height: units.gridUnit * 5.25
         width: cbwidth - units.gridUnit * 0.50
-        color: theme.backgroundColor
+        border.width: 1        
+        border.color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2)
+        color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2) 
         layer.enabled: true
         layer.effect: DropShadow {
             horizontalOffset: 0
@@ -59,8 +61,13 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 wrapMode: Text.Wrap;
                 font.bold: true;
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 text: i18n(itemWeatherCity + " | " + itemWeatherTempType)
-                color: theme.textColor
             }
             
             Image {
@@ -79,8 +86,13 @@ Rectangle {
                 anchors.rightMargin: units.gridUnit * 1
                 anchors.verticalCenter: parent.verticalCenter
                 font.bold: true;
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 text: i18n("Wind | " + itemWeatherWind + " meters/sec")
-                color: theme.textColor
             }
             
             PlasmaCore.SvgItem {
@@ -140,7 +152,12 @@ Rectangle {
                 anchors.top: nwsseprator.bottom
                 anchors.topMargin: 1
                 anchors.left: parent.left
-                color: theme.textColor
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 wrapMode: Text.WordWrap;
                 font.bold: true;
                 text: "Minimum Temperature: " + itemWeatherTempMin + itemWeatherMetricType
@@ -160,10 +177,15 @@ Rectangle {
                 anchors.top: nwsseprator2.bottom
                 anchors.topMargin: 1
                 anchors.left: parent.left
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 wrapMode: Text.WordWrap;
                 font.bold: true;
                 text: "Current Temperature: " + itemWeatherTemp + itemWeatherMetricType
-                color: theme.textColor
             }
             
             Rectangle {
@@ -180,9 +202,14 @@ Rectangle {
                 anchors.top: nwsseprator3.bottom
                 anchors.topMargin: 1
                 anchors.left: parent.left
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
                 wrapMode: Text.WordWrap;
                 font.bold: true;
-                color: theme.textColor
                 text:"Maximum Temperature: " + itemWeatherTempMax + itemWeatherMetricType
                 }
             }

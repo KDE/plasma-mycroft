@@ -28,9 +28,11 @@ import QtGraphicalEffects 1.0
 
 Rectangle {
         id: dashDelegateItm
-        height: units.gridUnit * 4.75
+        height: contentdlgtitem.height
         width: cbwidth - units.gridUnit * 0.50
-        color: theme.backgroundColor
+        border.width: 1        
+        border.color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2)
+        color: Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2) 
         layer.enabled: true
         layer.effect: DropShadow {
             horizontalOffset: 0
@@ -44,7 +46,7 @@ Rectangle {
         Item {
             id: contentdlgtitem
             width: parent.width
-            height: parent.height
+            height: dashHeader.height + dashHeaderSeprtr.height + nwsseprator.height + dashinner.height
             
             Item {
             id: skillTopRowLayout
@@ -59,10 +61,15 @@ Rectangle {
                 anchors.left: dashHeaderSeprtr.right
                 anchors.leftMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter
-                wrapMode: Text.Wrap;
-                font.bold: true;
+                wrapMode: Text.Wrap
+                font.bold: true
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
                 text: i18n("Let's Continue ?")
-                color: theme.textColor
+                color: PlasmaCore.ColorScope.textColor
             }
             
             PlasmaCore.SvgItem {
@@ -131,7 +138,11 @@ Rectangle {
             anchors.right: parent.right
             anchors.left: parent.left
             anchors.leftMargin: 2
-            color: theme.textColor ;
+            color: PlasmaCore.ColorScope.textColor
+            font.pointSize: theme.defaultFont.pointSize
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
             text: i18n("Mycroft by default is powered by a cloud-based speech to text service. Mycroft gives you the ability to change speech to text services or use a locally configured one within their settings at home.mycroft.ai.")
                 }
             }
