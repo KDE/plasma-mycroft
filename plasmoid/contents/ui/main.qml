@@ -73,6 +73,7 @@ Item {
     property alias recipeLmodel: recipesListModel
     property alias recipeReadLmodel: recipeReadListModel
     property alias stackLmodel: stackexListModel
+    property alias bookLmodel: bookListModel
     property bool intentfailure: false
     property bool locationUserSelected: false
     property bool connectCtx: false
@@ -271,6 +272,14 @@ Item {
             stackexListModel.insert(i, {sQuestion: filterStackMeta.items[i].title, sLink: filterStackMeta.items[i].link, sAuthor: filterStackMeta.items[i].owner.display_name, sIsAnswered: filterStackMeta.items[i].is_answered, sAnswerCount: filterStackMeta.items[i].answer_count})
         }
         convoLmodel.append({"itemType": "StackObjType", "InputQuery": ""})
+        inputlistView.positionViewAtEnd();
+    }
+    
+    function filterbookObj(metadata){
+        var filterBookMeta = JSON.parse(metadata.data)
+        bookListModel.clear()
+        bookListModel.append({bookcover: filterBookMeta.bkcover, bookurl: filterBookMeta.bkurl, bookstatus: filterBookMeta.bkstatus, booktitle: filterBookMeta.bktitle, bookauthor: filterBookMeta.bkauthor, bookdate: filterBookMeta.bkyear, bookpublisher: filterBookMeta.bkpublisher})
+        convoLmodel.append({"itemType": "BookType", "InputQuery": ""})
         inputlistView.positionViewAtEnd();
     }
 
@@ -548,6 +557,10 @@ ListModel {
 ListModel {
         id: stackexListModel
     }
+
+ListModel {
+        id: bookListModel
+    }   
     
 Timer {
            id: timer
@@ -864,6 +877,11 @@ Item {
                 filterstackObj(dataContent)
             }
             
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "bookObject") {
+                dataContent = somestring.data.desktop
+                filterbookObj(dataContent)
+            }
+            
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
                 var title = "Mycroft's Reply:"
@@ -1100,6 +1118,7 @@ Item {
                                         case "DocumentFileType" : return "DocumentFileDelegate.qml"
                                         case "FallBackType" : return "FallbackWebSearchType.qml"
                                         case "StackObjType" : return "StackObjType.qml"
+                                        case "BookType" : return "BookType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
