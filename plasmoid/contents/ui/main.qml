@@ -430,7 +430,14 @@ Item {
         doc.onreadystatechange = function() {
             if (doc.readyState === XMLHttpRequest.DONE) {
                 var req = doc.responseText;
+                var checkNewsItem = JSON.parse(req)
+                if (checkNewsItem.totalResults == 0){
+                    globalcountrycode = "us"
+                    fetchDashNews()
+                }
+                else {
                 dashLmodel.append({"iType": "DashNews", "iObj": req})
+                }
             }
         }
     }
@@ -496,7 +503,12 @@ Item {
             }
             else {
                 convoLmodel.clear()
-                disclaimbox.visible = true
+                if(mycroftStatusCheckSocket._socketIsAlreadyActive == true){
+                    disclaimbox.visible = false
+                }
+                else {
+                    disclaimbox.visible = true
+                }
             }
         }
         
@@ -795,9 +807,11 @@ Item {
         id: mycroftStatusCheckSocket
         url: innerset.wsurl
         active: true
+        property bool _socketIsAlreadyActive: false
         onStatusChanged: 
             if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
             socket.active = true
+            mycroftStatusCheckSocket._socketIsAlreadyActive = true
             disclaimbox.visible = false;
             mycroftstartservicebutton.checked = true
             statusId.text = i18n("<b>Mycroft is ready</b>")
@@ -807,6 +821,7 @@ Item {
 
             else if (mycroftStatusCheckSocket.status == WebSocket.Error) {
             mycroftstartservicebutton.checked = false
+            mycroftStatusCheckSocket._socketIsAlreadyActive = false
             statusId.text = i18n("<b>Mycroft is disabled</b>")
             statusId.color = theme.textColor
             statusId.visible = true
@@ -1071,6 +1086,15 @@ Item {
             }
         }
         
+        PulleyItem {
+            id: favlistPulley
+            visible: true
+            barColor: theme.linkColor
+            _isVisible: true
+            z: 900
+            
+            onPulleyExpanded: {disclaimbox.visible = false}
+        }
         
         Disclaimer{
             id: disclaimbox
@@ -1465,10 +1489,13 @@ Item {
             onCheckedChanged:   {
                 console.log(dashswitch.checked)
                 if(dashswitch.checked){
+                    tabBar.currentTab = mycroftTab
+                    disclaimbox.visible = false
                     showDash("setVisible")
                 }
                 else if(!dashswitch.checked){
                     convoLmodel.clear()
+                    disclaimbox.visible = true
                 }
             }
             
