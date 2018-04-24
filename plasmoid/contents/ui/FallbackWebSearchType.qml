@@ -53,8 +53,28 @@ Column {
                             url: InputQuery
                             experimental.preferredMinimumContentsWidth: cbwidth
                             experimental.useDefaultContentItemSize: false
+                            experimental.transparentBackground: true
                             experimental.userStyleSheets: "../code/fallback.css"
+                            opacity: 0
+                                                        
+                            onLoadingChanged: {
+                                switch (loadRequest.status)
+                                {
+                                case WebView.LoadSucceededStatus:
+                                    opacity = 1
+                                    return
+                                case WebView.LoadStartedStatus:
+                                    break
+                                case WebView.LoadStoppedStatus:
+                                    break
+                                case WebView.LoadFailedStatus:
+                                    break
+                                }
+                                opacity = 0
                             }
+
+                        }
+                            
                             
                             ScrollIndicator.vertical: ScrollIndicator { }
                             
