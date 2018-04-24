@@ -115,35 +115,61 @@ Item {
                     color: Qt.rgba(0, 0, 0, 0.3)
                 }
                 
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    
+                    onEntered: {
+                        removeItemButton.visible = true
+                        pulleyDelegateListBg.color = theme.linkColor
+                    }
+                    onExited: {
+                        removeItemButton.visible = false
+                        pulleyDelegateListBg.color = Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2)
+                    }
+                    onClicked: {
+                        pulleyFrame.close();
+                        var genExampleQuery = CommandList.get(0).Commands;
+                        var exampleQuery = genExampleQuery.toString().split(",");
+                        var socketmessage = {};
+                        socketmessage.type = "recognizer_loop:utterance";
+                        socketmessage.data = {};
+                        socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
+                        socket.sendTextMessage(JSON.stringify(socketmessage));
+                        qinput.text = "";
+                        }
+                }    
+            
+            PlasmaCore.IconItem {
+                id: removeItemButton
+                source: "window-close"
+                width: units.gridUnit * 1.5
+                height: units.gridUnit * 1.5
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: units.gridUnit * 0.50
+                visible: false
+                
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    onEntered: { 
+                        removeItemButton.visible = true
+                    }
+                    onClicked: {
+                        SkillModel.remove(index)
+                    }
+                }
+            }
+                
                 PlasmaComponents.Label {
                 id: pulleyDelegateListLabel
                 anchors.centerIn: parent
                     text: CommandList.get(0).Commands
                     color: PlasmaCore.ColorScope.textColor
                     
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        propagateComposedEvents: true
-                        
-                        onEntered: {
-                            pulleyDelegateListBg.color = theme.linkColor
-                        }
-                        onExited: {
-                            pulleyDelegateListBg.color = Qt.darker(PlasmaCore.ColorScope.backgroundColor, 1.2)
-                        }
-                        onClicked: {
-                            pulleyFrame.close();
-                            var genExampleQuery = CommandList.get(0).Commands;
-                            var exampleQuery = genExampleQuery.toString().split(",");
-                            var socketmessage = {};
-                            socketmessage.type = "recognizer_loop:utterance";
-                            socketmessage.data = {};
-                            socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));
-                            qinput.text = "";
-                            }
-                        }    
                     }
                 }
             }
