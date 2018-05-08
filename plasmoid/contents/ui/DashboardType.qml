@@ -27,27 +27,41 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Item {
     id: dashbdtypebg
-    height: cbheight / 1.1
     width: cbwidth
+    height: cbheight
     property alias dashlvmodel: dashboardmodelview.model
     property alias dashlvdelegate: dashboardmodelview.delegate
-    
+      
     PlasmaComponents.ScrollBar {
         id: dashscrollBar
         flickableItem: dashboardmodelview
         orientation: Qt.Vertical
         interactive: true
     }
-
+    
+    PulleyItemDash {
+        id: dashlistPulley
+        visible: true
+        barColor: theme.linkColor
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: units.gridUnit * 0.10
+        _isVisible: true
+        z: 900
+    }  
+    
 ListView {
      id: dashboardmodelview
-     anchors.fill: parent
+     anchors.top: parent.top
+     anchors.left: parent.left
+     anchors.right: parent.right
+     height: cbheight / 1.05
      model: dashLmodel
-     spacing: 4
+     spacing: 2
      focus: false
      interactive: true
      clip: true;
      delegate: DashboardDelegate{}
+     
     }
 }
 

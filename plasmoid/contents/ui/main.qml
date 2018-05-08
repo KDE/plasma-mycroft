@@ -1087,17 +1087,7 @@ Item {
                 }
             }
         }
-        
-        PulleyItem {
-            id: favlistPulley
-            visible: true
-            barColor: theme.linkColor
-            _isVisible: true
-            z: 900
-            
-            onPulleyExpanded: {disclaimbox.visible = false}
-        }
-        
+                
         Disclaimer{
             id: disclaimbox
             visible: false

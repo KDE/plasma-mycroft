@@ -188,7 +188,7 @@ ListModel {
 ListView {
      id: dashdelegatelview
      width: cbwidth - units.gridUnit * 0.25
-     spacing: units.gridUnit * 0.5
+     spacing: units.gridUnit * 0.3
      focus: false
      interactive: true
      clip: true;
@@ -212,7 +212,7 @@ ListView {
              listViewHeight += root.visibleChildren[i].height
              listViewWidth  = Math.max(listViewWidth, root.visibleChildren[i].width)
          }
-         dashdelegatelview.height = listViewHeight + units.gridUnit * 2
+         dashdelegatelview.height = listViewHeight + units.gridUnit * 1
         }
      }
    }
