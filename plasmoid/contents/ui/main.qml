@@ -26,6 +26,7 @@ import Qt.labs.settings 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
 import org.kde.plasma.private.volume 0.1
@@ -323,7 +324,7 @@ Item {
     }
     function getSkills() {
       var doc = new XMLHttpRequest()
-      var url = "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/master/.gitmodules"
+      var url = innerset.versionUrl
       doc.open("GET", url, true);
       doc.send();
 
@@ -332,6 +333,7 @@ Item {
           var path, list;
           var tempRes = doc.responseText
           var moduleList = tempRes.split("[");
+          skillList.length = 0
           for (var i = 1; i < moduleList.length; i++) {
             path = moduleList[i].substring(moduleList[i].indexOf("= ") + 2, moduleList[i].indexOf("url")).replace(/^\s+|\s+$/g, '');
             url = moduleList[i].substring(moduleList[i].search("url =") + 6).replace(/^\s+|\s+$/g, '');
@@ -1593,16 +1595,38 @@ Item {
     anchors.right: root.right
     anchors.bottom: root.bottom
             
-            Item { 
+        Item { 
                 id: msmtabtopbar
                 width: parent.width
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: units.gridUnit * 2
                 
-                PlasmaComponents.TextField {
+        PlasmaComponents3.ComboBox {
+            id: versionBox
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: parent.width / 3.5
+            textRole: "key"
+            displayText: "Version: " + currentText
+            property string versionInfo: versionItem.get(currentIndex).value
+            
+            model: ListModel {
+                id: versionItem
+                ListElement { key: "18.02"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/18.02/.gitmodules" }
+                ListElement { key: "18.0x"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/master/.gitmodules" }
+            }
+            onActivated: {
+                msmskillsModel.clear();
+                getSkills();
+            }
+        }
+        
+        PlasmaComponents.TextField {
                 id: msmsearchfld
-                anchors.left: parent.left
+                anchors.left: versionBox.right
+                anchors.leftMargin: units.gridUnit * 0.50
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.right: getskillsbx.left
@@ -1865,5 +1889,7 @@ Item {
             property alias weatherCardAPIKey: owmApiKeyLabelFld.text
             property alias weatherMetricC: owmApiKeyMetricCel.checked
             property alias weatherMetricF: owmApiKeyMetricFar.checked
+            property alias versionIndex: versionBox.currentIndex
+            property alias versionUrl: versionBox.versionInfo
     }
 }
