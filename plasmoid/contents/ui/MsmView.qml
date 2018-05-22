@@ -43,21 +43,61 @@ Rectangle {
                 
                 function exec(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
-                        return launchinstaller.msmapp("bash msm install " + model.url)
+                        if(innerset.versionIndex == 0){
+                            var createSkillMsg = "install " + model.name
+                            var socketmessage = {};
+                            socketmessage.type = "recognizer_loop:utterance";
+                            socketmessage.data = {};
+                            socketmessage.data.utterances = [createSkillMsg];
+                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                        }
+                        else {
+                            return launchinstaller.msmapp("bash msm install " + model.url)
+                        }
                     }
                     else {
-                        var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
+                        if(innerset.versionIndex == 0){
+                            var createSkillMsg = "install " + model.name
+                            var socketmessage = {};
+                            socketmessage.type = "recognizer_loop:utterance";
+                            socketmessage.data = {};
+                            socketmessage.data.utterances = [createSkillMsg];
+                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                        }
+                        else {
+                            var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                            return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
+                        }
                     }
                 }
                 
                 function execUninstall(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
-                        return launchinstaller.msmapp("bash msm remove " + model.name)
+                        if(innerset.versionIndex == 0){
+                            var createSkillMsg = "uninstall " + model.name
+                            var socketmessage = {};
+                            socketmessage.type = "recognizer_loop:utterance";
+                            socketmessage.data = {};
+                            socketmessage.data.utterances = [createSkillMsg];
+                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                        }
+                        else {
+                            return launchinstaller.msmapp("bash msm remove " + model.name)
+                        }
                     }
                     else {
-                        var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("bash " + bscrpt + " remove " + model.name)
+                        if(innerset.versionIndex == 0){
+                            var createSkillMsg = "uninstall " + model.name
+                            var socketmessage = {};
+                            socketmessage.type = "recognizer_loop:utterance";
+                            socketmessage.data = {};
+                            socketmessage.data.utterances = [createSkillMsg];
+                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                        }
+                        else {
+                            var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
+                            return launchinstaller.msmapp("bash " + bscrpt + " remove " + model.name)
+                        }
                     }
                 }
                 
