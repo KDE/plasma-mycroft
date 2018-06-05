@@ -75,6 +75,7 @@ Item {
     property alias recipeReadLmodel: recipeReadListModel
     property alias stackLmodel: stackexListModel
     property alias bookLmodel: bookListModel
+    property alias wikiLmodel: wikiListModel
     property bool intentfailure: false
     property bool locationUserSelected: false
     property bool connectCtx: false
@@ -283,6 +284,29 @@ Item {
         convoLmodel.append({"itemType": "BookType", "InputQuery": ""})
         inputlistView.positionViewAtEnd();
     }
+    
+    function filterwikiObj(metadata){
+        var wikiSummary = JSON.stringify(metadata.data.summary)
+        var wikiImage = JSON.stringify(metadata.data.image)
+        wikiSummary = wikiSummary.replace(/['"]+/g, '')
+        wikiImage = wikiImage.replace(/['"]+/g, '')
+        convoLmodel.clear()
+        wikiListModel.clear()
+        wikiListModel.append({summary: wikiSummary, image: wikiImage})
+        convoLmodel.append({"itemType": "WikiType", "InputQuery": ""})
+        inputlistView.positionViewAtEnd();
+    }
+    
+    function filterwikiMoreObj(metadata){
+        var wikiSummaryMore = JSON.stringify(metadata.data.summarymore)
+        var wikiImageMore = JSON.stringify(metadata.data.imagemore)
+        convoLmodel.clear()
+        wikiListModel.clear()
+        wikiSummaryMore = wikiSummaryMore.replace(/['"]+/g, '')
+        wikiImageMore = wikiImageMore.replace(/['"]+/g, '')
+        wikiListModel.append({summary: wikiSummaryMore, image: wikiImageMore})
+        convoLmodel.append({"itemType": "WikiType", "InputQuery": ""})
+    }
 
     function isBottomEdge() {
         return plasmoid.location == PlasmaCore.Types.BottomEdge;
@@ -463,10 +487,9 @@ Item {
     
     function fetchDashCryptoCardData(){
         var doc = new XMLHttpRequest
-        var url = "https://api.coindesk.com/v1/bpi/currentprice.json"
-        
-            doc.open("Get", url, true);
-            doc.send();
+        var url = "https://min-api.cryptocompare.com/data/price?fsym=" + innerset.selectedCrypto + "&tsyms=" + innerset.selectedCur1 + "," + innerset.selectedCur2 + "," + innerset.selectedCur3
+        doc.open("Get", url, true);
+        doc.send();
         
          doc.onreadystatechange = function() {
             if (doc.readyState === XMLHttpRequest.DONE) {
@@ -574,7 +597,11 @@ ListModel {
 
 ListModel {
         id: bookListModel
-    }   
+    }
+
+ListModel {
+        id: wikiListModel
+    }
     
 Timer {
            id: timer
@@ -899,6 +926,16 @@ Item {
                 filterbookObj(dataContent)
             }
             
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "wikiObject") {
+                dataContent = somestring.data.desktop
+                filterwikiObj(dataContent)
+            }
+            
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "wikiaddObject") {
+                dataContent = somestring.data.desktop
+                filterwikiMoreObj(dataContent)
+            }
+            
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
                 var title = "Mycroft's Reply:"
@@ -1135,6 +1172,7 @@ Item {
                                         case "FallBackType" : return "FallbackWebSearchType.qml"
                                         case "StackObjType" : return "StackObjType.qml"
                                         case "BookType" : return "BookType.qml"
+                                        case "WikiType" : return "WikiType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
@@ -1516,7 +1554,51 @@ Item {
             text: i18n("Enable / Disable Cryptocurrency Card")
             checked: false
         }
-                    
+        
+        Row {
+        spacing: 2
+            PlasmaComponents.Label{
+                id: cryptoCurrencySelected
+                text: "Selected CryptoCurrency:"
+            }
+            PlasmaComponents3.ComboBox {
+                id: cryptoSelectedBox
+                textRole: "cryptoname"
+                displayText: currentText
+                model: CrypCurModel{}
+                property string cryptInfo: cryptoSelectedBox.model.get(currentIndex).value
+            }
+        }
+        
+        PlasmaComponents.Label{
+            id: localCurrencySelected
+            text: "Display Currencies:"
+        }
+        
+        PlasmaComponents3.ComboBox {
+            id: cryptoSelectCur1
+            textRole: "currencyname"
+            displayText: currentText
+            model: CurModel{}
+            property string cur1Info: cryptoSelectCur1.model.get(currentIndex).value
+        }
+        
+        PlasmaComponents3.ComboBox {
+            id: cryptoSelectCur2
+            textRole: "currencyname"
+            displayText: currentText
+            model: CurModel{}
+            property string cur2Info: cryptoSelectCur2.model.get(currentIndex).value
+        }
+        
+        PlasmaComponents3.ComboBox {
+            id: cryptoSelectCur3
+            textRole: "currencyname"
+            displayText: currentText
+            model: CurModel{}
+            property string cur3Info: cryptoSelectCur3.model.get(currentIndex).value
+        }
+        
         Row {
         spacing: 2
            PlasmaComponents.Label { 
@@ -1881,5 +1963,13 @@ Item {
             property alias weatherMetricF: owmApiKeyMetricFar.checked
             property alias versionIndex: versionBox.currentIndex
             property alias versionUrl: versionBox.versionInfo
+            property alias selectedCryptoidx: cryptoSelectedBox.currentIndex
+            property alias selectedCrypto: cryptoSelectedBox.cryptInfo
+            property alias selectedCur1idx: cryptoSelectCur1.currentIndex
+            property alias selectedCur1: cryptoSelectCur1.cur1Info
+            property alias selectedCur2idx: cryptoSelectCur2.currentIndex
+            property alias selectedCur2: cryptoSelectCur2.cur2Info
+            property alias selectedCur3idx: cryptoSelectCur3.currentIndex
+            property alias selectedCur3: cryptoSelectCur3.cur3Info
     }
 }

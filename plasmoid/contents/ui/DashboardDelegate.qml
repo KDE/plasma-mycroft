@@ -88,7 +88,10 @@ Item {
         if(cryptobj){
          var filteredCryptObj = JSON.parse(cryptobj)
          dashdelegatelview.model = dashCryptoPriceListModel
-         dashCryptoPriceListModel.append({itemType: "DashCryptoPrice", cryptoType: "Bitcoin", cryptoUSDSymbol: filteredCryptObj.bpi.USD.symbol, cryptoGBPSymbol: filteredCryptObj.bpi.GBP.symbol, cryptoEURSymbol: filteredCryptObj.bpi.EUR.symbol, cryptoUSDRate: filteredCryptObj.bpi.USD.rate, cryptoGBPRate: filteredCryptObj.bpi.GBP.rate, cryptoEURRate: filteredCryptObj.bpi.EUR.rate})
+         var currency1 = filteredCryptObj[innerset.selectedCur1]
+         var currency2 = filteredCryptObj[innerset.selectedCur2]
+         var currency3 = filteredCryptObj[innerset.selectedCur3]
+         dashCryptoPriceListModel.append({itemType: "DashCryptoPrice", cryptoType: innerset.selectedCrypto, cryptoUSDSymbol: innerset.selectedCur1, cryptoGBPSymbol: innerset.selectedCur2, cryptoEURSymbol: innerset.selectedCur3, cryptoUSDRate: currency1, cryptoGBPRate: currency2, cryptoEURRate: currency3})
         }
     }
     
