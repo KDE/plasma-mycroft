@@ -30,11 +30,12 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 Column {
     spacing: 6
     
-    property var scttemp: metacontent.currenttemp
-    property var slttemp: metacontent.mintemp
-    property var shttemp: metacontent.maxtemp
-    property var ssum: metacontent.sum
-    property var sloc: metacontent.loc
+    property var scttemp: metacontent.currentIntent.currenttemp
+    property var slttemp: metacontent.currentIntent.mintemp
+    property var shttemp: metacontent.currentIntent.maxtemp
+    property var ssum: metacontent.currentIntent.sum
+    property var sloc: metacontent.currentIntent.loc
+    property var sicon: metacontent.currentIntent.icon
 
     Row {
         id: messageRow
@@ -52,19 +53,19 @@ Column {
             height: messageRect.height
             
             Component.onCompleted: {
-            if(metacontent.sum.indexOf("scattered") !== -1 && metacontent.sum.indexOf("clouds") !== -1 || metacontent.sum.indexOf("clear") !== -1 || metacontent.sum.indexOf("clouds") !== -1 ){
+            if(metacontent.currentIntent.sum.indexOf("scattered") !== -1 && metacontent.currentIntent.sum.indexOf("clouds") !== -1 || metacontent.currentIntent.sum.indexOf("clear") !== -1 || metacontent.currentIntent.sum.indexOf("clouds") !== -1 ){
                 weathbgImg.source = "../images/climatesc.jpg"
             }
-            else if(metacontent.sum.indexOf("rain") !== -1){
+            else if(metacontent.currentIntent.sum.indexOf("rain") !== -1){
                 weathbgImg.source = "../images/rain.gif"
             } 
-            else if(metacontent.sum.indexOf("snow") !== -1){
+            else if(metacontent.currentIntent.sum.indexOf("snow") !== -1){
                 weathbgImg.source = "../images/snow.gif"
             }
-            else if(metacontent.sum.indexOf("snow") !== -1){
+            else if(metacontent.currentIntent.sum.indexOf("snow") !== -1){
                 weathbgImg.source = "../images/snow.gif"
             }
-            else if(metacontent.sum.indexOf("haze") !== -1){
+            else if(metacontent.currentIntent.sum.indexOf("haze") !== -1){
                 weathbgImg.source = "../images/haze.gif"
             }
             else {
@@ -72,11 +73,10 @@ Column {
             }
         }
 
-            Rectangle {
+            Item {
                 id: messageRect
                 width: cbwidth
-                height: 150
-                color: "#00000000"
+                height: weatherinfoBar.height + rectanglectt.height + units.gridUnit * 1
             
              Rectangle {
                 id: weatherinfoBar
@@ -89,36 +89,65 @@ Column {
                 anchors.right: parent.right
             
                 PlasmaComponents.Label {
-                    id: todayweather
-                    //text: qsTr(metacontent.loc)
+                    id: weatherLocation
                     anchors.left: parent.left
                     anchors.leftMargin: 8
-                    //font.family: "Courier"
+                    font.capitalization: Font.SmallCaps
                     font.italic: false
                     font.bold: true
                     font.pixelSize: 15
                     
                     Component.onCompleted: {
-                        todayweather.text = sloc
+                        weatherLocation.text = sloc
+                    }
+                }
+                
+                Row {
+                    id: sumRow
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+                    height: parent.height
+                    spacing: 2
+                
+                Image {
+                    id: weatherIcon
+                    width: units.gridUnit * 1.25
+                    height: units.gridUnit * 1.25
+                    anchors.verticalCenter: parent.verticalCenter                    
+                    Component.onCompleted: {
+                        weatherIcon.source =  "http://openweathermap.org/img/w/" + sicon + ".png"
+                        }
+                    }
+                
+                PlasmaCore.SvgItem {
+                    id: weatherheaderSeprtr
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: units.gridUnit * 1
+                    width: whvertseptSvg.elementSize("vertical-line").width
+                    z: 110
+                    elementId: "vertical-line"
+
+                    svg: PlasmaCore.Svg {
+                        id: whvertseptSvg;
+                        imagePath: "widgets/line"
                     }
                 }
                 
                 PlasmaComponents.Label {
-                    id: weathersum
-                    //text: qsTr(metacontent.sum)
-                    anchors.right: parent.right
-                    anchors.rightMargin: 8
+                    id: weatherSummary
                     font.italic: true
                     font.bold: true
-                    font.pixelSize: 10
+                    font.capitalization: Font.SmallCaps
+                    font.pixelSize: 15
                     
                     Component.onCompleted: {
-                        weathersum.text = ssum
+                        weatherSummary.text = ssum
+                        }
                     }
                 }
             }
                 
-                PlasmaCore.SvgItem {
+        PlasmaCore.SvgItem {
         anchors {
             left: messageRect.left
             right: messageRect.right
@@ -135,215 +164,90 @@ Column {
             }
         }  
                 
-                Rectangle {
-                    id: rectanglectt
-                    width: 125
-                    anchors.left: parent.left
-                    height: 75
-                    color: theme.backgroundColor
-                    anchors.top: weatherinfoBar.bottom
-                    anchors.topMargin: 5
+        Rectangle {
+            id: rectanglectt
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: weatherMinLabel.height + nwsseprator2.height + weatherCurrentLabel.height + nwsseprator3.height + weatherMaxLabel.height + units.gridUnit * 0.50
+            color: theme.backgroundColor
+            anchors.top: weatherinfoBar.bottom
+            anchors.topMargin: 5
 
-                    PlasmaComponents.Label {
-                        id: currenttemplable
-                        text: "Current"
-                        font.pointSize: 12
-                        //font.family: "Courier"
-                        font.bold: true
-                        anchors.top: parent.top
-                        anchors.topMargin: 8
-                        //anchors.verticalCenter: currenttempaniimage.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 15
+            Text {
+                id: weatherMinLabel
+                anchors.top: parent.top
+                anchors.topMargin: 1
+                anchors.left: parent.left
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
+                wrapMode: Text.WordWrap;
+                font.bold: true;
+                
+                Component.onCompleted: {
+                    weatherMinLabel.text = "Minimum Temperature: " + slttemp
                     }
-
-                    PlasmaComponents.Label {
-                        id: currenttempitem
-                        x: 73
-                        y: 38
-                        //text: metacontent.currenttemp
-                        anchors.horizontalCenter: currenttemplable.horizontalCenter
-                        anchors.top: currenttemplable.bottom
-                        anchors.topMargin: 10
-                        
-                    Component.onCompleted: {
-                       currenttempitem.text = scttemp
-                    }
-                    }
-
-                    PlasmaComponents.Label {
-                        id: weatherwidgetcurrenttempdegrees
-                        text: qsTr("°")
-                        anchors.verticalCenterOffset: -5
-                        anchors.verticalCenter: currenttempitem.verticalCenter
-                        anchors.left: currenttempitem.right
-                        anchors.leftMargin: 5
-                        font.pixelSize: 12
-                    }
-
-
                 }
                 
-            PlasmaCore.SvgItem {
-                    anchors {
-                        right: rectanglectt.right
-                        rightMargin: units.gridUnit * 0.25
-                        top: rectanglectt.top
-                        topMargin: 5
-                        bottom: rectanglectt.bottom
-                        bottomMargin: 0
-                    }
-
-                    width: linecttSvg.elementSize("vertical-line").width
-                    z: 110
-                    elementId: "vertical-line"
-
-                    svg: PlasmaCore.Svg {
-                        id: linecttSvg;
-                        imagePath: "widgets/line"
-                    }
-                }
-
-                Rectangle {
-                    id: rectangleltt
-                    //width: 100
-                    height: 75
-                    color: theme.backgroundColor
-                    anchors.top: weatherinfoBar.bottom
-                    anchors.topMargin: 5
-                    anchors.left: rectanglectt.right
-                    anchors.right: rectanglehtt.left
-                    anchors.leftMargin: 0
-
-                    PlasmaComponents.Label {
-                        id: lowtemplable
-                        anchors.left: parent.left
-                        //anchors.verticalCenter: lowtempaniimage.verticalCenter
-                        text: "Low"
-                        //font.family: "Courier"
-                        font.pointSize: 12
-                        font.bold: true
-                        anchors.top: parent.top
-                        anchors.topMargin: 8
-                        anchors.leftMargin: 30
-                    }
-
-                    PlasmaComponents.Label {
-                        id: lowtempitem
-                        x: 63
-                        y: 33
-                        anchors.top: lowtemplable.bottom
-                        //text: metacontent.mintemp
-                        anchors.horizontalCenter: lowtemplable.horizontalCenter
-                        anchors.topMargin: 10
-                        
-                    Component.onCompleted: {
-                       lowtempitem.text = slttemp
-                    }
-                    }
-
-                    PlasmaComponents.Label {
-                        id: weatherwidgetlowtempdegree
-                        text: qsTr("°")
-                        anchors.verticalCenterOffset: -5
-                        anchors.verticalCenter: lowtempitem.verticalCenter
-                        anchors.left: lowtempitem.right
-                        anchors.leftMargin: 5
-                        font.pixelSize: 12
-                    }
-
-
-                }
+            Rectangle {
+                id: nwsseprator2
+                width: parent.width
+                anchors.top: weatherMinLabel.bottom
+                anchors.topMargin: 1
+                height: 2
+                color: theme.linkColor
+            }
+            
+            Text {
+                id: weatherCurrentLabel
+                anchors.top: nwsseprator2.bottom
+                anchors.topMargin: 1
+                anchors.left: parent.left
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
+                wrapMode: Text.WordWrap;
+                font.bold: true;
                 
-                PlasmaCore.SvgItem {
-                    anchors {
-                        right: rectangleltt.right
-                        rightMargin: units.gridUnit * 0.25
-                        top: rectangleltt.top
-                        topMargin: 5
-                        bottom: rectanglectt.bottom
-                        bottomMargin: 0
-                    }
-
-                    width: linelttSvg.elementSize("vertical-line").width
-                    z: 110
-                    elementId: "vertical-line"
-
-                    svg: PlasmaCore.Svg {
-                        id: linelttSvg;
-                        imagePath: "widgets/line"
-                    }
+                Component.onCompleted: {
+                    weatherCurrentLabel.text = "Current Temperature: " + scttemp
                 }
+            }
+            
+            Rectangle {
+                id: nwsseprator3
+                width: parent.width
+                anchors.top: weatherCurrentLabel.bottom
+                anchors.topMargin: 1
+                height: 2
+                color: theme.linkColor
+            }
 
-                Rectangle {
-                    id: rectanglehtt
-                    width: 125
-                    height: 75
-                    color: theme.backgroundColor
-                    anchors.top: weatherinfoBar.bottom
-                    anchors.topMargin: 5
-                    anchors.right: parent.right
-                    anchors.leftMargin: 0
-
-                    PlasmaComponents.Label {
-                        id: hightempitem
-                        x: 65
-                        y: 70
-                        anchors.top: hightemplable.bottom
-                        //text: metacontent.maxtemp
-                        anchors.topMargin: 10
-                        anchors.horizontalCenter: hightemplable.horizontalCenter
-                    
-                    Component.onCompleted: {
-                       hightempitem.text = shttemp
-                    }
-                        
-                    }
-
-                    PlasmaComponents.Label {
-                        id: hightemplable
-                        anchors.left: parent.left
-                        text: "High"
-                        font.pointSize: 12
-                        font.bold: true
-                        //font.family: "Courier"
-                        anchors.top: parent.top
-                        anchors.topMargin: 8
-                        //anchors.verticalCenter: hightempaniimage.verticalCenter
-                        anchors.leftMargin: 30
-                    }
-
-                   PlasmaComponents.Label {
-                        id: weatherwidgethightempdegree
-                        text: qsTr("°")
-                        anchors.verticalCenterOffset: -5
-                        anchors.verticalCenter: hightempitem.verticalCenter
-                        anchors.left: hightempitem.right
-                        anchors.leftMargin: 5
-                        font.pixelSize: 12
-                    }
-
-
-                }
+            Text {
+                id: weatherMaxLabel
+                anchors.top: nwsseprator3.bottom
+                anchors.topMargin: 1
+                anchors.left: parent.left
+                font.pointSize: theme.defaultFont.pointSize
+                font.letterSpacing: theme.defaultFont.letterSpacing
+                font.wordSpacing: theme.defaultFont.wordSpacing
+                font.family: theme.defaultFont.family
+                renderType: Text.NativeRendering 
+                color: PlasmaCore.ColorScope.textColor
+                wrapMode: Text.WordWrap;
+                font.bold: true;
                 
-                PlasmaCore.SvgItem {
-                anchors {
-                    left: messageRect.left
-                    right: messageRect.right
-                    top: rectanglectt.bottom
-                    topMargin: 2
-                }
-                width: 1
-                height: horlinewthrbotSvg.elementSize("horizontal-line").height
-
-                elementId: "horizontal-line"
-                z: 110
-                svg: PlasmaCore.Svg {
-                id: horlinewthrbotSvg;
-                imagePath: "widgets/line"
-                }
-            }  
-                
+                Component.onCompleted: {
+                    weatherMaxLabel.text = "Maximum Temperature: " + shttemp
+                            }                
+                        }
+                    }  
                 }
             }
         }

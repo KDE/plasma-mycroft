@@ -640,8 +640,8 @@ Item {
             anchors.leftMargin: units.gridUnit * 0.1
             anchors.verticalCenter: parent.verticalCenter
             source: "../images/mycroftsmaller.png"
-            width: units.gridUnit * 1.6
-            height: units.gridUnit * 1.6
+            width: units.gridUnit * 1.4
+            height: units.gridUnit * 1.5
         }
         
     ColorOverlay {
@@ -650,10 +650,22 @@ Item {
                     color: theme.linkColor
     }
     
+    PlasmaComponents.Label {
+                anchors.top: parent.top
+                anchors.topMargin: 4
+                anchors.left: barAnim.right
+                anchors.leftMargin: units.gridUnit * 0.25
+                font.capitalization: Font.SmallCaps 
+                id: logotextId
+                text: i18n("Mycroft")
+                font.bold: false;
+                color: theme.textColor
+    }
+    
     PlasmaCore.SvgItem {
         id: topbarLeftDividerline
         anchors {
-            left: barAnim.right
+            left: logotextId.right
             leftMargin: units.gridUnit * 0.34
             top: parent.top
             topMargin: 0
@@ -671,7 +683,6 @@ Item {
         }
     }  
 
-
     PlasmaComponents.Label {
                 anchors.top: parent.top
                 anchors.topMargin: 4
@@ -679,9 +690,8 @@ Item {
                 anchors.leftMargin: units.gridUnit * 0.25
                 font.capitalization: Font.SmallCaps 
                 id: statusId
-                text: i18n("<b>Mycroft is disabled</b>")
+                text: i18n("<b>Disabled</b>")
                 font.bold: false;
-                font.pixelSize: 14
                 color: theme.textColor
     }
     
@@ -843,7 +853,7 @@ Item {
             mycroftStatusCheckSocket._socketIsAlreadyActive = true
             disclaimbox.visible = false;
             mycroftstartservicebutton.checked = true
-            statusId.text = i18n("<b>Mycroft is ready</b>")
+            statusId.text = i18n("<b>Ready</b>")
             statusId.color = "green"
             statusId.visible = true
             }
@@ -851,7 +861,7 @@ Item {
             else if (mycroftStatusCheckSocket.status == WebSocket.Error) {
             mycroftstartservicebutton.checked = false
             mycroftStatusCheckSocket._socketIsAlreadyActive = false
-            statusId.text = i18n("<b>Mycroft is disabled</b>")
+            statusId.text = i18n("<b>Disabled</b>")
             statusId.color = theme.textColor
             statusId.visible = true
             }
@@ -959,7 +969,7 @@ Item {
                                 })
 
                          } else if (socket.status == WebSocket.Open) {
-                                statusId.text = i18n("<b>Mycroft is ready</b>")
+                                statusId.text = i18n("<b>Ready</b>")
                                 statusId.color = "green"
                                 statusRetryBtn.visible = false
                                 mycroftstartservicebutton.circolour = "green"
@@ -971,7 +981,7 @@ Item {
                                     drawer.close()
                                 })
                          } else if (socket.status == WebSocket.Closed) {
-                                statusId.text = i18n("<b>Mycroft is disabled</b>")
+                                statusId.text = i18n("<b>Disabled</b>")
                                 statusId.color = theme.textColor
                                 mycroftstartservicebutton.circolour = Qt.lighter(theme.backgroundColor, 1.5)
                                 midbarAnim.showstatsId()
@@ -1001,11 +1011,11 @@ Item {
                 id: mycroftTab
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                iconSource: "user-home"
+                iconSource: "go-home"
                 
                     PlasmaCore.ToolTipArea {
                         id: tooltiptab1
-                        mainText: i18n("Home Tab")
+                        mainText: i18n("Conversation")
                         anchors.fill: parent
                         }
                 
@@ -1019,7 +1029,7 @@ Item {
                 
                     PlasmaCore.ToolTipArea {
                         id: tooltiptab2
-                        mainText: i18n("Skills Tab")
+                        mainText: i18n("Hints/Tips")
                         anchors.fill: parent
                         }
                 
@@ -1033,7 +1043,7 @@ Item {
                 
                     PlasmaCore.ToolTipArea {
                         id: tooltiptab3
-                        mainText: i18n("Settings Tab")
+                        mainText: i18n("Settings")
                         anchors.fill: parent
                         }
                 
@@ -1048,7 +1058,7 @@ Item {
                 
                     PlasmaCore.ToolTipArea {
                         id: tooltiptab4
-                        mainText: i18n("Skill Installs Tab")
+                        mainText: i18n("Skill Browser")
                         anchors.fill: parent
                         }
                 

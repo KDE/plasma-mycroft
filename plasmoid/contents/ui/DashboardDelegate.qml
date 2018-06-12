@@ -24,6 +24,7 @@ import QtQuick.Layouts 1.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 Item {
     id: dashdelegteType
@@ -91,7 +92,7 @@ Item {
          var currency1 = filteredCryptObj[innerset.selectedCur1]
          var currency2 = filteredCryptObj[innerset.selectedCur2]
          var currency3 = filteredCryptObj[innerset.selectedCur3]
-         dashCryptoPriceListModel.append({itemType: "DashCryptoPrice", cryptoType: innerset.selectedCrypto, cryptoUSDSymbol: innerset.selectedCur1, cryptoGBPSymbol: innerset.selectedCur2, cryptoEURSymbol: innerset.selectedCur3, cryptoUSDRate: currency1, cryptoGBPRate: currency2, cryptoEURRate: currency3})
+         dashCryptoPriceListModel.append({itemType: "DashCryptoPrice", cryptoType: innerset.selectedCrypto, cryptoSymbol1: innerset.selectedCur1, cryptoSymbol2: innerset.selectedCur2, cryptoSymbol3: innerset.selectedCur3, cryptoCurRate1: currency1, cryptoCurRate2: currency2, cryptoCurRate3: currency3})
         }
     }
     
@@ -195,7 +196,8 @@ ListView {
      focus: false
      interactive: true
      clip: true;
-     delegate: Loader{
+     delegate: 
+     Loader{
                 id: dashcardLoader
                 source: switch(itemType){
                                case "Disclaimer": return "DisclaimerCardDelegate.qml"
@@ -216,8 +218,9 @@ ListView {
              listViewWidth  = Math.max(listViewWidth, root.visibleChildren[i].width)
          }
          dashdelegatelview.height = listViewHeight + units.gridUnit * 1
+                }
+            }
+        ScrollIndicator.vertical: dashscrollBar
         }
-     }
-   }
 }
 

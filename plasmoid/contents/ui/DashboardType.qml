@@ -24,6 +24,7 @@ import QtQuick.Layouts 1.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 Item {
     id: dashbdtypebg
@@ -32,13 +33,6 @@ Item {
     property alias dashlvmodel: dashboardmodelview.model
     property alias dashlvdelegate: dashboardmodelview.delegate
       
-    PlasmaComponents.ScrollBar {
-        id: dashscrollBar
-        flickableItem: dashboardmodelview
-        orientation: Qt.Vertical
-        interactive: true
-    }
-    
     PulleyItemDash {
         id: dashlistPulley
         visible: true
@@ -60,8 +54,15 @@ ListView {
      focus: false
      interactive: true
      clip: true;
-     delegate: DashboardDelegate{}
-     
+     delegate: DashboardDelegate{}   
+    }
+    
+    ScrollIndicator {
+        id: dashscrollBar
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        orientation: Qt.Vertical
     }
 }
 

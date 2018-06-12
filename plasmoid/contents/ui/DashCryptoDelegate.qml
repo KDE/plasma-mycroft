@@ -142,7 +142,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n("USD: $" + model.cryptoUSDRate)
+            text: i18n(model.cryptoSymbol1 + " : " + model.cryptoCurRate1)
             }
         
         Text {
@@ -156,7 +156,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n("GBP: £" + model.cryptoUSDRate)
+            text: i18n(model.cryptoSymbol2 + " : " + model.cryptoCurRate2)
                 }
         
         Text {
@@ -170,7 +170,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n("EURO: €" + model.cryptoUSDRate)
+            text: i18n(model.cryptoSymbol3 + " : " + model.cryptoCurRate3)
             }
         
         

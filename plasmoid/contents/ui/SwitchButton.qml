@@ -34,20 +34,20 @@ T.Switch {
 
     indicator: Rectangle {
         id: switchHandle
-        implicitWidth: 6 * 4.8
-        implicitHeight: 6 * 2.6
+        implicitWidth: units.gridUnit * 1.5
+        implicitHeight: units.gridUnit * 0.3
         x: control.leftPadding
         anchors.verticalCenter: parent.verticalCenter
-        radius: 6 * 1.3
+        radius: units.gridUnit * 0.4
         color: Qt.darker(theme.textColor, 1.2)
         border.color: theme.backgroundColor
 
         Rectangle {
             id: rectangle
-
-            width: 6 * 2.6
-            height: 6 * 2.6
-            radius: 10 * 1.3
+            anchors.verticalCenter: parent.verticalCenter
+            width: units.gridUnit * 0.6
+            height: units.gridUnit * 0.6
+            radius: units.gridUnit * 3
             color: Qt.lighter(theme.backgroundColor, 1.5)
             border.color: theme.textColor
         }
