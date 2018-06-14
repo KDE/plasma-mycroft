@@ -76,6 +76,7 @@ Item {
     property alias stackLmodel: stackexListModel
     property alias bookLmodel: bookListModel
     property alias wikiLmodel: wikiListModel
+    property alias yelpLmodel: yelpListModel
     property bool intentfailure: false
     property bool locationUserSelected: false
     property bool connectCtx: false
@@ -306,6 +307,14 @@ Item {
         wikiImageMore = wikiImageMore.replace(/['"]+/g, '')
         wikiListModel.append({summary: wikiSummaryMore, image: wikiImageMore})
         convoLmodel.append({"itemType": "WikiType", "InputQuery": ""})
+    }
+    
+    function filteryelpObj(metadata){
+        var filtermetayelp = metadata
+        console.log(filtermetayelp.data.url)
+        yelpListModel.clear()
+        yelpListModel.append({'restaurant': filtermetayelp.data.restaurant, 'phone': filtermetayelp.data.phone, 'location': filtermetayelp.data.location, 'status': filtermetayelp.data.status, 'url': filtermetayelp.data.url, 'image_url': filtermetayelp.data.image_url, 'rating': filtermetayelp.data.rating})
+        convoLmodel.append({"itemType": "YelpType", "InputQuery": ""})
     }
 
     function isBottomEdge() {
@@ -601,6 +610,9 @@ ListModel {
 
 ListModel {
         id: wikiListModel
+    }
+ListModel {
+        id: yelpListModel
     }
     
 Timer {
@@ -946,6 +958,11 @@ Item {
                 filterwikiMoreObj(dataContent)
             }
             
+            if(somestring && somestring.data && typeof somestring.data.desktop !== 'undefined' && somestring.type === "yelpObject") {
+                dataContent = somestring.data.desktop
+                filteryelpObj(dataContent)
+            }
+            
             if (msgType === "speak" && !plasmoid.expanded && notificationswitch.checked == true) {
                 var post = somestring.data.utterance;
                 var title = "Mycroft's Reply:"
@@ -1183,6 +1200,7 @@ Item {
                                         case "StackObjType" : return "StackObjType.qml"
                                         case "BookType" : return "BookType.qml"
                                         case "WikiType" : return "WikiType.qml"
+                                        case "YelpType" : return "YelpType.qml"
                                         }
                                     property var metacontent : dataContent
                                 }
