@@ -111,12 +111,29 @@ Rectangle {
             
             PlasmaComponents.Button {
                   id: yelpViewBtn
+                  anchors.top: parent.top
                   anchors.right: parent.right
                   width: units.gridUnit * 6;
-                  height: units.gridUnit * 5;
+                  height: units.gridUnit * 2.5;
                   text: "Checkout"
-
                   onClicked: {
+                       Qt.openUrlExternally(model.url)
+                        }
+                    }
+            PlasmaComponents.Button {
+                  id: yelpSendMsgBtn
+                  anchors.top: yelpViewBtn.bottom
+                  anchors.right: parent.right
+                  width: units.gridUnit * 6;
+                  height: units.gridUnit * 2.5;
+                  text: "Send As Text"
+                  onClicked: {
+                        var sendmsgUtterance = "send info"
+                        var socketmessage = {};
+                        socketmessage.type = "recognizer_loop:utterance";
+                        socketmessage.data = {};
+                        socketmessage.data.utterances = [sendmsgUtterance];
+                        socket.sendTextMessage(JSON.stringify(socketmessage));
                         }
                     }
             }
