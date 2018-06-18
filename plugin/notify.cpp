@@ -19,6 +19,7 @@
 #include "notify.h"
 #include <QIcon>
 #include <KNotification>
+#include <KLocalizedString>
 
 Notify::Notify(QObject *parent)
     : QObject(parent)
@@ -32,5 +33,27 @@ void Notify::mycroftResponse(const QString &title, const QString &notiftext)
     notification->setComponentName(QStringLiteral("mycroftPlasmoid"));
     notification->setTitle(title);
     notification->setText(notiftext);
+    notification->setActions(QStringList() << i18n("Stop") << i18n("Show Response"));
+    connect(notification, &KNotification::action1Activated, this, &Notify::notificationStopSpeech);
+    connect(notification, &KNotification::action2Activated, this, &Notify::notificationShowResponse);
+    notification->sendEvent();
+}
+
+void Notify::mycroftConnectionStatus(const QString &connectionStatus)
+{
+    KNotification *notification = new KNotification(QStringLiteral("MycroftConnectionStatus"),
+                                                    KNotification::CloseOnTimeout, this);
+    notification->setComponentName(QStringLiteral("mycroftPlasmoid"));
+    notification->setTitle(i18n("Mycroft"));
+    notification->setText(connectionStatus);
+    if(connectionStatus == QStringLiteral("Connected")){
+        notification->setIconName("mycroft-appicon-connected");
+    }
+    else if(connectionStatus == QStringLiteral("Disconnected")){
+        notification->setIconName("mycroft-appicon-disconnected");
+    }
+    else {
+        notification->setIconName("mycroft-plasma-appicon");
+    }
     notification->sendEvent();
 }

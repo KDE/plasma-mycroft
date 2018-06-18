@@ -31,6 +31,10 @@ public:
 
 public Q_SLOTS:
     void mycroftResponse(const QString &title, const QString &notiftext);
+    void mycroftConnectionStatus(const QString &connectionStatus);
+Q_SIGNALS: // SIGNALS
+    void notificationStopSpeech();
+    void notificationShowResponse();
 };
 
 #endif // NOTIFY_H

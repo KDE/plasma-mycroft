@@ -95,6 +95,21 @@ Item {
     }
     
     Connections {
+        target: PlasmaLa.Notify
+        onNotificationStopSpeech: {
+            var socketmessage = {};
+            socketmessage.type = "recognizer_loop:utterance";
+            socketmessage.data = {};
+            socketmessage.data.utterances = ["stop"];
+            socket.sendTextMessage(JSON.stringify(socketmessage));
+        }
+        onNotificationShowResponse: {
+           plasmoid.expanded = !plasmoid.expanded
+           tabBar.currentTab = mycroftTab
+        }
+    }
+    
+    Connections {
         target: main2
         ignoreUnknownSignals: true
         
@@ -977,6 +992,7 @@ Item {
                                 statusId.text = i18n("<b>Connection error</b>")
                                 statusId.color = "red"
                                 mycroftstartservicebutton.circolour = "red"
+                                PlasmaLa.Notify.mycroftConnectionStatus("Connection Error")
                                 midbarAnim.showstatsId()
                                 statusRetryBtn.visible = true
                                 drawer.open()
@@ -989,6 +1005,7 @@ Item {
                                 statusId.text = i18n("<b>Ready</b>")
                                 statusId.color = "green"
                                 statusRetryBtn.visible = false
+                                PlasmaLa.Notify.mycroftConnectionStatus("Connected")
                                 mycroftstartservicebutton.circolour = "green"
                                 mycroftStatusCheckSocket.active = false;
                                 midbarAnim.showstatsId()
@@ -1000,6 +1017,7 @@ Item {
                          } else if (socket.status == WebSocket.Closed) {
                                 statusId.text = i18n("<b>Disabled</b>")
                                 statusId.color = theme.textColor
+                                PlasmaLa.Notify.mycroftConnectionStatus("Disconnected")
                                 mycroftstartservicebutton.circolour = Qt.lighter(theme.backgroundColor, 1.5)
                                 midbarAnim.showstatsId()
                          } else if (socket.status == WebSocket.Connecting) {
