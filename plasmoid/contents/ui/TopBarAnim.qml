@@ -193,6 +193,7 @@ Item {
 
               onPaint: {
                               var ctxside = canvasmiddlegraphics.getContext('2d');
+                              var ctxside2 = canvasmiddlegraphics.getContext('2d');
                               var hCenter = width * 0.5
                               var vCenter = height * 0.5
                               var size = 12
@@ -200,7 +201,7 @@ Item {
                               var dotSpeed = 5;
 
                               function draw_line(i){
-                                  var oStartx=10;
+                                  var oStartx=0;
                                   var oStarty=( height / 2 )
                                   ctxside.beginPath();
                                   ctxside.moveTo( oStartx, oStarty + amplitude * Math.sin( x / period + ( i  / 5 ) ) );
@@ -208,23 +209,39 @@ Item {
                                   ctxside.strokeStyle = theme.linkColor;
 
                                   for(var Vx = oStartx; Vx < width * 0.95; Vx++) {
-
                                       var Vy = amplitude * Math.sin( Vx / period + ( i  / 5 + Math.floor(Math.random() * 2) + 0));
                                       ctxside.lineTo( oStartx + Vx,  oStarty + Vy);
                                   }
 
                                    ctxside.stroke();
                               }
+                              
+                              
+                              function draw_line_rev(i){
+                                  var oStartx=-10;
+                                  var oStarty=(height / 2)
+                                  ctxside2.beginPath();
+                                  ctxside2.moveTo( oStartx, oStarty + amplitude * Math.sin( x / period + ( i  / 5 ) ) );
+                                  ctxside2.lineWidth = 2;
+                                  ctxside2.strokeStyle = theme.linkColor;
+
+                                  for(var Vx = Math.random(oStartx); Vx < width * 1; Vx++) {
+                                      var Vy = Math.random() * amplitude * Math.sin( Vx / period + ( i  / 5 + Math.floor(Math.random() * 2) + 0));
+                                      ctxside2.lineTo( oStartx + Vx,  oStarty + Vy);
+                                  }
+
+                                   ctxside2.stroke();
+                              }
+                                
 
                               function render(){
                                   var st = i
                                   ctxside.clearRect(0, 0, width, height);
+                                  ctxside2.clearRect(0, 0, width, height);
                                   draw_line(st)
-
+                                  draw_line_rev(st)
                               }
                   render();
               }
-
     }
-  
 }
