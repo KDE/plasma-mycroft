@@ -29,7 +29,6 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
-import org.kde.plasma.private.volume 0.1
 import QtWebKit 3.0
 import QtQuick.Window 2.0
 import QtGraphicalEffects 1.0
@@ -80,6 +79,7 @@ Item {
     property bool intentfailure: false
     property bool locationUserSelected: false
     property bool connectCtx: false
+    property bool micIsMuted
     property var geoLat
     property var geoLong
     property var globalcountrycode
@@ -326,7 +326,6 @@ Item {
     
     function filteryelpObj(metadata){
         var filtermetayelp = metadata
-        console.log(filtermetayelp.data.url)
         yelpListModel.clear()
         yelpListModel.append({'restaurant': filtermetayelp.data.restaurant, 'phone': filtermetayelp.data.phone, 'location': filtermetayelp.data.location, 'status': filtermetayelp.data.status, 'url': filtermetayelp.data.url, 'image_url': filtermetayelp.data.image_url, 'rating': filtermetayelp.data.rating})
         convoLmodel.append({"itemType": "YelpType", "InputQuery": ""})
@@ -340,14 +339,28 @@ Item {
             inputlistView.clear()
         }
     
-    function muteMicrophone() {
-        if (!sourceModel.defaultSource) {
-            return;
-        }
-        var toMute = !sourceModel.defaultSource.muted;
-        sourceModel.defaultSource.muted = toMute;
+    function checkMicrophoneState(){
+            var socketmessage = {};
+            socketmessage.type = "er";
+            socketmessage.data = {};
+            socket.sendTextMessage(JSON.stringify(socketmessage));
     }
+
+    function muteMicrophone() {
+            var socketmessage = {};
+            socketmessage.type = "mycroft.mic.mute";
+            socketmessage.data = {};
+            socket.sendTextMessage(JSON.stringify(socketmessage));
+            qinputmicbx.iconSource = "mic-off"
+        }
     
+    function unmuteMicrophone(){
+            var socketmessage = {};
+            socketmessage.type = "mycroft.mic.unmute";
+            socketmessage.data = {};
+            socket.sendTextMessage(JSON.stringify(socketmessage));
+            qinputmicbx.iconSource = "mic-on"
+    }
     
     function refreshAllSkills(){
         getSkills();
@@ -456,7 +469,6 @@ Item {
     function autoAppend(model, getinputstring, setinputstring) {
         for(var i = 0; i < model.count; ++i)
             if (getinputstring(model.get(i))){
-                console.log(model.get(i))
                     return true
                 }
               return null
@@ -518,7 +530,6 @@ Item {
          doc.onreadystatechange = function() {
             if (doc.readyState === XMLHttpRequest.DONE) {
                  var req = doc.responseText;
-                 console.log(req)
                  dashLmodel.append({"iType": "DashCryptoPrice", "iObj": req})
             }
         }
@@ -820,14 +831,13 @@ TopBarAnim {
     
                 onClicked: {
                     if (qinputmicbx.iconSource == "mic-on") {
-                        qinputmicbx.iconSource = "mic-off"
+                        muteMicrophone()
                     }
                     else if (qinputmicbx.iconSource == "mic-off") {
-                        qinputmicbx.iconSource = "mic-on"
-                    }
-                    muteMicrophone()
-                    }    
-                }
+                        unmuteMicrophone()
+                        }
+                    } 
+        }
     
     PlasmaComponents.ToolButton {
         id: pinButton
@@ -880,7 +890,7 @@ Item {
             mycroftStatusCheckSocket._socketIsAlreadyActive = true
             disclaimbox.visible = false;
             mycroftstartservicebutton.checked = true
-            statusId.text = i18n("<b>Ready</b>")
+            statusId.text = i18n("<b>Connected</b>")
             statusId.color = "green"
             statusId.visible = true
             }
@@ -902,6 +912,22 @@ Item {
             var msgType = somestring.type;
             playwaitanim(msgType);
             
+            if (msgType === "mycroft.mic.is_muted.response") {
+                var micState = somestring.data.mic_state
+                if(micState) {
+                    micIsMuted = true
+                    qinputmicbx.iconSource = "mic-off"
+                }
+                else if(!micState) {
+                     micIsMuted = false
+                     qinputmicbx.iconSource = "mic-on"
+                }
+            }
+
+            if (msgType === "mycroft.skills.initialized") {
+                PlasmaLa.Notify.mycroftConnectionStatus(i18n("Ready..Let's Talk"))
+            }
+
             if (msgType === "recognizer_loop:utterance") {
                 qinput.focus = false;
                 var intpost = somestring.data.utterances;
@@ -992,7 +1018,6 @@ Item {
                                 statusId.text = i18n("<b>Connection error</b>")
                                 statusId.color = "red"
                                 mycroftstartservicebutton.circolour = "red"
-                                PlasmaLa.Notify.mycroftConnectionStatus("Connection Error")
                                 midbarAnim.showstatsId()
                                 statusRetryBtn.visible = true
                                 drawer.open()
@@ -1002,17 +1027,18 @@ Item {
                                 })
 
                          } else if (socket.status == WebSocket.Open) {
-                                statusId.text = i18n("<b>Ready</b>")
+                                statusId.text = i18n("<b>Connected</b>")
                                 statusId.color = "green"
                                 statusRetryBtn.visible = false
-                                PlasmaLa.Notify.mycroftConnectionStatus("Connected")
                                 mycroftstartservicebutton.circolour = "green"
                                 mycroftStatusCheckSocket.active = false;
                                 midbarAnim.showstatsId()
+                                PlasmaLa.Notify.mycroftConnectionStatus("Connected")
                                 drawer.open()
                                 waitanimoutter.aniRunHappy()
                                 delay(1250, function() {
                                     drawer.close()
+                                    checkMicrophoneState()
                                 })
                          } else if (socket.status == WebSocket.Closed) {
                                 statusId.text = i18n("<b>Disabled</b>")
@@ -1563,7 +1589,6 @@ Item {
             checked: true
             
             onCheckedChanged:   {
-                console.log(dashswitch.checked)
                 if(dashswitch.checked){
                     tabBar.currentTab = mycroftTab
                     disclaimbox.visible = false
@@ -1820,10 +1845,6 @@ Item {
                 }
         }
 }
-
-SourceModel {
-        id: sourceModel
-                }
                 
     PlasmaCore.SvgItem {
         anchors {
