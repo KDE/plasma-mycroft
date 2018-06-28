@@ -341,7 +341,7 @@ Item {
     
     function checkMicrophoneState(){
             var socketmessage = {};
-            socketmessage.type = "er";
+            socketmessage.type = "mycroft.mic.get_status";
             socketmessage.data = {};
             socket.sendTextMessage(JSON.stringify(socketmessage));
     }
@@ -912,8 +912,8 @@ Item {
             var msgType = somestring.type;
             playwaitanim(msgType);
             
-            if (msgType === "mycroft.mic.is_muted.response") {
-                var micState = somestring.data.mic_state
+            if (msgType === "mycroft.mic.get_status.response") {
+                var micState = somestring.data.muted
                 if(micState) {
                     micIsMuted = true
                     qinputmicbx.iconSource = "mic-off"
