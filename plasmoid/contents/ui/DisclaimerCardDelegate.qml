@@ -201,7 +201,7 @@ Rectangle {
                                         removeCardLabel.color = theme.textColor
                                     }
                                     onClicked:{
-                                        disclaimerListModel.remove(index)
+                                        dashCardCollectionModel.remove(index)
                                         removeChildCard()
                                     }
                                 }
@@ -252,7 +252,7 @@ Rectangle {
                                     }
                                     onClicked:{
                                         disclaimercardswitch.checked = false
-                                        disclaimerListModel.remove(index)
+                                        dashCardCollectionModel.remove(index)
                                         removeChildCard()
                                         }
                                     }

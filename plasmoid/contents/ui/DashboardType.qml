@@ -57,7 +57,7 @@ ListView {
      delegate: DashboardDelegate{}   
     }
     
-    ScrollIndicator {
+    PlasmaComponents3.ScrollBar {
         id: dashscrollBar
         anchors.right: parent.right
         anchors.top: parent.top

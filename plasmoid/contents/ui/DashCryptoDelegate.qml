@@ -68,7 +68,7 @@ Rectangle {
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
                 color: PlasmaCore.ColorScope.textColor
-                text: i18n("Currency: " + model.cryptoType)
+                text: i18n("Currency: " + model.contents.cryptoType)
             }
             
             PlasmaCore.SvgItem {
@@ -142,7 +142,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n(model.cryptoSymbol1 + " : " + model.cryptoCurRate1)
+            text: i18n(model.contents.cryptoSymbol1 + " : " + model.contents.cryptoCurRate1)
             }
         
         Text {
@@ -156,8 +156,8 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n(model.cryptoSymbol2 + " : " + model.cryptoCurRate2)
-                }
+            text: i18n(model.contents.cryptoSymbol2 + " : " + model.contents.cryptoCurRate2)
+            }
         
         Text {
             id: nwsdesc3
@@ -170,7 +170,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n(model.cryptoSymbol3 + " : " + model.cryptoCurRate3)
+            text: i18n(model.contents.cryptoSymbol3 + " : " + model.contents.cryptoCurRate3)
             }
         
         
@@ -230,7 +230,7 @@ Rectangle {
                                         removeCardLabel.color = theme.textColor
                                     }
                                     onClicked:{
-                                        disclaimerListModel.remove(index)
+                                        dashCardCollectionModel.remove(index)
                                         removeChildCard()
                                     }
                                 }
@@ -281,7 +281,7 @@ Rectangle {
                                     }
                                     onClicked:{
                                         cryptocardswitch.checked = false
-                                        ashCryptoPriceListModel.remove(index)
+                                        dashCardCollectionModel.remove(index)
                                         removeChildCard()
                                         }
                                     }

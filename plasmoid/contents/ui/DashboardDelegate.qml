@@ -30,8 +30,10 @@ Item {
     id: dashdelegteType
     height: dashdelegatelview.height
     width: parent.width
-    property alias dashnewsLmodel: dashnewsListModel
-    property alias dashweatherLmodel: dashweatherListModel
+    property Component delegateComponentDisclaimer: Qt.createComponent("DisclaimerCardDelegate.qml")
+    property Component delegateComponentWeather: Qt.createComponent("DashWeatherDelegate.qml")
+    property Component delegateComponentNews: Qt.createComponent("DashNewsDelegate.qml")
+    property Component delegateComponentCrypto: Qt.createComponent("DashCryptoDelegate.qml")
 
     Component.onCompleted: {
         filterSwitchDash(iType, iObj)
@@ -55,8 +57,8 @@ Item {
     }
     
     function filterDashDisclaimerObj() {
-            dashdelegatelview.model = disclaimerListModel
-            disclaimerListModel.append({itemType: "Disclaimer"})
+            dashCardCollectionModel.append({itemType: "Disclaimer", itemAt: 0, contents:{}})
+            dashdelegatelview.delegate = delegateComponentDisclaimer
     }
 
     function filterDashWeatherObj(weatherobj){
@@ -67,37 +69,51 @@ Item {
         else if (weatherMetric.indexOf('imperial') != -1){
                 filteredMetric = "°f"  
         }
-          if(weatherobj){
-              var filteredWeatherObject = JSON.parse(weatherobj)
-              var weatherIcnType = "http://openweathermap.org/img/w/" + filteredWeatherObject.weather[0].icon + ".png"
-              dashdelegatelview.model = dashweatherLmodel
-              dashweatherLmodel.append({itemType: "DashWeather", itemWeatherTemp: filteredWeatherObject.main.temp, itemWeatherTempMin: filteredWeatherObject.main.temp_min, itemWeatherTempMax: filteredWeatherObject.main.temp_max, itemWeatherTempType: filteredWeatherObject.weather[0].main, itemWeatherMetricType: filteredMetric, itemWeatherIconType: weatherIcnType, itemWeatherWind: filteredWeatherObject.wind.speed, itemWeatherCity: filteredWeatherObject.name})
-          }
+        if(weatherobj){
+                var filteredWeatherObject = JSON.parse(weatherobj)
+                var weatherIcnTypeHourZero = "http://openweathermap.org/img/w/" + filteredWeatherObject.list[0].weather[0].icon + ".png"
+                var weatherIcnTypeHourA = "http://openweathermap.org/img/w/" + filteredWeatherObject.list[1].weather[0].icon + ".png"
+                var weatherIcnTypeHourB = "http://openweathermap.org/img/w/" + filteredWeatherObject.list[2].weather[0].icon + ".png"
+                var weatherdateHourZero = filteredWeatherObject.list[0].dt_txt
+                var weatherdateHourA = filteredWeatherObject.list[1].dt_txt
+                var weatherdateHourB = filteredWeatherObject.list[2].dt_txt
+                dashCardCollectionModel.append({itemType: "DashWeather", itemAt: 1, contents:{itemWeatherTempHourZero: filteredWeatherObject.list[0].main.temp, itemWeatherTempHourA: filteredWeatherObject.list[1].main.temp, itemWeatherTempHourB: filteredWeatherObject.list[2].main.temp, itemWeatherTempMinHourZero: filteredWeatherObject.list[0].main.temp_min, itemWeatherTempMinHourA: filteredWeatherObject.list[1].main.temp_min, itemWeatherTempMinHourB: filteredWeatherObject.list[2].main.temp_min, itemWeatherTempMaxHourZero: filteredWeatherObject.list[0].main.temp_max, itemWeatherTempMaxHourA: filteredWeatherObject.list[1].main.temp_max, itemWeatherTempMaxHourB: filteredWeatherObject.list[2].main.temp_max, itemWeatherTempTypeHourZero: filteredWeatherObject.list[0].weather[0].main, itemWeatherTempTypeHourA: filteredWeatherObject.list[1].weather[0].main, itemWeatherTempTypeHourB: filteredWeatherObject.list[2].weather[0].main, itemWeatherMetricType: filteredMetric, itemWeatherIconTypeHourZero: weatherIcnTypeHourZero, itemWeatherIconTypeHourA: weatherIcnTypeHourA, itemWeatherIconTypeHourB: weatherIcnTypeHourB, itemWeatherWindHourZero: filteredWeatherObject.list[0].wind.speed, itemWeatherWindHourA: filteredWeatherObject.list[1].wind.speed, itemWeatherWindHourB: filteredWeatherObject.list[2].wind.speed, itemWeatherCity: filteredWeatherObject.city.name, itemWeatherDateHourZero: weatherdateHourZero, itemWeatherDateHourA: weatherdateHourA, itemWeatherDateHourB: weatherdateHourB}})
+                dashdelegatelview.delegate = delegateComponentWeather
+         }
     }
 
     function filterDashNewsObj(newsobj){
             if(newsobj){
               var filteredNewsObject = JSON.parse(newsobj)
               for (var i=0; i<filteredNewsObject.totalResults; i++){
-                  dashdelegatelview.model = dashnewsLmodel
-                  dashnewsLmodel.append({itemType: "DashNews", newsSource: filteredNewsObject.articles[i].source.name, newsTitle: filteredNewsObject.articles[i].title, newsDescription: filteredNewsObject.articles[i].description, newsURL: filteredNewsObject.articles[i].url, newsImgURL: filteredNewsObject.articles[i].urlToImage})
+                  dashCardCollectionModel.append({itemType: "DashNews", itemAt: 2, contents: {newsSource: filteredNewsObject.articles[i].source.name, newsTitle: filteredNewsObject.articles[i].title, newsDescription: filteredNewsObject.articles[i].description, newsURL: filteredNewsObject.articles[i].url, newsImgURL: filteredNewsObject.articles[i].urlToImage}})
+                  dashdelegatelview.delegate = delegateComponentNews
               }
-            }
-        }
+         }
+    }
     
     function filterDashCryptoObj(cryptobj){
         if(cryptobj){
          var filteredCryptObj = JSON.parse(cryptobj)
-         dashdelegatelview.model = dashCryptoPriceListModel
          var currency1 = filteredCryptObj[innerset.selectedCur1]
          var currency2 = filteredCryptObj[innerset.selectedCur2]
          var currency3 = filteredCryptObj[innerset.selectedCur3]
-         dashCryptoPriceListModel.append({itemType: "DashCryptoPrice", cryptoType: innerset.selectedCrypto, cryptoSymbol1: innerset.selectedCur1, cryptoSymbol2: innerset.selectedCur2, cryptoSymbol3: innerset.selectedCur3, cryptoCurRate1: currency1, cryptoCurRate2: currency2, cryptoCurRate3: currency3})
+         dashCardCollectionModel.append({itemType: "DashCryptoPrice", itemAt: 3, contents: {cryptoType: innerset.selectedCrypto, cryptoSymbol1: innerset.selectedCur1, cryptoSymbol2: innerset.selectedCur2, cryptoSymbol3: innerset.selectedCur3, cryptoCurRate1: currency1, cryptoCurRate2: currency2, cryptoCurRate3: currency3}})
+         dashdelegatelview.delegate = delegateComponentCrypto
         }
     }
     
     function removeChildCard(){
         dashLmodel.remove(index)
+    }
+
+    function findIndex(itemType){
+        for(var i=0; i<dashboardmodelview.model.count; i++ ){
+            
+            if(dashboardmodelview.model.get(i).iType === itemType){
+                return i;
+            }
+        }
     }
 
 Drawer {
@@ -176,51 +192,33 @@ Drawer {
                     }
 
 ListModel {
-        id: dashnewsListModel
-    }
-
-ListModel {
-        id: dashweatherListModel
-    }
-ListModel {
-        id: disclaimerListModel
+        id: dashCardCollectionModel
 }
-ListModel {
-        id: dashCryptoPriceListModel
-}
-
+    
 ListView {
      id: dashdelegatelview
      width: cbwidth - units.gridUnit * 0.25
+     height: childrenRect.height
      spacing: units.gridUnit * 0.3
-     focus: false
      interactive: true
      clip: true;
-     delegate: 
-     Loader{
-                id: dashcardLoader
-                source: switch(itemType){
-                               case "Disclaimer": return "DisclaimerCardDelegate.qml"
-                               case "DashNews": return "DashNewsDelegate.qml"
-                               case "DashWeather": return "DashWeatherDelegate.qml"
-                               case "DashCryptoPrice": return "DashCryptoDelegate.qml"
-                }
-        }
+     model: dashCardCollectionModel
 
      onCountChanged: {
          if (dashdelegatelview.model.count != 0){
          var root = dashdelegatelview.visibleChildren[0]
          var listViewHeight = 0
          var listViewWidth = 0
+         var scrollableHeight
 
          for (var i = 0; i < root.visibleChildren.length; i++) {
-             listViewHeight += root.visibleChildren[i].height
-             listViewWidth  = Math.max(listViewWidth, root.visibleChildren[i].width)
+             listViewHeight = root.visibleChildren[i].height
+             scrollableHeight += root.visibleChildren[i].height
          }
-         dashdelegatelview.height = listViewHeight + units.gridUnit * 1
+         dashdelegatelview.contentHeight = scrollableHeight
                 }
             }
-        ScrollIndicator.vertical: dashscrollBar
+     ScrollBar.vertical: dashscrollBar
         }
 }
 

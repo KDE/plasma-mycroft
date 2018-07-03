@@ -506,8 +506,8 @@ Item {
     
     function fetchDashWeather(){
         var doc = new XMLHttpRequest()
-        var url = 'https://api.openweathermap.org/data/2.5/weather?' +
-        'lat=' + geoLat + '&lon=' + geoLong + '&units=' + weatherMetric +
+        var url = 'https://api.openweathermap.org/data/2.5/forecast?' +
+        'lat=' + geoLat + '&lon=' + geoLong + '&units=' + weatherMetric + '&cnt=3' +
         '&APPID=' + owmApiKeyTextFld.text;
 
             doc.open("GET", url, true);

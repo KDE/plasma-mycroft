@@ -42,7 +42,7 @@ Rectangle {
             spread: 0.1
             color: Qt.rgba(0, 0, 0, 0.3)
         }
-
+        
         Item {
             id: contentdlgtitem
             width: parent.width - units.gridUnit * 0.05
@@ -69,7 +69,7 @@ Rectangle {
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
                 color: PlasmaCore.ColorScope.textColor
-                text: newsTitle
+                text: model.contents.newsTitle
                 
                 MouseArea {
                     anchors.fill: parent
@@ -84,7 +84,7 @@ Rectangle {
                         dashHeader.font.underline = false
                     }
                     onClicked: {
-                        Qt.openUrlExternally(newsURL)
+                        Qt.openUrlExternally(model.contents.newsURL)
                     }
                 }
             }
@@ -161,11 +161,11 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: newsDescription
+            text: model.contents.newsDescription
             
             Component.onCompleted: {
                 if (!nwsdesc.text) {
-                    nwsdesc.text = newsTitle
+                    nwsdesc.text = model.contents.newsTitle
                 }
             }
         }
@@ -174,7 +174,7 @@ Rectangle {
             id: ctxImgIcon
             anchors.right: parent.right
             anchors.margins: units.gridUnit * 0.5
-            source: newsImgURL
+            source: model.contents.newsImgURL
             width: 64
             height: parent.height
             
@@ -216,7 +216,7 @@ Rectangle {
                   font.family: theme.defaultFont.family
                   renderType: Text.NativeRendering 
                   color: PlasmaCore.ColorScope.textColor
-                  text: newsSource
+                  text: model.contents.newsSource
                   
                 MouseArea {
                     anchors.fill: parent
@@ -231,7 +231,7 @@ Rectangle {
                                dashItemSrcName.color = theme.textColor
                             }
                             onClicked: {
-                                Qt.openUrlExternally("https://" + newsSource)
+                                Qt.openUrlExternally("https://" + model.contents.newsSource)
                             }
                         }
                     }
@@ -307,7 +307,7 @@ Rectangle {
                                     }
                                     onClicked:{
                                     mcmenuItem.close()
-                                    var sendnewsurl = "getarticle newsurl " + newsURL
+                                    var sendnewsurl = "getarticle newsurl " + model.contents.newsURL
                                     var socketmessage = {};
                                         socketmessage.type = "recognizer_loop:utterance";
                                         socketmessage.data = {};
@@ -412,7 +412,7 @@ Rectangle {
                                         removeCardLabel.color = theme.textColor
                                     }
                                     onClicked:{
-                                        dashnewsListModel.remove(index)
+                                        dashCardCollectionModel.remove(index)
                                     }
                                 }
                             }
@@ -461,7 +461,7 @@ Rectangle {
                                         disableCardLabel.color = theme.textColor
                                     }
                                     onClicked:{
-                                        dashnewsListModel.remove(index)
+                                        dashCardCollectionModel.remove(index)
                                         removeChildCard()
                                         newscardswitch.checked = false
                                         }
