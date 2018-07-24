@@ -23,87 +23,106 @@ import QtQuick.Controls 2.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.core 2.0 as PlasmaCore
+import QtGraphicalEffects 1.0
 
-Column {
-        spacing: 6
-        anchors.right: parent.right
+Item {
+        width: cbwidth
+        height: messageRect.height + timeStampLabel.height
         property alias mssg: messageText.text
-                        
-        Rectangle {
-            id: messageRect
+        
+        Column{
+            anchors.fill: parent 
+            spacing: 1
+        
+        Item {    
+            id: messageRectFrameItem
             anchors.right: parent.right
+            width: parent.width
+            height: messageRect.height
+            
+         Rectangle {
+            id: messageRect
+            anchors.right: messageRectedge.left
+            anchors.rightMargin: -2
             implicitWidth: messageText.width + 10
             radius: 2
             height: messageText.implicitHeight + 24
             color: theme.linkColor
+            layer.enabled: true
+            layer.effect: DropShadow {
+                horizontalOffset: 0
+                verticalOffset: 1
+                radius: 10
+                samples: 32
+                spread: 0.1
+                color: Qt.rgba(0, 0, 0, 0.3)
+            }
             
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
                 propagateComposedEvents: true
-                onEntered: { 
-                    removeItemButton.visible = true
-                    searchItemButton.visible = true
+                onEntered: {
+                    messageRect.color = Qt.darker(theme.linkColor, 1.2)
+                    messageRectedgeOverLay.color = Qt.darker(theme.linkColor, 1.2)
                 }
                 onExited: { 
-                    removeItemButton.visible = false
-                    searchItemButton.visible = false
+                    messageRect.color = theme.linkColor
+                    messageRectedgeOverLay.color = theme.linkColor
+                }
+                onClicked: {
+                    askCtxMenu.open()
                 }
             }
-            
-            PlasmaCore.IconItem {
-                id: removeItemButton
-                source: "window-close"
-                width: units.gridUnit * 1.5
-                height: units.gridUnit * 1.5
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.bottomMargin: -units.gridUnit * 0.75
-                visible: false
-                
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    propagateComposedEvents: true
-                    onEntered: { 
-                        removeItemButton.visible = true
-                    }
-                    onClicked: {
-                        convoLmodel.remove(index)
-                    }
-                }
-            }
-            
-                PlasmaCore.IconItem {
-                        id: searchItemButton
-                        source: "system-search"
-                        width: units.gridUnit * 1.5
-                        height: units.gridUnit * 1.5
-                        anchors.bottom: parent.bottom
-                        anchors.right: removeItemButton.right
-                        anchors.rightMargin: units.gridUnit * 1.0
-                        anchors.bottomMargin: -units.gridUnit * 0.75
-                        visible: false
                         
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            propagateComposedEvents: true
-                            onEntered: { 
-                                searchItemButton.visible = true
-                            }
-                            onClicked: {
-                                Qt.openUrlExternally("https://duckduckgo.com/?q=" + model.InputQuery)
-                            }
-                        }
-                    }
-            
         PlasmaComponents.Label {
             id: messageText
-            text: model.InputQuery
             anchors.centerIn: parent
             wrapMode: Label.Wrap
             color: theme.backgroundColor
-            }
+            
+            Component.onCompleted: {
+                    var askText = model.InputQuery
+                    var fixedText = askText.substr(0,1).toUpperCase() + askText.substr(1).toLowerCase()
+                    messageText.text = fixedText
+                        }
+                    }
                 }
-                                    }
+            
+        Image {
+            id: messageRectedge
+            anchors.right: parent.right
+            anchors.verticalCenter: messageRect.verticalCenter
+            source: "../images/arright.png"
+            width: units.gridUnit * 0.50
+            height: messageRect.height / 2
+         }
+
+        ColorOverlay {
+                id: messageRectedgeOverLay
+                anchors.fill: messageRectedge
+                source: messageRectedge
+                color: theme.linkColor
+            }
+        }
+            
+            Text{
+            id: timeStampLabel
+            anchors.right: parent.right
+            anchors.rightMargin: units.gridUnit * 0.50
+            width: units.gridUnit * 2.5
+            height: units.gridUnit * 0.50
+            color: Qt.darker(theme.textColor, 1.5)
+            font.pointSize: theme.defaultFont.pointSize - 2
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            text: currentDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+            }
+        }
+        
+        AskMessageTypeMenu{
+           id: askCtxMenu 
+        }
+    }

@@ -74,6 +74,13 @@ void MycroftDbusAdapterInterface::showRecipeMethod(const QString &recipeName)
     QMetaObject::invokeMethod(this, "getMethod", Qt::DirectConnection, Q_ARG(QString, recipeName));
 }
 
+void MycroftDbusAdapterInterface::sendKioMethod(const QString &kioString)
+{
+    // handle method call org.kde.mycroft.showRecipeMethod
+    emit kioMethod(kioString);
+    QMetaObject::invokeMethod(this, "getMethod", Qt::DirectConnection, Q_ARG(QString, kioString));
+}
+
 Q_INVOKABLE QString MycroftDbusAdapterInterface::getMethod(const QString &method)
 {
     QString str = method;

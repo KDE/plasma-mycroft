@@ -51,11 +51,17 @@ class MycroftDbusAdapterInterface: public QDBusAbstractAdaptor
 "    <signal name=\"recipeMethod\">\n"
 "      <arg direction=\"out\" type=\"s\" name=\"msgRecipeMethod\"/>\n"
 "    </signal>\n"
+"    <signal name=\"kioMethod\">\n"
+"      <arg direction=\"out\" type=\"s\" name=\"msgKioMethod\"/>\n"
+"    </signal>\n"
 "    <method name=\"showMycroft\"/>\n"
 "    <method name=\"showSkills\"/>\n"
 "    <method name=\"showSkillsInstaller\"/>\n"
 "    <method name=\"showRecipeMethod\">\n"
 "      <arg direction=\"in\" type=\"s\" name=\"recipeName\"/>\n"
+"     </method>\n"
+"    <method name=\"sendKioMethod\">\n"
+"      <arg direction=\"in\" type=\"s\" name=\"kioString\"/>\n"
 "     </method>\n"
 "  </interface>\n"
         "")
@@ -70,11 +76,13 @@ public Q_SLOTS: // METHODS
     void showSkills();
     void showSkillsInstaller();
     void showRecipeMethod(const QString &recipeName);
+    void sendKioMethod(const QString &kioString);
 Q_SIGNALS: // SIGNALS
     void sendShowMycroft(const QString &msgShowMycroft);
     void sendShowSkills(const QString &msgShowSkills);
     void installList(const QString &msgShowInstallSkills);
     void recipeMethod(const QString &msgRecipeMethod);
+    void kioMethod(const QString &msgKioMethod);
 };
 
 #endif

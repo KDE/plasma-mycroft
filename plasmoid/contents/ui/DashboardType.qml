@@ -54,15 +54,17 @@ ListView {
      focus: false
      interactive: true
      clip: true;
-     delegate: DashboardDelegate{}   
+     delegate: DashboardDelegate{}
+     ScrollBar.vertical: dashscrollBar
     }
     
     PlasmaComponents3.ScrollBar {
         id: dashscrollBar
+        orientation: Qt.Vertical
+        interactive: true
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        orientation: Qt.Vertical
     }
 }
 

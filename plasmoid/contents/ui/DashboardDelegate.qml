@@ -195,6 +195,10 @@ ListModel {
         id: dashCardCollectionModel
 }
     
+FocusScope {
+    anchors.fill:parent
+    focus: true
+    
 ListView {
      id: dashdelegatelview
      width: cbwidth - units.gridUnit * 0.25
@@ -218,7 +222,13 @@ ListView {
          dashdelegatelview.contentHeight = scrollableHeight
                 }
             }
-     ScrollBar.vertical: dashscrollBar
+        
+        Component.onCompleted: {
+            if(dashCardCollectionModel.index !== -1){
+                dashboardmodelview.forceActiveFocus();   
+                }
+            }
         }
+    }
 }
 

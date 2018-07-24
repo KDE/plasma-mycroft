@@ -84,6 +84,7 @@ Item {
     property var geoLong
     property var globalcountrycode
     property var weatherMetric: "metric"
+    property date currentDate: new Date()
     
     Connections {
         target: plasmoid
@@ -128,6 +129,14 @@ Item {
             if(plasmoid.expanded = !plasmoid.expanded){
                 plasmoid.expanded
             }
+        }
+        onKioMethod: {
+            var sentFromKio = msgKioMethod
+            var socketmessage = {};
+            socketmessage.type = "recognizer_loop:utterance";
+            socketmessage.data = {};
+            socketmessage.data.utterances = [sentFromKio];
+            socket.sendTextMessage(JSON.stringify(socketmessage));
         }
     }
     
@@ -175,13 +184,6 @@ Item {
             break
         }
    }
-    
-    function retryConn(){
-        socket.active = true
-        if (socket.active = false){
-               convoLmodel.append({"itemType": "NonVisual", "InputQuery": socket.errorString})
-        }
-    }
     
     function filterSpeak(msg){
         convoLmodel.append({
@@ -744,9 +746,15 @@ Item {
         text: i18n("Reconnect")
         width: units.gridUnit * 6
         visible: false
+        focus: false
+        enabled: false
         
         onClicked: {
-            retryConn()
+            socket.active = false
+            socket.active = true
+            if (socket.active = false){
+               convoLmodel.append({"itemType": "NonVisual", "InputQuery": socket.errorString})
+            }
         }
     }
     
@@ -793,6 +801,7 @@ TopBarAnim {
                 onClicked: {
                     if (mycroftstartservicebutton.checked === false) {
                         statusRetryBtn.visible = false
+                        statusRetryBtn.enabled = false
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
                         convoLmodel.clear()
                         suggst.visible = true;
@@ -1020,6 +1029,7 @@ Item {
                                 mycroftstartservicebutton.circolour = "red"
                                 midbarAnim.showstatsId()
                                 statusRetryBtn.visible = true
+                                statusRetryBtn.enabled = true
                                 drawer.open()
                                 waitanimoutter.aniRunError()
                                 delay(1250, function() {
@@ -1030,6 +1040,7 @@ Item {
                                 statusId.text = i18n("<b>Connected</b>")
                                 statusId.color = "green"
                                 statusRetryBtn.visible = false
+                                statusRetryBtn.enabled = false
                                 mycroftstartservicebutton.circolour = "green"
                                 mycroftStatusCheckSocket.active = false;
                                 midbarAnim.showstatsId()
@@ -1157,9 +1168,8 @@ Item {
     anchors.right: root.right
     anchors.bottom: root.bottom
 
-    Rectangle {
+    Item {
                     id: rectangle2
-                    color: "#00000000"
                     anchors.top: mycroftcolumntab.top
                     anchors.topMargin:15
                     anchors.left: mycroftcolumntab.left
@@ -1205,17 +1215,14 @@ Item {
         id: convoLmodel
         }
 
-            Rectangle {
+            Item {
                 id: messageBox
                 anchors.fill: parent
-                anchors.right: parent.right
-                anchors.left: parent.left
-                color: "#00000000"
-
+                
                 ColumnLayout {
                     id: colconvo
                     anchors.fill: parent
-
+                
                 ListView {
                     id: inputlistView
                     Layout.fillWidth: true
@@ -1226,7 +1233,7 @@ Item {
                     model: convoLmodel
                     ScrollBar.vertical: ScrollBar {}
                     delegate:  Component {
-                            Loader {
+                        Loader {
                                 source: switch(itemType) {
                                         case "NonVisual": return "SimpleMessageType.qml"
                                         case "WebViewType": return "WebViewType.qml"
@@ -1249,11 +1256,11 @@ Item {
                                     property var metacontent : dataContent
                                 }
                         }
-
+                
                 onCountChanged: {
                     inputlistView.positionViewAtEnd();
                                 }
-                                    }
+                                    } 
                                         }
                                             }
                                                 }
@@ -1596,10 +1603,11 @@ Item {
                 }
                 else if(!dashswitch.checked){
                     convoLmodel.clear()
-                    disclaimbox.visible = true
+                    if(!socket.active){
+                        disclaimbox.visible = true   
+                    }
                 }
             }
-            
         }
 
         PlasmaComponents.Label {

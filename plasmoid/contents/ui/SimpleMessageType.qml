@@ -25,82 +25,119 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.core 2.0 as PlasmaCore
 import QtGraphicalEffects 1.0
 
-Column {
-                    spacing: 6
-                    anchors.right: parent.right
+Item {
+    width: cbwidth
+    height: messageRect.height + timeStampLabel.height
+    property alias mssg: messageText.text
+                    
+        Row {
+            id: messageRow
+            spacing: 6
+            
+        Item {
+            id: repImgBox
+            width: units.gridUnit * 2
+            height: units.gridUnit * 2
+            
+            Image {
+                id: repImg
+                anchors.fill: parent
+                source: "../images/mycroftsmaller2.png"
+            }
+            
+            ColorOverlay {
+                anchors.fill: repImg
+                source: repImg
+                color: theme.linkColor
+            }
+        }
+        
+        Column{ 
+            spacing: 1
+        
+        Item {
+            id: simplemsgRectFrameItem
+            width: cbwidth
+            height: messageRect.height
+       
+        Rectangle {
+            id: messageRect
+            anchors.left: simpleMsgRectedge.right
+            anchors.leftMargin: -2
+            width: cbwidth - units.gridUnit * 2
+            radius: 2
+            height: messageText.implicitHeight + 24
+            color: Qt.lighter(theme.backgroundColor, 1.2)
+            layer.enabled: true
+            layer.effect: DropShadow {
+                horizontalOffset: 0
+                verticalOffset: 1
+                radius: 10
+                samples: 32
+                spread: 0.1
+                color: Qt.rgba(0, 0, 0, 0.3)
+            }
+            
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            propagateComposedEvents: true
+            onEntered: {
+                messageRect.color = Qt.lighter(theme.backgroundColor, 1.5)
+                simpleMsgRectedgeOverLay.color = Qt.lighter(theme.backgroundColor, 1.5)
+            }
+            onExited: {
+                messageRect.color = Qt.lighter(theme.backgroundColor, 1.2)
+                simpleMsgRectedgeOverLay.color = Qt.lighter(theme.backgroundColor, 1.2)
+            }
+            onClicked:{
+                simpleCtxMenu.open()
+            }
+        }
+                                    
+        PlasmaComponents.Label {
+            id: messageText
+            text: model.InputQuery
+            anchors.fill: parent
+            anchors.margins: 12
+            wrapMode: Label.Wrap
+        }
+            }
+            
+        Image {
+            id: simpleMsgRectedge
+            anchors.left: parent.left
+            anchors.top: parent.top
+            source: "../images/arleft.png"
+            width: units.gridUnit * 0.50
+            height: units.gridUnit * 1.25
+         }
 
-                    readonly property bool sentByMe: model.recipient !== "User"
-                    property alias mssg: messageText.text
-                        
-                    Row {
-                        id: messageRow
-                        spacing: 6
-                        
-                    Item {
-                        id: repImgBox
-                        width: units.gridUnit * 2
-                        height: units.gridUnit * 2
-                        
-                        Image {
-                            id: repImg
-                            anchors.fill: parent
-                            source: "../images/mycroftsmaller2.png"
-                        }
-                        
-                        ColorOverlay {
-                            anchors.fill: repImg
-                            source: repImg
-                            color: theme.linkColor
-                        }
+        ColorOverlay {
+                id: simpleMsgRectedgeOverLay
+                anchors.fill: simpleMsgRectedge
+                source: simpleMsgRectedge
+                color: Qt.lighter(theme.backgroundColor, 1.2)
+        }
+            }
+        
+        Text {
+            id: timeStampLabel
+            anchors.left: parent.left
+            anchors.leftMargin: units.gridUnit * 0.50
+            width: units.gridUnit * 2.5
+            height: units.gridUnit * 0.50
+            color: Qt.darker(theme.textColor, 1.5)
+            font.pointSize: theme.defaultFont.pointSize - 2
+            font.letterSpacing: theme.defaultFont.letterSpacing
+            font.wordSpacing: theme.defaultFont.wordSpacing
+            font.family: theme.defaultFont.family
+            renderType: Text.NativeRendering 
+            text: currentDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+            }
+                }
                     }
-                    
-                    Rectangle {
-                        id: messageRect
-                        width: cbwidth - units.gridUnit * 2
-                        radius: 2
-                        height: messageText.implicitHeight + 24
-                        color: Qt.lighter(theme.backgroundColor, 1.2)
-                            
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        propagateComposedEvents: true
-                        onEntered: removeItemButton.visible = true
-                        onExited: removeItemButton.visible = false
-                    }
-                    
-                    PlasmaCore.IconItem {
-                        id: removeItemButton
-                        source: "window-close"
-                        width: units.gridUnit * 1.5
-                        height: units.gridUnit * 1.5
-                        anchors.bottom: parent.bottom
-                        anchors.right: parent.right
-                        anchors.rightMargin: units.gridUnit * 0.2
-                        anchors.bottomMargin: -units.gridUnit * 0.75
-                        visible: false
-                        
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            propagateComposedEvents: true
-                            onEntered: { 
-                                removeItemButton.visible = true
-                            }
-                            onClicked: {
-                                convoLmodel.remove(index)
-                            }
-                        }
-                    }
-                                        
-                    PlasmaComponents.Label {
-                        id: messageText
-                        text: model.InputQuery
-                        anchors.fill: parent
-                        anchors.margins: 12
-                        wrapMode: Label.Wrap
-                        
-                        }
-                            }
-                                }
-                                    }
+        SimpleMessageTypeMenu{
+            id: simpleCtxMenu 
+        }
+    }
