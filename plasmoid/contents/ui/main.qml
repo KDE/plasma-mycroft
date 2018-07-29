@@ -194,14 +194,14 @@ Item {
     }
     
     function filterincoming(intent, metadata) {
-        var intentVisualArray = ['CurrentWeatherIntent'];
+        var intentVisualArray = ['handle_current_weather'];
         var itemType
         var filterintentname = intent.split(':');
         var intentname = filterintentname[1];
 
         if (intentVisualArray.indexOf(intentname) !== -1) {
                 switch (intentname){
-                case "CurrentWeatherIntent":
+                case "handle_current_weather":
                     itemType = "CurrentWeather"
                     break;
                 }
