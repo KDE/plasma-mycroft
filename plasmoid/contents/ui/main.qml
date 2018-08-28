@@ -29,7 +29,6 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
-import QtWebKit 3.0
 import QtQuick.Window 2.0
 import QtGraphicalEffects 1.0
 
