@@ -88,7 +88,7 @@ Rectangle {
                 font.wordSpacing: theme.defaultFont.wordSpacing
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
-                text: qsTr(placetitle.replace(/["']/g, ""))
+                text: i18n(placetitle.replace(/["']/g, ""))
                 }
             
             PlasmaComponents.Label {
@@ -103,7 +103,7 @@ Rectangle {
                 font.wordSpacing: theme.defaultFont.wordSpacing
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
-                text: "Distance: " + placedistance + " <i>mtrs</i>"
+                text: i18nc("mtrs stands for meters", "Distance: %1 <i>mtrs</i>", placedistance)
                 }
             }
                 
@@ -155,7 +155,7 @@ Rectangle {
                     font.wordSpacing: theme.defaultFont.wordSpacing
                     font.family: theme.defaultFont.family
                     renderType: Text.NativeRendering 
-                    text: "Address: " + placeloc.replace(/["']/g, "")
+                    text: i18n("Address: %1", placeloc.replace(/["']/g, ""))
                 }
 
                 Image {

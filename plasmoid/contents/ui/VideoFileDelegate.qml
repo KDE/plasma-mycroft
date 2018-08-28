@@ -90,7 +90,7 @@ Rectangle {
 
                 wrapMode: Text.Wrap
                 Component.onCompleted: {
-                    videoFileLoc.text = "<i>Location: " + InputQuery + "</i>"
+                    videoFileLoc.text = i18n("<i>Location: %1</i>", InputQuery)
                 }
             }
         }
@@ -102,7 +102,7 @@ Rectangle {
                   anchors.verticalCenter: parent.verticalCenter
                   width: units.gridUnit * 3.5
                   height: units.gridUnit * 3
-                  text: "Play"
+                  text: i18n("Play")
 
                   onClicked: {
                         var vidFile = Qt.resolvedUrl(InputQuery)

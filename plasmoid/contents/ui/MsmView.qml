@@ -122,7 +122,7 @@ Rectangle {
                     var skillPath = (defaultFold || customFold) + "/" + model.name
                     configPath = (defaultFold || customFold) + "/" + model.name + "/" + "settingsmeta.json"
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
-                        installUpdateLabl.text = "Uninstall"
+                        installUpdateLabl.text = i18n("Uninstall")
                         updateskillviamsm.enabled = true
                     }
                     if(PlasmaLa.FileReader.file_exists_local(configPath)){
@@ -196,7 +196,7 @@ Rectangle {
                        width: parent.width / 4
                        height: parent.height
                        anchors.left: parent.left
-                       text: "Install"
+                       text: i18n("Install")
                        
                        onClicked:{
                            switch(installUpdateLabl.text){
@@ -215,7 +215,7 @@ Rectangle {
                        width: parent.width / 4
                        height: parent.height
                        anchors.left: installUpdateLabl.right
-                       text: "Update"
+                       text: i18n("Update")
                        enabled: false
                        
                        onClicked:{
@@ -228,25 +228,24 @@ Rectangle {
                        width: parent.width / 4
                        height: parent.height
                        anchors.left: updateskillviamsm.right
-                       text: "Readme"
+                       text: i18n("Readme")
                        
                        onClicked: {
                            Qt.openUrlExternally(model.url)
                         }
                     }
-                        
+
                     PlasmaComponents.Button{
                        id: configureSkillLabl
                        width: parent.width / 4
                        anchors.right: parent.right
                        height: parent.height
-                       text: "Configure"
+                       text: i18n("Configure")
                        enabled: false
                        
                        onClicked: {
                             execConfiguration()
                         }
-                    }    
+                    }
                 }
             }
-                    

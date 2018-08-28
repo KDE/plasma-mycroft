@@ -74,7 +74,7 @@ Item {
             width: parent.width
             color: theme.textColor
             font.pointSize: 9
-            text: "<i>" + model.sLink + "</i>"
+            text: i18n("<i>%1</i>", model.sLink)
             }
         }
         
@@ -103,10 +103,10 @@ Item {
                     
                     Component.onCompleted:{
                         if (sIsAnswered) {
-                                stackObjAnswerAvailableLabel.text = "Answered"
+                                stackObjAnswerAvailableLabel.text = i18n("Answered")
                         }
                         else {
-                                stackObjAnswerAvailableLabel.text = "Unanswered"
+                                stackObjAnswerAvailableLabel.text = i18n("Unanswered")
                         }
                     }
                 }
@@ -124,7 +124,7 @@ Item {
                 Text {
                     id: stackObjAnswerCountLabel
                     anchors.centerIn: parent
-                    text: "Replies: " + sAnswerCount
+                    text: i18n("Replies: %1", sAnswerCount)
                     font.pointSize: 9
                     color: theme.textColor
                 }

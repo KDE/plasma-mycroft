@@ -81,7 +81,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 height: units.gridUnit * 1
-                text: "<i>Calories:</i> " + recipeCalories +" <b>cal</b>"
+                text: i18n("<i>Calories:</i> %1 <b>cal</b>", recipeCalories)
                 }
                 
             Text{
@@ -92,7 +92,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 height: units.gridUnit * 1
-                text: "<i>Diet Type:</i> " + recipeDiet
+                text: i18n("<i>Diet Type:</i> %1", recipeDiet)
                 }
                 
             Text{
@@ -103,7 +103,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 height: units.gridUnit * 1
-                text: "<i>Health Tags:</i> " + recipeHealthTags
+                text: i18n("<i>Health Tags:</i> %1", recipeHealthTags)
                 }    
             }
             
@@ -112,7 +112,7 @@ Rectangle {
                   anchors.right: parent.right
                   width: units.gridUnit * 6;
                   height: units.gridUnit * 4;
-                  text: "View Recipe"
+                  text: i18n("View Recipe")
 
                   onClicked: {
                     recipeReadLmodel.clear()  
@@ -136,7 +136,7 @@ Rectangle {
             Text {
                 color: theme.textColor;
                 font.pixelSize: 10
-                text: "<i>Recipe Source: " + recipeSource + "</i>"
+                text: i18n("<i>Recipe Source: %1</i>", recipeSource)
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter
@@ -145,7 +145,7 @@ Rectangle {
             Text {
                 color: theme.textColor ;
                 font.pixelSize: 10
-                text: "<i>Powered By: Edamam.com</i>"
+                text: i18n("<i>Powered By: Edamam.com</i>")
                 anchors.right: parent.right
                 anchors.rightMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter

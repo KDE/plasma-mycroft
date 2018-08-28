@@ -36,7 +36,7 @@ height: units.gridUnit * 3
     Text {
         id: disclaimerHeading1
         height: 28
-        text: i18n("Let's Continue ?")
+        text: i18n("Let's Continue?")
         font.pointSize: 24
         elide: Text.ElideLeft
         font.family: "Verdana"

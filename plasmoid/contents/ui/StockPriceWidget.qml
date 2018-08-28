@@ -58,7 +58,7 @@ Column {
                 PlasmaComponents.Label {
                     id: stockWidgetHeader
                     color: "#ffffff"
-                    text: qsTr("Stock Price Info")
+                    text: i18n("Stock Price Info")
                     style: Text.Raised
                     font.italic: false
                     textFormat: Text.AutoText
@@ -77,7 +77,7 @@ Column {
                 PlasmaComponents.Label {
                     id: stockWidgetSymbol
                     color: "#ffffff"
-                    text: qsTr("Text")
+                    text: i18n("Text")
                     font.bold: true
                     anchors.top: stockWidgetHeader.bottom
                     anchors.topMargin: 15
@@ -92,7 +92,7 @@ Column {
                     PlasmaComponents.Label {
                         id: stockWidgetPriceLabel
                         color: "#ffffff"
-                        text: qsTr("Stock Price:")
+                        text: i18n("Stock Price:")
                         font.italic: true
                         font.family: "Times New Roman"
                         style: Text.Raised
@@ -106,7 +106,7 @@ Column {
                        PlasmaComponents.Label {
                             id: stockWidgetPrice
                             color: "#ffffff"
-                            text: qsTr("128.89")
+                            text: i18n("128.89")
                             font.italic: true
                             style: Text.Raised
                             font.family: "Times New Roman"

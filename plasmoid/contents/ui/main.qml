@@ -1312,12 +1312,12 @@ Item {
         
         PlasmaComponents.TabButton {
                 id: generalSettingsTab
-                text: "General"
+                text: i18n("General")
         }
         
         PlasmaComponents.TabButton {
             id: dashSettingsTab
-            text: "Dash"
+            text: i18n("Dash")
             }
         }
 
@@ -1638,7 +1638,7 @@ Item {
         spacing: 2
             PlasmaComponents.Label{
                 id: cryptoCurrencySelected
-                text: "Selected CryptoCurrency:"
+                text: i18n("Selected CryptoCurrency:")
             }
             PlasmaComponents3.ComboBox {
                 id: cryptoSelectedBox
@@ -1651,7 +1651,7 @@ Item {
         
         PlasmaComponents.Label{
             id: localCurrencySelected
-            text: "Display Currencies:"
+            text: i18n("Display Currencies:")
         }
         
         PlasmaComponents3.ComboBox {
@@ -1682,7 +1682,7 @@ Item {
         spacing: 2
            PlasmaComponents.Label { 
                 id: newsApiKeyLabelFld
-                text: "NewsApi App_Key:"
+                text: i18n("NewsApi App_Key:")
             }
             PlasmaComponents.TextField{
                 id: newsApiKeyTextFld
@@ -1701,7 +1701,7 @@ Item {
         spacing: 2
            PlasmaComponents.Label { 
                 id: owmApiKeyLabelFld
-                text: "Open Weather Map App_ID:"
+                text: i18n("Open Weather Map App_ID:")
                 }
             PlasmaComponents.TextField{
                 id: owmApiKeyTextFld
@@ -1760,7 +1760,7 @@ Item {
             anchors.bottom: parent.bottom
             width: parent.width / 3.5
             textRole: "key"
-            displayText: "Version: " + currentText
+            displayText: i18n("Version: %1", currentText)
             property string versionInfo: versionItem.get(currentIndex).value
             
             model: ListModel {

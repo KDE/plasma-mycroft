@@ -188,7 +188,7 @@ Column {
                 font.bold: true;
                 
                 Component.onCompleted: {
-                    weatherMinLabel.text = "Minimum Temperature: " + slttemp
+                    weatherMinLabel.text = i18n("Minimum Temperature: %1", slttemp)
                     }
                 }
                 
@@ -216,7 +216,7 @@ Column {
                 font.bold: true;
                 
                 Component.onCompleted: {
-                    weatherCurrentLabel.text = "Current Temperature: " + scttemp
+                    weatherCurrentLabel.text = i18n("Current Temperature: %1", scttemp)
                 }
             }
             
@@ -244,10 +244,10 @@ Column {
                 font.bold: true;
                 
                 Component.onCompleted: {
-                    weatherMaxLabel.text = "Maximum Temperature: " + shttemp
-                            }                
+                    weatherMaxLabel.text = i18n("Maximum Temperature: %1", shttemp)
+                            }
                         }
-                    }  
+                    }
                 }
             }
         }

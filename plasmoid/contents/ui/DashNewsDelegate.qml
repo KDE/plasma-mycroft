@@ -293,7 +293,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: audionewsCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Play / Listen To News Article"
+                                   text: i18n("Play / Listen To News Article")
                                 }
                             }
                             MouseArea {
@@ -348,7 +348,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: shareCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Share News Link"
+                                   text: i18n("Share News Link")
                                 }
                             }
                             MouseArea {
@@ -399,7 +399,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: removeCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Remove Card"
+                                   text: i18n("Remove Card")
                                 }
                             }
                             MouseArea {
@@ -448,7 +448,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: disableCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Disable News Cards"
+                                   text: i18n("Disable News Cards")
                                 }
                             }
                             MouseArea {

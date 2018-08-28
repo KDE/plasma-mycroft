@@ -102,7 +102,7 @@ Rectangle {
                   anchors.verticalCenter: parent.verticalCenter
                   width: units.gridUnit * 3.5
                   height: units.gridUnit * 3
-                  text: "Open"
+                  text: i18n("Open")
 
                   onClicked: {
                         var docFile = Qt.resolvedUrl(InputQuery)

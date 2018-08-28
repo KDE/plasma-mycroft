@@ -132,25 +132,25 @@ Rectangle {
                     PlasmaComponents.Label {
                         id: bookAuthorLabel
                         font.capitalization: Font.Capitalize
-                        text: "Author: " + bookauthor
+                        text: i18n("Author: %1", bookauthor)
                     }
                     
                     PlasmaComponents.Label {
                         id: bookPublisherLabel
                         font.capitalization: Font.Capitalize
-                        text: "Publisher: " + bookpublisher
+                        text: i18n("Publisher: %1", bookpublisher)
                     }
                     
                     PlasmaComponents.Label {
                         id: bookYearLabel
                         font.capitalization: Font.Capitalize
-                        text: "Release Year: " + bookdate
+                        text: i18n("Release Year: %1", bookdate)
                     }
                     
                     PlasmaComponents.Label {
                         id: bookAvailableLabel
                         font.capitalization: Font.Capitalize
-                        text: "Availability: " + bookstatus
+                        text: i18n("Availability: %1", bookstatus)
                     }
                 }
             }
@@ -165,7 +165,7 @@ Rectangle {
                 id: bookReadOnlineBtn
                 width: cbwidth / 2
                 height: units.gridUnit * 2
-                text: "Read Online"
+                text: i18n("Read Online")
                 
                 onClicked: {
                     Qt.openUrlExternally(bookurl);
@@ -176,7 +176,7 @@ Rectangle {
                 id: bookDownloadBtn
                 width: cbwidth / 2
                 height: units.gridUnit * 2
-                text: "Download"
+                text: i18n("Download")
                 
                 onClicked: {
                     var socketmessage = {};

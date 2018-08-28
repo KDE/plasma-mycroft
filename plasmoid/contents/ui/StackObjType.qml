@@ -46,7 +46,7 @@ Rectangle {
         height: parent.height
         anchors.left: parent.left
         anchors.leftMargin: units.gridUnit * 0.25
-        text: "Powered By StackOverflow"
+        text: i18n("Powered By StackOverflow")
         font.capitalization: Font.SmallCaps
         color: theme.textColor
     }

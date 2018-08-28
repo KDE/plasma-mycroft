@@ -155,7 +155,7 @@ Drawer {
                                PlasmaComponents.Label {
                                    id: shareViaEmailLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Share Via Email"
+                                   text: i18n("Share Via Email")
                                 }
                             }
                             MouseArea {

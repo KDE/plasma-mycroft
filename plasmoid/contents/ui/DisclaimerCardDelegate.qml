@@ -68,7 +68,7 @@ Rectangle {
                 font.wordSpacing: theme.defaultFont.wordSpacing
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
-                text: i18n("Let's Continue ?")
+                text: i18n("Let's Continue?")
                 color: PlasmaCore.ColorScope.textColor
             }
             
@@ -188,7 +188,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: removeCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Remove Card"
+                                   text: i18n("Remove Card")
                                 }
                             }
                             MouseArea {
@@ -238,7 +238,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: disableCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Disable Disclaimer Card"
+                                   text: i18n("Disable Disclaimer Card")
                                 }
                             }
                             MouseArea {

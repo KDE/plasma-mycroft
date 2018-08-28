@@ -91,7 +91,7 @@ Rectangle {
                 height: units.gridUnit * 1
                 wrapMode: Text.Wrap
                 Component.onCompleted: {
-                    audioFileLoc.text = "<i>Location: " + InputQuery + "</i>"
+                    audioFileLoc.text = i18n("<i>Location: %1</i>", InputQuery)
                 }
             }
         }
@@ -103,7 +103,7 @@ Rectangle {
                   anchors.verticalCenter: parent.verticalCenter
                   width: units.gridUnit * 3.5
                   height: units.gridUnit * 3
-                  text: "Listen"
+                  text: i18n("Listen")
 
                   onClicked: {
                         var audFile = Qt.resolvedUrl(InputQuery)

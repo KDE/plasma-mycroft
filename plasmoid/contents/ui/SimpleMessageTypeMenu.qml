@@ -65,7 +65,7 @@ Drawer {
                         PlasmaComponents.Label {
                             id: removeRectLabel
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Remove"
+                            text: i18n("Remove")
                         }
                     }
                     MouseArea {
@@ -114,7 +114,7 @@ Drawer {
                         PlasmaComponents.Label {
                             id: searchRectLabel
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Search Online"
+                            text: i18n("Search Online")
                         }
                     }
                     MouseArea {

@@ -63,7 +63,7 @@ Column {
                                 id: generalImgRecog
                                 width: cbwidth / 2
                                 height: units.gridUnit * 2
-                                text: "Broad Recognition"
+                                text: i18n("Broad Recognition")
                                 
                                 onClicked: {
                                     var irecogmsgsend = innerset.customrecog
@@ -78,7 +78,7 @@ Column {
                                 id: ocrImageRecog
                                 width: cbwidth / 2
                                 height: units.gridUnit * 2
-                                text: "OCR Recognition"
+                                text: i18n("OCR Recognition")
                                 
                                 onClicked: {
                                     var irecogmsgsend = innerset.customocrrecog

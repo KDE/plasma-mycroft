@@ -64,7 +64,7 @@ Column {
                         id: lowtemplable
                         anchors.left: parent.left
                         anchors.verticalCenter: lowtempaniimage.verticalCenter
-                        text: "Low"
+                        text: i18n("Low")
 //                        font.family: "Courier"
                         font.pointSize: 12
                         font.bold: true
@@ -78,14 +78,14 @@ Column {
                         x: 63
                         y: 33
                         anchors.top: lowtemplable.bottom
-                        text: "100"
+                        text: i18n("100")
                         anchors.horizontalCenter: lowtemplable.horizontalCenter
                         anchors.topMargin: 10
                     }
 
                     PlasmaComponents.Label {
                         id: weatherwidgetlowtempdegree
-                        text: qsTr("°")
+                        text: i18n("°")
                         anchors.verticalCenterOffset: -5
                         anchors.verticalCenter: lowtempitem.verticalCenter
                         anchors.left: lowtempitem.right
@@ -111,7 +111,7 @@ Column {
                         x: 65
                         y: 70
                         anchors.top: hightemplable.bottom
-                        text: "100"
+                        text: i18n("100")
                         anchors.topMargin: 10
                         anchors.horizontalCenter: hightemplable.horizontalCenter
                     }
@@ -119,7 +119,7 @@ Column {
                     PlasmaComponents.Label {
                         id: hightemplable
                         anchors.left: parent.left
-                        text: "High"
+                        text: i18n("High")
                         font.pointSize: 12
                         font.bold: true
                    //     font.family: "Courier"
@@ -131,7 +131,7 @@ Column {
 
                     PlasmaComponents.Label {
                         id: weatherwidgethightempdegree
-                        text: qsTr("°")
+                        text: i18n("°")
                         anchors.verticalCenterOffset: -5
                         anchors.verticalCenter: hightempitem.verticalCenter
                         anchors.left: hightempitem.right
@@ -144,7 +144,7 @@ Column {
 
                 PlasmaComponents.Label {
                     id: todayweather
-                    text: qsTr("Tomorrow's Weather")
+                    text: i18n("Tomorrow's Weather")
                     anchors.left: parent.left
                     anchors.leftMargin: 9
                  //   font.family: "Courier"

@@ -68,7 +68,7 @@ Rectangle {
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
                 color: PlasmaCore.ColorScope.textColor
-                text: i18n("Currency: " + model.contents.cryptoType)
+                text: i18n("Currency: %1", model.contents.cryptoType)
             }
             
             PlasmaCore.SvgItem {
@@ -142,7 +142,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n(model.contents.cryptoSymbol1 + " : " + model.contents.cryptoCurRate1)
+            text: i18nc("%1 is the currency symbol, %2 is the current rate", "%1: %2", model.contents.cryptoSymbol1, model.contents.cryptoCurRate1)
             }
         
         Text {
@@ -156,7 +156,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n(model.contents.cryptoSymbol2 + " : " + model.contents.cryptoCurRate2)
+            text: i18nc("%1 is the currency symbol, %2 is the current rate", "%1: %2", model.contents.cryptoSymbol2, model.contents.cryptoCurRate2)
             }
         
         Text {
@@ -170,7 +170,7 @@ Rectangle {
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
             color: PlasmaCore.ColorScope.textColor
-            text: i18n(model.contents.cryptoSymbol3 + " : " + model.contents.cryptoCurRate3)
+            text: i18nc("%1 is the currency symbol, %2 is the current rate", "%1: %2", model.contents.cryptoSymbol3, model.contents.cryptoCurRate3)
             }
         
         
@@ -217,7 +217,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: removeCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Remove Card"
+                                   text: i18n("Remove Card")
                                 }
                             }
                             MouseArea {
@@ -267,7 +267,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: disableCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: "Disable Cryptocurrency Card"
+                                   text: i18n("Disable Cryptocurrency Card")
                                 }
                             }
                             MouseArea {
