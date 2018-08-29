@@ -23,6 +23,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import "Dashboard.js" as Dash
 
 Rectangle {
     id: suggestionsmainitem
@@ -223,9 +224,9 @@ Rectangle {
             }
 
             onClicked: {
-                convoLmodel.clear()
-                if(dashswitch.checked == true && dashLmodel.count == 0){
-                    showDash("setVisible")
+                mycroftConversationComponent.conversationModel.clear()
+                if(appletSettings.dasboardSwitch.checked == true && dashLmodel.count == 0){
+                    Dash.showDash("setVisible")
                 }
             }
         }

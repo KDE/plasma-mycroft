@@ -57,7 +57,7 @@
             socketmessage.type = "mycroft.mic.mute";
             socketmessage.data = {};
             socket.sendTextMessage(JSON.stringify(socketmessage));
-            qinputmicbx.iconSource = "mic-off"
+            topBarView.micIcon = "mic-off"
         }
     
     function unmuteMicrophone(){
@@ -65,7 +65,7 @@
             socketmessage.type = "mycroft.mic.unmute";
             socketmessage.data = {};
             socket.sendTextMessage(JSON.stringify(socketmessage));
-            qinputmicbx.iconSource = "mic-on"
+            topBarView.micIcon = "mic-on"
     }
     
     function getFileExtenion(filePath){
@@ -94,37 +94,104 @@
     function playwaitanim(recoginit){
        switch(recoginit){
        case "recognizer_loop:record_begin":
-               drawer.open()
-               waitanimoutter.aniRunWorking()
+               bottomBarView.animationDrawer.open()
+               bottomBarView.animateStepWorking()
                break
            case "recognizer_loop:wakeword":
-                waitanimoutter.aniRunHappy()
+                bottomBarView.animateStepHappy()
                 break
            case "intent_failure":
-                waitanimoutter.aniRunError()
+                bottomBarView.animateStepError()
                 intentfailure = true
                 break
            case "recognizer_loop:audio_output_start":
                if (intentfailure === false){
-                   drawer.close()
+                   bottomBarView.animationDrawer.close()
                }
                else {
                 delay(1500, function() {
-                        drawer.close()
+                        bottomBarView.animationDrawer.close()
                         intentfailure = false;
                     }) 
                 }
                break
            case "mycroft.skill.handler.complete":
                if (intentfailure === false){
-                   drawer.close()
+                   bottomBarView.animationDrawer.close()
                }
                else {
                 delay(1500, function() {
-                        drawer.close()
+                        bottomBarView.animationDrawer.close()
                         intentfailure = false;
                     }) 
                 }
                break
        }
+   }
+   
+   function preSocketStatus(){
+    if (mycroftStatusCheckSocket.status == WebSocket.Open && socket.status == WebSocket.Closed) {
+        socket.active = true
+        mycroftStatusCheckSocket._socketIsAlreadyActive = true
+        disclaimbox.visible = false;
+        topBarView.startSwitch.checked = true
+        topBarView.mycroftStatus.text = i18n("<b>Connected</b>")
+        topBarView.mycroftStatus.color = "green"
+        topBarView.mycroftStatus.visible = true
+        }
+
+        else if (mycroftStatusCheckSocket.status == WebSocket.Error) {
+        topBarView.startSwitch.checked = false
+        mycroftStatusCheckSocket._socketIsAlreadyActive = false
+        topBarView.mycroftStatus.text = i18n("<b>Disabled</b>")
+        topBarView.mycroftStatus.color = theme.textColor
+        topBarView.mycroftStatus.visible = true
+        }
+   }
+   
+   function mainSocketStatus(){
+     if (socket.status == WebSocket.Error) {
+        topBarView.mycroftStatus.text = i18n("<b>Connection error</b>")
+        topBarView.mycroftStatus.color = "red"
+        topBarView.startSwitch.circolour = "red"
+        topBarView.talkAnimation.showstatsId()
+        topBarView.retryButton.visible = true
+        topBarView.retryButton.enabled = true
+        bottomBarView.animationDrawer.open()
+        bottomBarView.animateStepError()
+        delay(1250, function() {
+            bottomBarView.animationDrawer.close()
+        })
+
+    } else if (socket.status == WebSocket.Open) {
+        topBarView.mycroftStatus.text = i18n("<b>Connected</b>")
+        topBarView.mycroftStatus.color = "green"
+        topBarView.retryButton.visible = false
+        topBarView.retryButton.enabled = false
+        topBarView.startSwitch.circolour = "green"
+        mycroftStatusCheckSocket.active = false;
+        topBarView.talkAnimation.showstatsId()
+        PlasmaLa.Notify.mycroftConnectionStatus("Connected")
+        bottomBarView.animationDrawer.open()
+        bottomBarView.animateStepHappy()
+        delay(1250, function() {
+            bottomBarView.animationDrawer.close()
+            Applet.checkMicrophoneState()
+        })
+    } else if (socket.status == WebSocket.Closed) {
+        topBarView.mycroftStatus.text = i18n("<b>Disabled</b>")
+        topBarView.mycroftStatus.color = theme.textColor
+        PlasmaLa.Notify.mycroftConnectionStatus("Disconnected")
+        topBarView.startSwitch.circolour = Qt.lighter(theme.backgroundColor, 1.5)
+        topBarView.talkAnimation.showstatsId()
+    } else if (socket.status == WebSocket.Connecting) {
+        topBarView.mycroftStatus.text = i18n("<b>Starting up..please wait</b>")
+        topBarView.mycroftStatus.color = theme.linkColor
+        topBarView.startSwitch.circolour = "steelblue"
+        topBarView.talkAnimation.showstatsId()
+    } else if (socket.status == WebSocket.Closing) {
+        topBarView.mycroftStatus.text = i18n("<b>Shutting down</b>")
+        topBarView.mycroftStatus.color = theme.textColor
+        topBarView.talkAnimation.showstatsId()
+    }  
    }

@@ -155,7 +155,7 @@ Drawer {
                                PlasmaComponents.Label {
                                    id: shareViaEmailLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: i18n("Share Via Email")
+                                   text: "Share Via Email"
                                 }
                             }
                             MouseArea {
@@ -194,14 +194,14 @@ Drawer {
 ListModel {
         id: dashCardCollectionModel
 }
-    
+
 FocusScope {
     anchors.fill:parent
     focus: true
     
 ListView {
      id: dashdelegatelview
-     width: cbwidth - units.gridUnit * 0.25
+     width: cbwidth - units.gridUnit * 0.30
      height: childrenRect.height
      spacing: units.gridUnit * 0.3
      interactive: true

@@ -1,3 +1,22 @@
+/* Copyright 2016 Aditya Mehra <aix.m@outlook.com>                            
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) version 3, or any
+    later version accepted by the membership of KDE e.V. (or its
+    successor approved by the membership of KDE e.V.), which shall
+    act as a proxy defined in Section 6 of version 3 of the license.
+    
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.9
 import QtQml.Models 2.2
 import QtQuick.Controls 2.2
@@ -10,7 +29,6 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
-import QtWebKit 3.0
 import QtQuick.Window 2.0
 import QtGraphicalEffects 1.0
 import "Applet.js" as Applet
@@ -22,7 +40,16 @@ Item {
     id: topBarBGrect
     anchors.fill: parent
     z: 101
-         
+    property alias mycroftStatus: statusId
+    property alias talkAnimation: midbarAnim
+    property alias startSwitch: mycroftstartservicebutton
+    property alias retryButton: statusRetryBtn
+    property alias micIcon: qinputmicbx.iconSource
+    
+    function animateTalk(){
+        midbarAnim.wsistalking()
+    }
+    
     Image {
             id: barAnim
             anchors.left: parent.left
@@ -99,10 +126,10 @@ Item {
         enabled: false
         
         onClicked: {
-            connectionObject.socket.active = false
-            connectionObject.socket.active = true
-            if (connectionObject.socket.active = false){
-               mycroftConversationComponent.conversationModel.append({"itemType": "NonVisual", "InputQuery": connectionObject.socket.errorString})
+            socket.active = false
+            socket.active = true
+            if (socket.active = false){
+               mycroftConversationComponent.conversationModel.append({"itemType": "NonVisual", "InputQuery": socket.errorString})
             }
         }
     }
@@ -153,8 +180,8 @@ TopBarAnim {
                         statusRetryBtn.enabled = false
                         PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
                         mycroftConversationComponent.conversationModel.clear()
-                        suggst.visible = true;
-                        connectionObject.socket.active = false;
+                        bottomBarView.suggestBox.visible = true;
+                        socket.active = false;
                         midbarAnim.showstatsId()
                         Dash.showDash("setVisible")
                     }
@@ -165,12 +192,12 @@ TopBarAnim {
                         if(appletSettings.innerset.dashboardSetting == "false"){
                         mycroftConversationComponent.conversationModel.clear()
                         }
-                        suggst.visible = true;
+                        bottomBarView.suggestBox.visible = true;
                         statusId.color = theme.linkColor
                         statusId.text = i18n("<b>Starting up..please wait</b>")
                         statusId.visible = true
                         delay(15000, function() {
-                        connectionObject.socket.active = true;
+                        socket.active = true;
                         })
                     }
                 }
