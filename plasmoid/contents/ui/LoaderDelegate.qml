@@ -28,7 +28,7 @@ Item {
     id: loaderRoot
     width: cbwidth
     height: parent.height
-    property string filename: "file:///" + model.InputQuery
+    property string filename: "file:///" + model.itemData.loaderUrl
     property int getHeight
 
     Component.onCompleted: {
