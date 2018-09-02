@@ -25,12 +25,10 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
-Rectangle {
-    id: partclc
-    height: cbheight
-    width: cbwidth
-    color: theme.backgroundColor
+Item {
+    id: recipeReadMain
     property alias recipeReadLVModel: recipeReadListView.model
+    property alias recipeReadDrawer: recipeContentsDrawer 
     
     Connections {
         target: main2
@@ -48,24 +46,8 @@ Rectangle {
         }
     }
 
-ListView {
-     id: recipesmodelview
-     anchors.fill: parent
-     model: recipeLmodel
-     spacing: 4
-     focus: false
-     interactive: true
-     clip: true;
-     delegate: RecipeDelegate{}
-     ScrollBar.vertical: ScrollBar {
-        active: true
-        policy: ScrollBar.AlwaysOn
-        snapMode : ScrollBar.SnapAlways
-      }
-   }
-
 Drawer {
-    id: recipeReadDrawer
+    id: recipeContentsDrawer
     width: parent.width
     height: cbdrawercontentheight
     edge: Qt.RightEdge

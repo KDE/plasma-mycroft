@@ -50,7 +50,7 @@ Column {
                             id: wikiview
                             height: units.gridUnit * 20
                             width: parent.width
-                            url: InputQuery
+                            url: model.itemData.fallbackUrl
                             experimental.preferredMinimumContentsWidth: cbwidth
                             experimental.useDefaultContentItemSize: false
                             experimental.transparentBackground: true

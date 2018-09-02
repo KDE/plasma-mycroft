@@ -1,14 +1,11 @@
     function getFallBackResult(failedQuery){
       var url = "http://api.wolframalpha.com/v1/simple?appid=" + innerset.wolframKey + "&i=" + failedQuery + "&width=1024&fontsize=32"
-      mycroftConversationComponent.conversationModel.append({"itemType": "FallBackType", "InputQuery": url})
+      mycroftConversationComponent.conversationModel.append({itemType: "FallBackType", inputQuery: "", itemData:{fallbackUrl: url}})
     }
     
-        function filterSpeak(msg){
-        mycroftConversationComponent.conversationModel.append({
-            "itemType": "NonVisual",
-            "InputQuery": msg
-        })
-           mycroftConversationComponent.conversationListView.positionViewAtEnd();
+    function filterSpeak(msg){
+        mycroftConversationComponent.conversationModel.append({itemType: "NonVisual", inputQuery: "", itemData:{queryData: msg}})
+        mycroftConversationComponent.conversationListView.positionViewAtEnd();
     }
     
     function filterincoming(intent, metadata) {
@@ -23,17 +20,17 @@
                     itemType = "CurrentWeather"
                     break;
                 }
-              mycroftConversationComponent.conversationModel.append({"itemType": itemType, "itemData": metadata})
+            mycroftConversationComponent.conversationModel.append({itemType: itemType, inputQuery: "", itemData:{weatherData: metadata}})
                 }
 
         else {
-            mycroftConversationComponent.conversationModel.append({"itemType": "WebViewType", "InputQuery": metadata.url})
+            mycroftConversationComponent.conversationModel.append({itemType: "WebViewType", inputQuery: "", itemData:{webviewUrl: metadata.url}})
         }
     }
     
     function filtervisualObj(metadata){
-                mycroftConversationComponent.conversationModel.append({"itemType": "LoaderType", "InputQuery": metadata.url})
-                mycroftConversationComponent.conversationListView.positionViewAtEnd();
+            mycroftConversationComponent.conversationModel.append({itemType: "LoaderType", inputQuery: "", itemData:{loaderUrl: metadata.url}})
+            mycroftConversationComponent.conversationListView.positionViewAtEnd();
           }
           
     function filterplacesObj(metadata){
@@ -43,14 +40,12 @@
         var hereappid = metadata.appid
         var hereappcode = metadata.appcode;
         mycroftConversationComponent.conversationModel.clear()
-        placesListModel.clear()
         for (var i = 0; i < filteredData.results.items.length; i++){
             var itemsInPlaces = JSON.stringify(filteredData.results.items[i])
             var fltritemsinPlc = JSON.parse(itemsInPlaces)
             var fltrtags = getTags(filteredData.results.items[i].tags)
-            placesListModel.insert(i, {placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placeicon: JSON.stringify(fltritemsinPlc.icon), placetags: fltrtags, placelocallat: locallat, placelocallong: locallong, placeappid: hereappid, placeappcode: hereappcode})
+            mycroftConversationComponent.conversationModel.append({itemType: "PlacesType", inputQuery: "", itemData:{placeposition: JSON.stringify(fltritemsinPlc.position), placetitle: JSON.stringify(fltritemsinPlc.title), placedistance: JSON.stringify(fltritemsinPlc.distance), placeloc: JSON.stringify(fltritemsinPlc.vicinity), placeicon: JSON.stringify(fltritemsinPlc.icon), placetags: fltrtags, placelocallat: locallat, placelocallong: locallong, placeappid: hereappid, placeappcode: hereappcode}})
         }
-        mycroftConversationComponent.conversationModel.append({"itemType": "PlacesType", "InputQuery": ""});
     }
 
     function getTags(fltrTags){
@@ -70,7 +65,6 @@
     function filterRecipeObj(metadata){
         var filteredData = JSON.parse(metadata.data);
         mycroftConversationComponent.conversationModel.clear()
-        recipeLmodel.clear()
         for (var i = 0; i < filteredData.hits.length; i++){
             var itemsInRecipes = filteredData.hits[i].recipe
             var itemsReadRecipe = itemsInRecipes.ingredientLines.join(",")
@@ -80,9 +74,8 @@
             if(itemsReadRecipeDietType == ""){
                 itemsReadRecipeDietType = "Normal"
             }
-            recipeLmodel.insert(i, {recipeLabel: itemsInRecipes.label, recipeSource: itemsInRecipes.source, recipeImageUrl: itemsInRecipes.image, recipeCalories: itemsReadRecipeCalories, recipeIngredientLines: itemsReadRecipe, recipeDiet: itemsReadRecipeDietType, recipeHealthTags: itemsReadRecipeHealthTags})
+            mycroftConversationComponent.conversationModel.append({itemType: "RecipeType", inputQuery: "", itemData:{recipeLabel: itemsInRecipes.label, recipeSource: itemsInRecipes.source, recipeImageUrl: itemsInRecipes.image, recipeCalories: itemsReadRecipeCalories, recipeIngredientLines: itemsReadRecipe, recipeDiet: itemsReadRecipeDietType, recipeHealthTags: itemsReadRecipeHealthTags}})
         }
-        mycroftConversationComponent.conversationModel.append({"itemType": "RecipeType", "InputQuery": ""})
     }
     
     function filterBalooObj(metadata){
@@ -91,13 +84,13 @@
         mycroftConversationComponent.conversationModel.clear()
         for (var i = 0; i < BalooObj.data.length; i++){
             if(baloosearchTerm == "type:audio"){
-                mycroftConversationComponent.conversationModel.append({"itemType": "AudioFileType", "InputQuery": metadata.data[i]})   
+                mycroftConversationComponent.conversationModel.append({itemType: "AudioFileType", inputQuery: "", itemData:{balooData: metadata.data[i]}})   
             }
             if(baloosearchTerm == "type:video"){
-                mycroftConversationComponent.conversationModel.append({"itemType": "VideoFileType", "InputQuery": metadata.data[i]})   
+                mycroftConversationComponent.conversationModel.append({itemType: "VideoFileType", inputQuery: "", itemData:{balooData: metadata.data[i]}})   
             }
             if(baloosearchTerm == "type:document" || baloosearchTerm == "type:spreadsheet" || baloosearchTerm == "type:presentation" || baloosearchTerm == "type:archive" ){
-                mycroftConversationComponent.conversationModel.append({"itemType": "DocumentFileType", "InputQuery": metadata.data[i]})   
+                mycroftConversationComponent.conversationModel.append({itemType: "DocumentFileType", inputQuery: "", itemData:{balooData: metadata.data[i]}})   
             }
         }
     }
@@ -105,19 +98,16 @@
     function filterstackObj(metadata){
         var filterStackMeta = JSON.parse(metadata.data)
         mycroftConversationComponent.conversationModel.clear()
-        stackexListModel.clear()
         for (var i = 0; i < filterStackMeta.items.length; i++){
-            stackexListModel.insert(i, {sQuestion: filterStackMeta.items[i].title, sLink: filterStackMeta.items[i].link, sAuthor: filterStackMeta.items[i].owner.display_name, sIsAnswered: filterStackMeta.items[i].is_answered, sAnswerCount: filterStackMeta.items[i].answer_count})
+            mycroftConversationComponent.conversationModel.append({itemType: "StackObjType", inputQuery: "", itemData:{sQuestion: filterStackMeta.items[i].title, sLink: filterStackMeta.items[i].link, sAuthor: filterStackMeta.items[i].owner.display_name, sIsAnswered: filterStackMeta.items[i].is_answered, sAnswerCount: filterStackMeta.items[i].answer_count}})
         }
-        mycroftConversationComponent.conversationModel.append({"itemType": "StackObjType", "InputQuery": ""})
         mycroftConversationComponent.conversationListView.positionViewAtEnd();
     }
     
     function filterbookObj(metadata){
         var filterBookMeta = JSON.parse(metadata.data)
-        bookListModel.clear()
-        bookListModel.append({bookcover: filterBookMeta.bkcover, bookurl: filterBookMeta.bkurl, bookstatus: filterBookMeta.bkstatus, booktitle: filterBookMeta.bktitle, bookauthor: filterBookMeta.bkauthor, bookdate: filterBookMeta.bkyear, bookpublisher: filterBookMeta.bkpublisher})
-        mycroftConversationComponent.conversationModel.append({"itemType": "BookType", "InputQuery": ""})
+        mycroftConversationComponent.conversationModel.clear()
+        mycroftConversationComponent.conversationModel.append({itemType: "BookType", inputQuery: "", itemData:{bookcover: filterBookMeta.bkcover, bookurl: filterBookMeta.bkurl, bookstatus: filterBookMeta.bkstatus, booktitle: filterBookMeta.bktitle, bookauthor: filterBookMeta.bkauthor, bookdate: filterBookMeta.bkyear, bookpublisher: filterBookMeta.bkpublisher}})
         mycroftConversationComponent.conversationListView.positionViewAtEnd();
     }
     
@@ -127,9 +117,7 @@
         wikiSummary = wikiSummary.replace(/['"]+/g, '')
         wikiImage = wikiImage.replace(/['"]+/g, '')
         mycroftConversationComponent.conversationModel.clear()
-        wikiListModel.clear()
-        wikiListModel.append({summary: wikiSummary, image: wikiImage})
-        mycroftConversationComponent.conversationModel.append({"itemType": "WikiType", "InputQuery": ""})
+        mycroftConversationComponent.conversationModel.append({itemType: "WikiType", inputQuery: "", itemData:{summary: wikiSummary, image: wikiImage}})
         mycroftConversationComponent.conversationListView.positionViewAtEnd();
     }
     
@@ -137,20 +125,16 @@
         var wikiSummaryMore = JSON.stringify(metadata.data.summarymore)
         var wikiImageMore = JSON.stringify(metadata.data.imagemore)
         mycroftConversationComponent.conversationModel.clear()
-        wikiListModel.clear()
         wikiSummaryMore = wikiSummaryMore.replace(/['"]+/g, '')
         wikiImageMore = wikiImageMore.replace(/['"]+/g, '')
-        wikiListModel.append({summary: wikiSummaryMore, image: wikiImageMore})
-        mycroftConversationComponent.conversationModel.append({"itemType": "WikiType", "InputQuery": ""})
+        mycroftConversationComponent.conversationModel.append({itemType: "WikiType", inputQuery: "", itemData:{summary: wikiSummaryMore, image: wikiImageMore}})
     }
     
     function filteryelpObj(metadata){
         var filtermetayelp = metadata
-        yelpListModel.clear()
-        yelpListModel.append({'restaurant': filtermetayelp.data.restaurant, 'phone': filtermetayelp.data.phone, 'location': filtermetayelp.data.location, 'status': filtermetayelp.data.status, 'url': filtermetayelp.data.url, 'image_url': filtermetayelp.data.image_url, 'rating': filtermetayelp.data.rating})
-        mycroftConversationComponent.conversationModel.append({"itemType": "YelpType", "InputQuery": ""})
+        mycroftConversationComponent.conversationModel.append({itemType: "YelpType", inputQuery: "", itemData:{'restaurant': filtermetayelp.data.restaurant, 'phone': filtermetayelp.data.phone, 'location': filtermetayelp.data.location, 'status': filtermetayelp.data.status, 'url': filtermetayelp.data.url, 'image_url': filtermetayelp.data.image_url, 'rating': filtermetayelp.data.rating}})
     }
 
     function filterImageObject(metadata){
-        mycroftConversationComponent.conversationModel.append({"itemType": "ImageType", "InputQuery": metadata.data})
+        mycroftConversationComponent.conversationModel.append({itemType: "ImageType", inputQuery: "", itemData:{imageData: metadata.data}})
     }

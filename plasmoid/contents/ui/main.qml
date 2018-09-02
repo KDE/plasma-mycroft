@@ -71,14 +71,7 @@ Item {
     property var smintent
     property var dataContent
     property alias textInput: bottomBarView.queryInput
-    property alias plcLmodel: placesListModel
     property alias dashLmodel: dashListModel
-    property alias recipeLmodel: recipesListModel
-    property alias recipeReadLmodel: recipeReadListModel
-    property alias stackLmodel: stackexListModel
-    property alias bookLmodel: bookListModel
-    property alias wikiLmodel: wikiListModel
-    property alias yelpLmodel: yelpListModel
     property bool intentfailure: false
     property bool locationUserSelected: false
     property bool connectCtx: false
@@ -165,33 +158,6 @@ Item {
 
 ListModel {
          id: dashListModel
-    }
-
-ListModel {
-        id: placesListModel
-    }
-    
-ListModel{
-        id: recipesListModel
-    }
-
-ListModel {
-        id: recipeReadListModel
-    }
-    
-ListModel {
-        id: stackexListModel
-    }
-
-ListModel {
-        id: bookListModel
-    }
-
-ListModel {
-        id: wikiListModel
-    }
-ListModel {
-        id: yelpListModel
     }
     
 Timer {

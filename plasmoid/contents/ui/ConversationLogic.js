@@ -19,7 +19,7 @@ function filterConversation(msgType, somestring){
         bottomBarView.queryInput.focus = false;
         var intpost = somestring.data.utterances;
         bottomBarView.queryInput.text = intpost.toString()
-        mycroftConversationComponent.conversationModel.append({"itemType": "AskType", "InputQuery": intpost.toString()})
+        mycroftConversationComponent.conversationModel.append({itemType: "AskType", inputQuery: "", itemData:{queryData: intpost.toString()}})
         topBarView.animateTalk()
     }
     

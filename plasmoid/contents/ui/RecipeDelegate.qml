@@ -25,6 +25,19 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
+Item {
+    id: recipesMainDelegate
+    width: cbwidth
+    height: recipeDelegateItm.height
+
+RecipeExtraComponentView{
+    id: recipesExtraView
+}
+    
+Column {
+    id: contentFrameColumn
+    anchors.fill: parent
+
 Rectangle {
         id: recipeDelegateItm
         height: units.gridUnit * 6
@@ -44,7 +57,7 @@ Rectangle {
                 anchors.right: parent.right
                 wrapMode: Text.WordWrap;
                 font.bold: true;
-                text: recipeLabel.replace(/["']/g, "")
+                text: model.itemData.recipeLabel.replace(/["']/g, "")
                 color: theme.textColor
                 }
             
@@ -62,7 +75,7 @@ Rectangle {
 
             Image {
                 id: recipeImgType
-                source: recipeImageUrl
+                source: model.itemData.recipeImageUrl
                 anchors.left: parent.left
                 width: units.gridUnit * 4
                 height: units.gridUnit * 4
@@ -81,7 +94,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 height: units.gridUnit * 1
-                text: i18n("<i>Calories:</i> %1 <b>cal</b>", recipeCalories)
+                text: "<i>Calories:</i> " + model.itemData.recipeCalories +" <b>cal</b>"
                 }
                 
             Text{
@@ -92,7 +105,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 height: units.gridUnit * 1
-                text: i18n("<i>Diet Type:</i> %1", recipeDiet)
+                text: "<i>Diet Type:</i> " + model.itemData.recipeDiet
                 }
                 
             Text{
@@ -103,7 +116,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 height: units.gridUnit * 1
-                text: i18n("<i>Health Tags:</i> %1", recipeHealthTags)
+                text: "<i>Health Tags:</i> " + model.itemData.recipeHealthTags
                 }    
             }
             
@@ -112,15 +125,15 @@ Rectangle {
                   anchors.right: parent.right
                   width: units.gridUnit * 6;
                   height: units.gridUnit * 4;
-                  text: i18n("View Recipe")
+                  text: "View Recipe"
 
                   onClicked: {
-                    recipeReadLmodel.clear()  
-                    recipeReadDrawer.open()
-                    recipeReadDrawer.recipeReadDrawerHeader = "<b>" + recipeLabel.replace(/["']/g, "") + "</b>"
+                    recipesExtraView.recipeReadLmodel.clear()  
+                    recipesExtraView.recipeReadDrawer.open()
+                    recipesExtraView.recipeReadDrawer.recipeReadDrawerHeader = "<b>" + model.itemData.recipeLabel.replace(/["']/g, "") + "</b>"
                     var readRecipeLines = recipeIngredientLines.split(",")
                     for(var i = 0; i < readRecipeLines.length; i++){
-                        recipeReadLmodel.append({ingredients: readRecipeLines[i]})
+                        recipeReadLmodel.append({ingredients: model.itemData.readRecipeLines[i]})
                             }
                         }
                     }
@@ -136,7 +149,7 @@ Rectangle {
             Text {
                 color: theme.textColor;
                 font.pixelSize: 10
-                text: i18n("<i>Recipe Source: %1</i>", recipeSource)
+                text: "<i>Recipe Source: " + model.itemData.recipeSource + "</i>"
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter
@@ -145,11 +158,13 @@ Rectangle {
             Text {
                 color: theme.textColor ;
                 font.pixelSize: 10
-                text: i18n("<i>Powered By: Edamam.com</i>")
+                text: "<i>Powered By: Edamam.com</i>"
                 anchors.right: parent.right
                 anchors.rightMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
             }
         }
     }
+}

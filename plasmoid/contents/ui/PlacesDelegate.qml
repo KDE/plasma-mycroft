@@ -26,6 +26,40 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtGraphicalEffects 1.0
 
+Item {
+    id: placesMainDelegate
+    width: cbwidth
+    height: nearbyDelegateItm.height
+    
+    function getRouteInformation(llat, llong, dlat, dlong, oappid, oappcode){
+    var routedoc = new XMLHttpRequest()
+    var url = "https://route.cit.api.here.com/routing/7.2/calculateroute.json?waypoint0=" + llat + "," + llong + "&waypoint1=" + dlat + "," + dlong + "&mode=fastest;car;&app_id=" + oappid + "&app_code=" + oappcode + "&depature=now"
+    routedoc.open("GET", url, true);
+    routedoc.send()
+
+    routedoc.onreadystatechange = function() {
+            if (routedoc.readyState === XMLHttpRequest.DONE && routedoc.responseText !== "undefined") {
+                var reqroute = routedoc.responseText
+                if (reqroute !== "undefined") {
+                    var filterRouteDict = JSON.parse(reqroute)
+                    for (var i = 0; i<filterRouteDict.response.route[0].leg[0].maneuver.length; i++){
+                    var getRouteDict = filterRouteDict.response.route[0].leg[0].maneuver[i].instruction
+                    console.log(JSON.stringify(getRouteDict))
+                    navComponentView.routeLModel.append({navInstruction: getRouteDict});
+                    }
+                }
+            }
+        }
+    }
+    
+    NavigationComponentView {
+        id: navComponentView
+    }
+    
+Column {
+    id: contentFrameColumn
+    anchors.fill: parent
+
 Rectangle {
         id: nearbyDelegateItm
         height: units.gridUnit * 6
@@ -44,27 +78,6 @@ Rectangle {
             color: Qt.rgba(0, 0, 0, 0.3)
         }
         
-        function getRouteInformation(llat, llong, dlat, dlong, oappid, oappcode){
-            var routedoc = new XMLHttpRequest()
-            var url = "https://route.cit.api.here.com/routing/7.2/calculateroute.json?waypoint0=" + llat + "," + llong + "&waypoint1=" + dlat + "," + dlong + "&mode=fastest;car;&app_id=" + oappid + "&app_code=" + oappcode + "&depature=now"
-            routedoc.open("GET", url, true);
-            routedoc.send()
-
-            routedoc.onreadystatechange = function() {
-                 if (routedoc.readyState === XMLHttpRequest.DONE && routedoc.responseText !== "undefined") {
-                     var reqroute = routedoc.responseText
-                     if (reqroute !== "undefined") {
-                            var filterRouteDict = JSON.parse(reqroute)
-                            for (var i = 0; i<filterRouteDict.response.route[0].leg[0].maneuver.length; i++){
-                            var getRouteDict = filterRouteDict.response.route[0].leg[0].maneuver[i].instruction
-                            console.log(JSON.stringify(getRouteDict))
-                            routeLmodel.append({navInstruction: getRouteDict});
-                          }
-                       }
-                    }
-                }
-            }
-
         Item {
             id: contentdlgtitem
             anchors.fill: parent
@@ -88,7 +101,7 @@ Rectangle {
                 font.wordSpacing: theme.defaultFont.wordSpacing
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
-                text: i18n(placetitle.replace(/["']/g, ""))
+                text: qsTr(model.itemData.placetitle.replace(/["']/g, ""))
                 }
             
             PlasmaComponents.Label {
@@ -103,7 +116,7 @@ Rectangle {
                 font.wordSpacing: theme.defaultFont.wordSpacing
                 font.family: theme.defaultFont.family
                 renderType: Text.NativeRendering 
-                text: i18nc("mtrs stands for meters", "Distance: %1 <i>mtrs</i>", placedistance)
+                text: "Distance: " + model.itemData.placedistance + " <i>mtrs</i>"
                 }
             }
                 
@@ -139,7 +152,7 @@ Rectangle {
                     anchors.left: parent.left
                     anchors.leftMargin: units.gridUnit * 0.05
                     anchors.verticalCenter: parent.verticalCenter
-                    source: placeicon.replace(/["']/g, "")
+                    source: model.itemData.placeicon.replace(/["']/g, "")
                     width: units.gridUnit * 2
                     height: units.gridUnit * 2
                 }
@@ -155,7 +168,7 @@ Rectangle {
                     font.wordSpacing: theme.defaultFont.wordSpacing
                     font.family: theme.defaultFont.family
                     renderType: Text.NativeRendering 
-                    text: i18n("Address: %1", placeloc.replace(/["']/g, ""))
+                    text: "Address: " + model.itemData.placeloc.replace(/["']/g, "")
                 }
 
                 Image {
@@ -170,11 +183,11 @@ Rectangle {
                        anchors.fill: parent
 
                        onClicked: {
-                         var navpos = placeposition.replace(/[[\]]/g,'').split(",");
-                         getRouteInformation(placelocallat, placelocallong, navpos[0], navpos[1], placeappid, placeappcode)
-                         var formatedurl =   "https://image.maps.cit.api.here.com/mia/1.6/mapview?c=" + placelocallat + "," + placelocallong + "&z=16&poi=" + navpos[0] + "," + navpos[1] + "&poithm=0&app_id=" + placeappid + "&app_code=" + placeappcode + "&h=" + cbheight / 2 + "&w=" + cbwidth + "&ppi=500ppi=120&t=7&f=2&i=true"
-                         navMapDrawer.open()
-                         navMapDrawer.getURL = formatedurl
+                         var navpos = model.itemData.placeposition.replace(/[[\]]/g,'').split(",");
+                         getRouteInformation(model.itemData.placelocallat, model.itemData.placelocallong, navpos[0], navpos[1], model.itemData.placeappid, model.itemData.placeappcode)
+                         var formatedurl = "https://image.maps.cit.api.here.com/mia/1.6/mapview?c=" + model.itemData.placelocallat + "," + model.itemData.placelocallong + "&z=16&poi=" + navpos[0] + "," + navpos[1] + "&poithm=0&app_id=" + model.itemData.placeappid + "&app_code=" + model.itemData.placeappcode + "&h=" + cbheight / 2 + "&w=" + cbwidth + "&ppi=500ppi=120&t=7&f=2&i=true"
+                         navComponentView.navMapDrawer.open()
+                         navComponentView.navMapDrawer.getURL = formatedurl
                        }
                     }
                 }
@@ -198,7 +211,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     wrapMode: Text.WordWrap;
                     font.pointSize: theme.defaultFont.pointSize - 2
-                    text: placetags
+                    text: model.itemData.placetags
                     }
                 
                 PlasmaComponents.Label {
@@ -210,9 +223,11 @@ Rectangle {
                     font.bold: true
                     font.pointSize: theme.defaultFont.pointSize - 2
                     text: i18n("<i>Powered By: Here.API</i>")
+                        }
                     }
-                }
-            }             
+                }             
+            }
         }
     }
+}
  

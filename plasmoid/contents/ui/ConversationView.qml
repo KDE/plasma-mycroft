@@ -96,24 +96,24 @@ Item {
             delegate:  Component {
                 Loader {
                         source: switch(itemType) {
-                                case "NonVisual": return "SimpleMessageType.qml"
-                                case "WebViewType": return "WebViewType.qml"
-                                case "CurrentWeather": return "CurrentWeatherType.qml"
-                                case "DropImg" : return "ImgRecogType.qml"
-                                case "AskType" : return "AskMessageType.qml"
-                                case "LoaderType" : return "LoaderType.qml"
-                                case "PlacesType" : return "PlacesType.qml"
-                                case "RecipeType" : return "RecipeType.qml"    
+                                case "NonVisual": return "SimpleMessageDelegate.qml"
+                                case "WebViewType": return "WebViewDelegate.qml"
+                                case "CurrentWeather": return "CurrentWeatherDelegate.qml"
+                                case "DropImg" : return "ImgRecogDelegate.qml"
+                                case "AskType" : return "AskMessageDelegate.qml"
+                                case "LoaderType" : return "LoaderDelagate.qml"
+                                case "PlacesType" : return "PlacesDelegate.qml"
+                                case "RecipeType" : return "RecipeDelegate.qml"    
                                 case "DashboardType" : return "DashboardType.qml"
                                 case "AudioFileType" : return "AudioFileDelegate.qml"
                                 case "VideoFileType" : return "VideoFileDelegate.qml"
                                 case "DocumentFileType" : return "DocumentFileDelegate.qml"
-                                case "FallBackType" : return "FallbackWebSearchType.qml"
-                                case "StackObjType" : return "StackObjType.qml"
-                                case "BookType" : return "BookType.qml"
-                                case "WikiType" : return "WikiType.qml"
-                                case "YelpType" : return "YelpType.qml"
-                                case "ImageType" : return "ImageType.qml"
+                                case "FallBackType" : return "FallbackWebSearchDelegte.qml"
+                                case "StackObjType" : return "StackObjDelegate.qml"
+                                case "BookType" : return "BookDelegate.qml"
+                                case "WikiType" : return "WikiDelegate.qml"
+                                case "YelpType" : return "YelpDelegate.qml"
+                                case "ImageType" : return "ImageDelegate.qml"
                                 }
                             property var metacontent : dataContent
                         }

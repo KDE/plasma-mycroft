@@ -26,48 +26,28 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import QtGraphicalEffects 1.0
 
 Item {
-    width: cbwidth
-    height: messageRect.height + timeStampLabel.height
-    property alias mssg: messageText.text
-                    
-        Row {
-            id: messageRow
-            spacing: 6
-            
-        Item {
-            id: repImgBox
-            width: units.gridUnit * 2
-            height: units.gridUnit * 2
-            
-            Image {
-                id: repImg
-                anchors.fill: parent
-                source: "../images/mycroftsmaller2.png"
-            }
-            
-            ColorOverlay {
-                anchors.fill: repImg
-                source: repImg
-                color: theme.linkColor
-            }
-        }
+        width: cbwidth
+        height: messageRect.height + timeStampLabel.height
+        property alias mssg: messageText.text
         
-        Column{ 
+        Column{
+            anchors.fill: parent 
             spacing: 1
         
-        Item {
-            id: simplemsgRectFrameItem
-            width: cbwidth
+        Item {    
+            id: messageRectFrameItem
+            anchors.right: parent.right
+            width: parent.width
             height: messageRect.height
-       
-        Rectangle {
+            
+         Rectangle {
             id: messageRect
-            anchors.left: simpleMsgRectedge.right
-            anchors.leftMargin: -2
-            width: cbwidth - units.gridUnit * 2
+            anchors.right: messageRectedge.left
+            anchors.rightMargin: -2
+            implicitWidth: messageText.width + 10
             radius: 2
             height: messageText.implicitHeight + 24
-            color: Qt.lighter(theme.backgroundColor, 1.2)
+            color: theme.linkColor
             layer.enabled: true
             layer.effect: DropShadow {
                 horizontalOffset: 0
@@ -78,53 +58,58 @@ Item {
                 color: Qt.rgba(0, 0, 0, 0.3)
             }
             
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            propagateComposedEvents: true
-            onEntered: {
-                messageRect.color = Qt.lighter(theme.backgroundColor, 1.5)
-                simpleMsgRectedgeOverLay.color = Qt.lighter(theme.backgroundColor, 1.5)
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                propagateComposedEvents: true
+                onEntered: {
+                    messageRect.color = Qt.darker(theme.linkColor, 1.2)
+                    messageRectedgeOverLay.color = Qt.darker(theme.linkColor, 1.2)
+                }
+                onExited: { 
+                    messageRect.color = theme.linkColor
+                    messageRectedgeOverLay.color = theme.linkColor
+                }
+                onClicked: {
+                    askCtxMenu.open()
+                }
             }
-            onExited: {
-                messageRect.color = Qt.lighter(theme.backgroundColor, 1.2)
-                simpleMsgRectedgeOverLay.color = Qt.lighter(theme.backgroundColor, 1.2)
-            }
-            onClicked:{
-                simpleCtxMenu.open()
-            }
-        }
-                                    
+                        
         PlasmaComponents.Label {
             id: messageText
-            text: model.InputQuery
-            anchors.fill: parent
-            anchors.margins: 12
+            anchors.centerIn: parent
             wrapMode: Label.Wrap
-        }
-            }
+            color: theme.backgroundColor
+            
+            Component.onCompleted: {
+                    var askText = model.itemData.queryData
+                    var fixedText = askText.substr(0,1).toUpperCase() + askText.substr(1).toLowerCase()
+                    messageText.text = fixedText
+                        }
+                    }
+                }
             
         Image {
-            id: simpleMsgRectedge
-            anchors.left: parent.left
-            anchors.top: parent.top
-            source: "../images/arleft.png"
+            id: messageRectedge
+            anchors.right: parent.right
+            anchors.verticalCenter: messageRect.verticalCenter
+            source: "../images/arright.png"
             width: units.gridUnit * 0.50
-            height: units.gridUnit * 1.25
+            height: messageRect.height / 2
          }
 
         ColorOverlay {
-                id: simpleMsgRectedgeOverLay
-                anchors.fill: simpleMsgRectedge
-                source: simpleMsgRectedge
-                color: Qt.lighter(theme.backgroundColor, 1.2)
-        }
+                id: messageRectedgeOverLay
+                anchors.fill: messageRectedge
+                source: messageRectedge
+                color: theme.linkColor
             }
-        
-        Text {
+        }
+            
+            Text{
             id: timeStampLabel
-            anchors.left: parent.left
-            anchors.leftMargin: units.gridUnit * 0.50
+            anchors.right: parent.right
+            anchors.rightMargin: units.gridUnit * 0.50
             width: units.gridUnit * 2.5
             height: units.gridUnit * 0.50
             color: Qt.darker(theme.textColor, 1.5)
@@ -135,9 +120,9 @@ Item {
             renderType: Text.NativeRendering 
             text: currentDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
             }
-                }
-                    }
-        SimpleMessageTypeMenu{
-            id: simpleCtxMenu 
+        }
+        
+        AskMessageTypeMenu{
+           id: askCtxMenu 
         }
     }

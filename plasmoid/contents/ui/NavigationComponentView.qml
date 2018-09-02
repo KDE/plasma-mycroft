@@ -26,40 +26,18 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
-
-Rectangle {
-    id: partclc
-    height: cbheight
-    width: cbwidth
-    color: theme.backgroundColor
-    property alias routeLmodel: routeListModel
     
-    Component.onCompleted: {
-        console.log(cbheight)
-    }
+Item {    
+    id: navigationComponentView
+    property alias routeLModel: routeListModel
+    property alias navMapDrawer: navigationMapDrawer
     
 ListModel {
         id: routeListModel
 }
 
-ListView {
-     id: placesmodelview
-     anchors.fill: parent
-     model: plcLmodel
-     spacing: 4
-     focus: false
-     interactive: true
-     clip: true;
-     delegate: PlacesDelegate{}
-     ScrollBar.vertical: ScrollBar {
-        active: true
-        policy: ScrollBar.AlwaysOn
-        snapMode : ScrollBar.SnapAlways
-      }
-    }
-
 Drawer {
-    id: navMapDrawer
+    id: navigationMapDrawer
     width: parent.width
     height: cbdrawercontentheight
     edge: Qt.RightEdge
@@ -88,7 +66,7 @@ Drawer {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            model: routeLmodel
+            model: routeListModel
             spacing: 2
             focus: false
             interactive: true
@@ -98,9 +76,8 @@ Drawer {
                active: true
                policy: ScrollBar.AlwaysOn
                snapMode : ScrollBar.SnapAlways
-           }
-         }
-      }
-   }
+                }
+            }
+        }
+    }
 }
- 
