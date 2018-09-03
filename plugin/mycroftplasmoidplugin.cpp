@@ -23,6 +23,7 @@
 #include "filereader.h"
 #include "msmapp.h"
 #include "connectioncheck.h"
+#include "wsocket.h"
 #include <QtQml>
 #include <QtDebug>
 #include <QtDBus>
@@ -65,7 +66,8 @@ void MycroftPlasmoidPlugin::registerTypes(const char *uri)
     qmlRegisterSingletonType<Notify>(uri, 1, 0, "Notify", notify_singleton);
     qmlRegisterSingletonType<LaunchApp>(uri, 1, 0, "LaunchApp", launchapp_singleton);
     qmlRegisterSingletonType<FileReader>(uri, 1, 0, "FileReader", filereader_singleton);
-    qmlRegisterSingletonType<ConnectionCheck>(uri, 1, 0, "ConnectionCheck", connectioncheck_singleton);    
+    qmlRegisterSingletonType<ConnectionCheck>(uri, 1, 0, "ConnectionCheck", connectioncheck_singleton);
+    qmlRegisterType<WSocket>(uri, 1, 0, "WSocket");
     qmlRegisterType<MsmApp>(uri, 1, 0, "MsmApp");
 }
 

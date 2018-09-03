@@ -136,7 +136,7 @@ Item {
                         socketmessage.type = "recognizer_loop:utterance";
                         socketmessage.data = {};
                         socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
-                        socket.sendTextMessage(JSON.stringify(socketmessage));
+                        socket.onSendMessage(JSON.stringify(socketmessage));
                         qinput.text = "";
                         }
                 }    

@@ -53,7 +53,7 @@ Item {
     
     property var skillList: []
     property alias cbwidth: conversationViewFrameBox.width
-    property var cbwidthmargin: conversationViewFrameBox.width - mycroftConversationComponent.conversationViewScrollBar.width - units.gridUnit * 0.25
+    property var cbwidthmargin: conversationViewFrameBox.width - units.gridUnit * 0.25
     property alias cbheight: conversationViewFrameBox.height
     property var dwrpaddedwidth: main.width + units.gridUnit * 1
     property var cbdrawercontentheight: parent.height + units.gridUnit * 0.5 - rectanglebottombar.height
@@ -61,8 +61,8 @@ Item {
     property string defaultmcorestoppath: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/stopservice.sh"
     property string packagemcorestartcmd: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/pkgstartservice.sh"
     property string packagemcorestopcmd: "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/pkgstopservice.sh"
-    property string customlocstartpath: startsrvcustom.text
-    property string customlocstoppath: stopsrvcustom.text
+    //property string customlocstartpath: startsrvcustom.text
+    //property string customlocstoppath: stopsrvcustom.text
     property string customloc: " "
     property string coreinstallstartpath: defaultmcorestartpath
     property string coreinstallstoppath: defaultmcorestoppath
@@ -98,7 +98,7 @@ Item {
             socketmessage.type = "recognizer_loop:utterance";
             socketmessage.data = {};
             socketmessage.data.utterances = ["stop"];
-            socket.sendTextMessage(JSON.stringify(socketmessage));
+            socket.onSendMessage(JSON.stringify(socketmessage));
         }
         onNotificationShowResponse: {
            plasmoid.expanded = !plasmoid.expanded
@@ -132,7 +132,7 @@ Item {
             socketmessage.type = "recognizer_loop:utterance";
             socketmessage.data = {};
             socketmessage.data.utterances = [sentFromKio];
-            socket.sendTextMessage(JSON.stringify(socketmessage));
+            socket.onSendMessage(JSON.stringify(socketmessage));
         }
     }
         
@@ -216,25 +216,26 @@ Item {
       right: parent.right
     }
         
-    WebSocket {
-        id: mycroftStatusCheckSocket
-        url: appletSettings.innerset.wsurl
-        active: true
-        property bool _socketIsAlreadyActive: false
-        onStatusChanged: Applet.preSocketStatus()
-        }
+    //WebSocket {
+      //  id: mycroftStatusCheckSocket
+       // url: appletSettings.innerset.wsurl
+       // active: true
+       // property bool _socketIsAlreadyActive: false
+        //onStatusChanged: Applet.preSocketStatus()
+       // }
         
-    WebSocket {
+    PlasmaLa.WSocket {
         id: socket
-        url: appletSettings.innerset.wsurl
-        onTextMessageReceived: {
+        onMessageReceived: {
             var somestring = JSON.parse(message)
             var msgType = somestring.type;
             Applet.playwaitanim(msgType);
             ConversationLogic.filterConversation(msgType, somestring)
             topBarView.animateTalk()
         }
-        onStatusChanged: Applet.mainSocketStatus()
+        onSocketStatusChanged: {
+            Applet.mainSocketStatus()
+        }
     }    
         
     ColumnLayout {

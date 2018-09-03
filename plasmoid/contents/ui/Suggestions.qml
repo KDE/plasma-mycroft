@@ -78,7 +78,7 @@ Rectangle {
                 socketmessage.type = "recognizer_loop:utterance";
                 socketmessage.data = {};
                 socketmessage.data.utterances = [qinput.text];
-                socket.sendTextMessage(JSON.stringify(socketmessage));
+                socket.onSendMessage(JSON.stringify(socketmessage));
             }
         }
 
@@ -154,7 +154,7 @@ Rectangle {
                 socketmessage.type = "recognizer_loop:utterance";
                 socketmessage.data = {};
                 socketmessage.data.utterances = ["stop"];
-                socket.sendTextMessage(JSON.stringify(socketmessage));
+                socket.onSendMessage(JSON.stringify(socketmessage));
             }
         }
 

@@ -132,25 +132,25 @@ Rectangle {
                     PlasmaComponents.Label {
                         id: bookAuthorLabel
                         font.capitalization: Font.Capitalize
-                        text: i18n("Author: %1", bookauthor)
+                        text: "Author: " + bookauthor
                     }
                     
                     PlasmaComponents.Label {
                         id: bookPublisherLabel
                         font.capitalization: Font.Capitalize
-                        text: i18n("Publisher: %1", bookpublisher)
+                        text: "Publisher: " + bookpublisher
                     }
                     
                     PlasmaComponents.Label {
                         id: bookYearLabel
                         font.capitalization: Font.Capitalize
-                        text: i18n("Release Year: %1", bookdate)
+                        text: "Release Year: " + bookdate
                     }
                     
                     PlasmaComponents.Label {
                         id: bookAvailableLabel
                         font.capitalization: Font.Capitalize
-                        text: i18n("Availability: %1", bookstatus)
+                        text: "Availability: " + bookstatus
                     }
                 }
             }
@@ -165,7 +165,7 @@ Rectangle {
                 id: bookReadOnlineBtn
                 width: cbwidth / 2
                 height: units.gridUnit * 2
-                text: i18n("Read Online")
+                text: "Read Online"
                 
                 onClicked: {
                     Qt.openUrlExternally(bookurl);
@@ -176,14 +176,14 @@ Rectangle {
                 id: bookDownloadBtn
                 width: cbwidth / 2
                 height: units.gridUnit * 2
-                text: i18n("Download")
+                text: "Download"
                 
                 onClicked: {
                     var socketmessage = {};
                     socketmessage.type = "recognizer_loop:utterance";
                     socketmessage.data = {};
                     socketmessage.data.utterances = ["download available book"];
-                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                    socket.onSendMessage(JSON.stringify(socketmessage));
                 }
             }
         }

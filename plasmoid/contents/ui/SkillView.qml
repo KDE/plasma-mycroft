@@ -133,7 +133,7 @@ Rectangle {
                                     socketmessage.type = "recognizer_loop:utterance";
                                     socketmessage.data = {};
                                     socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
-                                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                                    socket.onSendMessagesendTextMessage(JSON.stringify(socketmessage));
                                     tabBar.currentTab = mycroftTab
                                     qinput.text = ""; 
                                 }
@@ -168,7 +168,7 @@ Rectangle {
                                     socketmessage.type = "recognizer_loop:utterance";
                                     socketmessage.data = {};
                                     socketmessage.data.utterances = [exampleQuery[1].toLowerCase()];
-                                    socket.sendTextMessage(JSON.stringify(socketmessage));
+                                    socket.onSendMessagesendTextMessage(JSON.stringify(socketmessage));
                                     tabBar.currentTab = mycroftTab
                                     qinput.text = ""; 
                                 }

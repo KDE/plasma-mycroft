@@ -80,7 +80,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
-                text: i18n("<i>Phone:</i> %1", model.phone)
+                text: "<i>Phone:</i> " + model.phone
                 }
                 
             Text{
@@ -93,7 +93,7 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.rightMargin: units.gridUnit * 0.25
                 width: parent.width
-                text: i18n("<i>Location:</i> %1", model.location)
+                text: "<i>Location:</i> " + model.location
                 wrapMode: Text.WrapAnywhere
                 }
                 
@@ -105,7 +105,7 @@ Rectangle {
                 anchors.topMargin: units.gridUnit * 0.2
                 anchors.left: parent.left
                 anchors.leftMargin: units.gridUnit * 0.25
-                text: i18n("<i>Rating:</i> %1 Stars", model.rating)
+                text: "<i>Rating:</i> " + model.rating + " Stars"
                 }
             }
             
@@ -115,7 +115,7 @@ Rectangle {
                   anchors.right: parent.right
                   width: units.gridUnit * 6;
                   height: units.gridUnit * 2.5;
-                  text: i18n("Checkout")
+                  text: "Checkout"
                   onClicked: {
                        Qt.openUrlExternally(model.url)
                         }
@@ -126,14 +126,14 @@ Rectangle {
                   anchors.right: parent.right
                   width: units.gridUnit * 6;
                   height: units.gridUnit * 2.5;
-                  text: i18n("Send As Text")
+                  text: "Send As Text"
                   onClicked: {
                         var sendmsgUtterance = "send info"
                         var socketmessage = {};
                         socketmessage.type = "recognizer_loop:utterance";
                         socketmessage.data = {};
                         socketmessage.data.utterances = [sendmsgUtterance];
-                        socket.sendTextMessage(JSON.stringify(socketmessage));
+                        socket.onSendMessage(JSON.stringify(socketmessage));
                         }
                     }
             }
@@ -148,7 +148,7 @@ Rectangle {
             Text {
                 color: theme.textColor ;
                 font.pixelSize: 10
-                text: i18n("<i>Powered By: Yelp.com</i>")
+                text: "<i>Powered By: Yelp.com</i>"
                 anchors.right: parent.right
                 anchors.rightMargin: units.gridUnit * 0.25
                 anchors.verticalCenter: parent.verticalCenter

@@ -49,14 +49,14 @@
             var socketmessage = {};
             socketmessage.type = "mycroft.mic.get_status";
             socketmessage.data = {};
-            socket.sendTextMessage(JSON.stringify(socketmessage));
+            socket.onSendMessage(JSON.stringify(socketmessage));
     }
 
     function muteMicrophone() {
             var socketmessage = {};
             socketmessage.type = "mycroft.mic.mute";
             socketmessage.data = {};
-            socket.sendTextMessage(JSON.stringify(socketmessage));
+            socker.onSendMessage(JSON.stringify(socketmessage));
             topBarView.micIcon = "mic-off"
         }
     
@@ -64,7 +64,7 @@
             var socketmessage = {};
             socketmessage.type = "mycroft.mic.unmute";
             socketmessage.data = {};
-            socket.sendTextMessage(JSON.stringify(socketmessage));
+            socker.onSendMessage(JSON.stringify(socketmessage));
             topBarView.micIcon = "mic-on"
     }
     
@@ -150,7 +150,8 @@
    }
    
    function mainSocketStatus(){
-     if (socket.status == WebSocket.Error) {
+    
+     if (socket.status == 4) { //error
         topBarView.mycroftStatus.text = i18n("<b>Connection error</b>")
         topBarView.mycroftStatus.color = "red"
         topBarView.startSwitch.circolour = "red"
@@ -163,13 +164,13 @@
             bottomBarView.animationDrawer.close()
         })
 
-    } else if (socket.status == WebSocket.Open) {
+    } else if (socket.status == 1) { //connected
         topBarView.mycroftStatus.text = i18n("<b>Connected</b>")
         topBarView.mycroftStatus.color = "green"
         topBarView.retryButton.visible = false
         topBarView.retryButton.enabled = false
         topBarView.startSwitch.circolour = "green"
-        mycroftStatusCheckSocket.active = false;
+//        mycroftStatusCheckSocket.active = false;
         topBarView.talkAnimation.showstatsId()
         PlasmaLa.Notify.mycroftConnectionStatus("Connected")
         bottomBarView.animationDrawer.open()
@@ -178,18 +179,18 @@
             bottomBarView.animationDrawer.close()
             Applet.checkMicrophoneState()
         })
-    } else if (socket.status == WebSocket.Closed) {
+    } else if (socket.status == 3) {
         topBarView.mycroftStatus.text = i18n("<b>Disabled</b>")
         topBarView.mycroftStatus.color = theme.textColor
         PlasmaLa.Notify.mycroftConnectionStatus("Disconnected")
         topBarView.startSwitch.circolour = Qt.lighter(theme.backgroundColor, 1.5)
         topBarView.talkAnimation.showstatsId()
-    } else if (socket.status == WebSocket.Connecting) {
+    } else if (socket.status == 0) {
         topBarView.mycroftStatus.text = i18n("<b>Starting up..please wait</b>")
         topBarView.mycroftStatus.color = theme.linkColor
         topBarView.startSwitch.circolour = "steelblue"
         topBarView.talkAnimation.showstatsId()
-    } else if (socket.status == WebSocket.Closing) {
+    } else if (socket.status == 2) {
         topBarView.mycroftStatus.text = i18n("<b>Shutting down</b>")
         topBarView.mycroftStatus.color = theme.textColor
         topBarView.talkAnimation.showstatsId()

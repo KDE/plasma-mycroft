@@ -40,7 +40,8 @@ Rectangle {
                 border.color: Qt.darker(theme.linkColor, 1.2)
                 color: Qt.darker(theme.backgroundColor, 1.2)
                 property var configPath
-                
+                focus: false
+                                
                 function exec(msmparam) {
                     if(main.coreinstallstartpath == packagemcorestartcmd){
                         if(innerset.versionIndex == 0){
@@ -49,7 +50,7 @@ Rectangle {
                             socketmessage.type = "recognizer_loop:utterance";
                             socketmessage.data = {};
                             socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                            socket.onSendMessage(JSON.stringify(socketmessage));   
                         }
                         else {
                             return launchinstaller.msmapp("bash msm install " + model.url)
@@ -62,7 +63,7 @@ Rectangle {
                             socketmessage.type = "recognizer_loop:utterance";
                             socketmessage.data = {};
                             socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                            socket.onSendMessage(JSON.stringify(socketmessage));   
                         }
                         else {
                             var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
@@ -79,7 +80,7 @@ Rectangle {
                             socketmessage.type = "recognizer_loop:utterance";
                             socketmessage.data = {};
                             socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                            socket.onSendMessage(JSON.stringify(socketmessage));   
                         }
                         else {
                             return launchinstaller.msmapp("bash msm remove " + model.name)
@@ -92,7 +93,7 @@ Rectangle {
                             socketmessage.type = "recognizer_loop:utterance";
                             socketmessage.data = {};
                             socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
+                            socket.onSendMessage(JSON.stringify(socketmessage));   
                         }
                         else {
                             var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
@@ -120,14 +121,18 @@ Rectangle {
                     var customFold = launchinstaller.skillsPath()
                     var defaultFold = '/opt/mycroft/skills'
                     var skillPath = (defaultFold || customFold) + "/" + model.name
+                    var defskillPath = (defaultFold || customFold) + "/" + "mycroft-" + model.name
                     configPath = (defaultFold || customFold) + "/" + model.name + "/" + "settingsmeta.json"
                     if(PlasmaLa.FileReader.file_exists_local(skillPath)){
-                        installUpdateLabl.text = i18n("Uninstall")
-                        updateskillviamsm.enabled = true
+                        installUpdateLabl.text = "Installed"
+                        //updateskillviamsm.enabled = true
                     }
-                    if(PlasmaLa.FileReader.file_exists_local(configPath)){
-                        configureSkillLabl.enabled = true
+                    else if(PlasmaLa.FileReader.file_exists_local(defskillPath)){
+                        installUpdateLabl.text = "Installed"
                     }
+//                     if(PlasmaLa.FileReader.file_exists_local(configPath)){
+//                         configureSkillLabl.enabled = true
+//                     }
                 }
                 
                 PlasmaLa.MsmApp{
@@ -187,16 +192,16 @@ Rectangle {
                 Rectangle {
                     id: getskillviamsmRect
                     width: parent.width
-                    height: units.gridUnit * 2.5
+                    height: units.gridUnit * 1
                     anchors.bottom: parent.bottom
                     color: Qt.darker(theme.linkColor, 1.2)
 
                     PlasmaComponents.Button{
                        id: installUpdateLabl
-                       width: parent.width / 4
+                       width: parent.width
                        height: parent.height
                        anchors.left: parent.left
-                       text: i18n("Install")
+                       text: "Install"
                        
                        onClicked:{
                            switch(installUpdateLabl.text){
@@ -209,43 +214,6 @@ Rectangle {
                             }
                         }
                     }
-                    
-                    PlasmaComponents.Button{
-                       id: updateskillviamsm
-                       width: parent.width / 4
-                       height: parent.height
-                       anchors.left: installUpdateLabl.right
-                       text: i18n("Update")
-                       enabled: false
-                       
-                       onClicked:{
-                            execUpdate()
-                        }
-                    }
-                    
-                    PlasmaComponents.Button{
-                       id: viewGit
-                       width: parent.width / 4
-                       height: parent.height
-                       anchors.left: updateskillviamsm.right
-                       text: i18n("Readme")
-                       
-                       onClicked: {
-                           Qt.openUrlExternally(model.url)
-                        }
-                    }
-
-                    PlasmaComponents.Button{
-                       id: configureSkillLabl
-                       width: parent.width / 4
-                       anchors.right: parent.right
-                       height: parent.height
-                       text: i18n("Configure")
-                       enabled: false
-                       
-                       onClicked: {
-                            execConfiguration()
-                        }
-                    }
                 }
             }
+                    

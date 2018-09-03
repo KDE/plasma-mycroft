@@ -97,7 +97,7 @@ Rectangle {
                     verticalCenter: parent.verticalCenter
                 }
                 height: units.gridUnit * 1
-                width: linetopleftvertSvg.elementSize("vertical-line").width
+                width: dashhdrvertSvg.elementSize("vertical-line").width
                 z: 110
                 elementId: "vertical-line"
 
@@ -293,7 +293,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: audionewsCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: i18n("Play / Listen To News Article")
+                                   text: "Play / Listen To News Article"
                                 }
                             }
                             MouseArea {
@@ -312,7 +312,7 @@ Rectangle {
                                         socketmessage.type = "recognizer_loop:utterance";
                                         socketmessage.data = {};
                                         socketmessage.data.utterances = [sendnewsurl];
-                                        socket.sendTextMessage(JSON.stringify(socketmessage));
+                                        socket.onSendMessage(JSON.stringify(socketmessage));
                                     }
                                 }
                             }
@@ -348,7 +348,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: shareCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: i18n("Share News Link")
+                                   text: "Share News Link"
                                 }
                             }
                             MouseArea {
@@ -399,7 +399,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: removeCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: i18n("Remove Card")
+                                   text: "Remove Card"
                                 }
                             }
                             MouseArea {
@@ -448,7 +448,7 @@ Rectangle {
                                PlasmaComponents.Label {
                                    id: disableCardLabel
                                    anchors.verticalCenter: parent.verticalCenter
-                                   text: i18n("Disable News Cards")
+                                   text: "Disable News Cards"
                                 }
                             }
                             MouseArea {

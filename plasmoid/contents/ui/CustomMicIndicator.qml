@@ -114,7 +114,7 @@ Item {
                 socketmessage.type = "mycroft.mic.listen";
                 socketmessage.data = {};
                 socketmessage.data.utterances = [];
-                socket.sendTextMessage(JSON.stringify(socketmessage));
+                socket.onSendMessage(JSON.stringify(socketmessage));
             }
         }
     }
