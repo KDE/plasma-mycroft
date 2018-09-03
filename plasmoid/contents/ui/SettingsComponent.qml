@@ -472,9 +472,9 @@ Item {
             property alias dashboardSetting: dashswitch.checked
             property alias disclaimerCardSetting: disclaimercardswitch.checked
             property alias newsCardSetting: newscardswitch.checked
-            property alias newsCardAPIKey: newsApiKeyTextFld
+            property alias newsCardAPIKey: newsApiKeyTextFld.text
             property alias weatherCardSetting: weathercardswitch.checked
-            property alias weatherCardAPIKey: owmApiKeyTextFld
+            property alias weatherCardAPIKey: owmApiKeyTextFld.text
             property alias weatherMetricC: owmApiKeyMetricCel.checked
             property alias weatherMetricF: owmApiKeyMetricFar.checked
 //            property alias versionIndex: versionBox.currentIndex
