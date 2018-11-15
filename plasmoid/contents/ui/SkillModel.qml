@@ -24,7 +24,7 @@ ListModel {
     id: skillshintmodel
     ListElement {
         Pic: "../images/alarm.png"
-        Skill: "Alarm"
+        Skill: i18n("Alarm")
         CommandList: [
          ListElement { Commands: "Hey Mycroft, Set an alarm for 9 pm" },
          ListElement { Commands: "Hey Mycroft, Cancel alarm" }
@@ -33,7 +33,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/dateandtime.png"
-        Skill: "Date & Time"
+        Skill: i18n("Date & Time")
         CommandList: [
         ListElement { Commands: "Hey Mycroft, What is the current time" },
         ListElement { Commands: "Hey Mycroft, What is the date today" }
@@ -42,7 +42,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/desktop.png"
-        Skill: "Desktop"
+        Skill: i18n("Desktop")
         CommandList: [
         ListElement { Commands: "Hey Mycroft, Open firefox"},
         ListElement { Commands: "Hey Mycroft, Open konsole"}
@@ -51,7 +51,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/joke.png"
-        Skill: "Joke"
+        Skill: i18n("Joke")
         CommandList: [
         ListElement {Commands: "Hey Mycroft, Tell me a joke"},
         ListElement {Commands: "Hey Mycroft, Sing for me"}
@@ -60,7 +60,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/spell.png"
-        Skill: "Spell"
+        Skill: i18n("Spell")
         CommandList: [
         ListElement {Commands: "Hey Mycroft, Spell hello"},
         ListElement {Commands: "Hey Mycroft, Spell mycroft"}
@@ -69,7 +69,7 @@ ListModel {
     
     ListElement {
         Pic: "../images/productivity.png"
-        Skill: "Productivity"
+        Skill: i18n("Productivity")
         CommandList: [
         ListElement {Commands: "Hey Mycroft, What is the stock price of nasdaq"},
         ListElement {Commands: "Hey Mycroft, What is the current price of oil"}
@@ -78,7 +78,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/wikip.png"
-        Skill: "WiKi"
+        Skill: i18n("WiKi")
         CommandList: [
         ListElement {Commands: "Hey Mycroft, What is the distance to the moon"},
         ListElement {Commands: "Hey Mycroft, What is relativity"}
@@ -87,7 +87,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/wolfram.png"
-        Skill: "Wolfram Alpha"
+        Skill: i18n("Wolfram Alpha")
         CommandList: [
         ListElement {Commands: "Hey Mycroft, What is PI to 10 digits"},
         ListElement {Commands: "Hey Mycroft, What is 2+2"}
@@ -96,7 +96,7 @@ ListModel {
 
     ListElement {
         Pic: "../images/weather.png"
-        Skill: "Weather"
+        Skill: i18n("Weather")
         CommandList: [
         ListElement {Commands: "Hey Mycroft, What is the current weather"},
         ListElement {Commands: "Hey Mycroft, Current weather in Tokyo"}

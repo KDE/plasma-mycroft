@@ -88,7 +88,7 @@ Rectangle {
                         anchors.right: parent.right
                         wrapMode: Text.WordWrap; 
                         font.bold: true; 
-                        text: i18n(Skill) 
+                        text: Skill
                     }
                     
                     Rectangle {
@@ -110,7 +110,7 @@ Rectangle {
                             id: cmd0label
                             wrapMode: Text.WordWrap; 
                             width: main.width; 
-                            text: i18n('<b>Command:</b> ' + CommandList.get(0).Commands)
+                            text: i18n("<b>Command:</b> %1", CommandList.get(0).Commands)
                             
                             MouseArea {
                                 anchors.fill: parent
@@ -144,7 +144,7 @@ Rectangle {
                             id: cmd1label
                             wrapMode: Text.WordWrap; 
                             width: main.width; 
-                            text: i18n('<b>Command:</b> ' + CommandList.get(1).Commands)
+                            text: i18n("<b>Command:</b> %1", CommandList.get(1).Commands)
                             
                             MouseArea {
                                 anchors.fill: parent
