@@ -23,7 +23,6 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import "Dashboard.js" as Dash
 
 Rectangle {
     id: suggestionsmainitem
@@ -32,7 +31,10 @@ Rectangle {
     property alias suggest1: suggestiontext1.text
     property alias suggest2: suggestiontext2.text
     property alias suggest3: suggestiontext3.text
-
+    signal emitAsk
+    signal emitStop
+    signal emitClear
+    
     Rectangle {
         id: suggestionbutton1
         color: theme.backgroundColor
@@ -47,12 +49,11 @@ Rectangle {
         width: suggestionsmainitem.width / 3
         
         PlasmaCore.IconItem {
-          id: suggest1imageicon  
-          anchors.left: parent.left
-          anchors.leftMargin: units.gridUnit * 0.5
-          source: "set-language"
-          width: units.gridUnit * 2
-          height: units.gridUnit * 2
+            id: suggest1imageicon
+            anchors.left: parent.left
+            source: "set-language"
+            width: units.gridUnit * 2
+            height: units.gridUnit * 2
         }
 
         MouseArea {
@@ -61,28 +62,21 @@ Rectangle {
             hoverEnabled: true
 
             onEntered: {
-            suggestionbutton1.color = theme.textColor
-            suggestiontext1.color = theme.backgroundColor
+                suggestionbutton1.color = theme.textColor
+                suggestiontext1.color = theme.backgroundColor
             }
 
             onExited: {
-            suggestionbutton1.color = theme.backgroundColor
-            suggestiontext1.color = theme.textColor
+                suggestionbutton1.color = theme.backgroundColor
+                suggestiontext1.color = theme.textColor
             }
 
             onClicked: {
-            //var suggest1 = qinput.text
-            //var lastIndex = suggest1.lastIndexOf(" ");
-            //qinput.text = suggest1.substring(0, lastIndex) +  " " + suggestiontext1.text + " "
-                var socketmessage = {};
-                socketmessage.type = "recognizer_loop:utterance";
-                socketmessage.data = {};
-                socketmessage.data.utterances = [qinput.text];
-                socket.onSendMessage(JSON.stringify(socketmessage));
+                suggestionsmainitem.emitAsk()
             }
         }
 
-  PlasmaComponents.Label {
+        PlasmaComponents.Label {
             id: suggestiontext1
             text: i18n("Ask Another")
             anchors.horizontalCenter: parent.horizontalCenter
@@ -94,7 +88,6 @@ Rectangle {
         id: suggestbarDividerline1
         anchors {
             left: suggestionbutton1.right
-            //rightMargin: units.gridUnit * 0.25
             top: parent.top
             topMargin: 0
             bottom: parent.bottom
@@ -109,7 +102,7 @@ Rectangle {
             id: linesuggest1vertSvg;
             imagePath: "widgets/line"
         }
-    } 
+    }
 
     Rectangle {
         id: suggestionbutton2
@@ -126,12 +119,11 @@ Rectangle {
         border.color: theme.textColor
         
         PlasmaCore.IconItem {
-          id: suggest2imageicon  
-          anchors.left: parent.left
-          anchors.leftMargin: units.gridUnit * 1.3
-          source: "gtk-stop"
-          width: units.gridUnit * 2
-          height: units.gridUnit * 2
+            id: suggest2imageicon
+            anchors.left: parent.left
+            source: "gtk-stop"
+            width: units.gridUnit * 2
+            height: units.gridUnit * 2
         }
 
         MouseArea {
@@ -140,21 +132,17 @@ Rectangle {
             hoverEnabled: true
 
             onEntered: {
-            suggestionbutton2.color = theme.textColor
-            suggestiontext2.color = theme.backgroundColor
+                suggestionbutton2.color = theme.textColor
+                suggestiontext2.color = theme.backgroundColor
             }
 
             onExited: {
-            suggestionbutton2.color = theme.backgroundColor
-            suggestiontext2.color = theme.textColor
+                suggestionbutton2.color = theme.backgroundColor
+                suggestiontext2.color = theme.textColor
             }
 
             onClicked: {
-                var socketmessage = {};
-                socketmessage.type = "recognizer_loop:utterance";
-                socketmessage.data = {};
-                socketmessage.data.utterances = ["stop"];
-                socket.onSendMessage(JSON.stringify(socketmessage));
+                suggestionsmainitem.emitStop()
             }
         }
 
@@ -200,12 +188,11 @@ Rectangle {
         width: parent.width / 3
         
         PlasmaCore.IconItem {
-          id: suggest3imageicon  
-          anchors.left: parent.left
-          anchors.leftMargin: units.gridUnit * 1.3
-          source: "code-function"
-          width: units.gridUnit * 2
-          height: units.gridUnit * 2
+            id: suggest3imageicon
+            anchors.left: parent.left
+            source: "code-function"
+            width: units.gridUnit * 2
+            height: units.gridUnit * 2
         }
 
         MouseArea {
@@ -214,28 +201,25 @@ Rectangle {
             hoverEnabled: true
 
             onEntered: {
-            suggestionbutton3.color = theme.textColor
-            suggestiontext3.color = theme.backgroundColor
+                suggestionbutton3.color = theme.textColor
+                suggestiontext3.color = theme.backgroundColor
             }
 
             onExited: {
-            suggestionbutton3.color = theme.backgroundColor
-            suggestiontext3.color = theme.textColor
+                suggestionbutton3.color = theme.backgroundColor
+                suggestiontext3.color = theme.textColor
             }
 
             onClicked: {
-                mycroftConversationComponent.conversationModel.clear()
-                if(appletSettings.dasboardSwitch.checked == true && dashLmodel.count == 0){
-                    Dash.showDash("setVisible")
-                }
+                suggestionsmainitem.emitClear()
             }
         }
 
-       PlasmaComponents.Label {
+        PlasmaComponents.Label {
             id: suggestiontext3
             text: i18n("Clear")
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            }
         }
+    }
 }

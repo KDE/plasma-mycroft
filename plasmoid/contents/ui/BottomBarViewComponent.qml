@@ -19,180 +19,115 @@
 
 import QtQuick 2.9
 import QtQml.Models 2.2
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.2 as Controls
 import QtQuick.Layouts 1.3
-import Qt.WebSockets 1.0
-import Qt.labs.settings 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
-import QtQuick.Window 2.0
+import org.kde.kirigami 2.5 as Kirigami
 import QtGraphicalEffects 1.0
-import "Applet.js" as Applet
-import "Autocomplete.js" as Autocomplete
-import "Conversation.js" as Conversation
-import "Dashboard.js" as Dash
+import Mycroft 1.0 as Mycroft
 
 Item {
     id: appletBottomBarComponent
     anchors.fill: parent
     property alias autoCompModel: completionItems
     property alias queryInput: qinput
-    property alias animationDrawer: drawer
     property alias suggestBox: suggst
-    signal animateStepWorking
-    signal animateStepHappy
-    signal animateStepError
+    property var lastMessage
     
-    Connections {
-        target: appletBottomBarComponent
-        onAnimateStepWorking: {
-            console.log("Here")
-            waitanimoutter.aniRunWorking()
-        }
-        onAnimateStepHappy: {
-            waitanimoutter.aniRunHappy()            
-        }
-        onAnimateStepError: {
-            waitanimoutter.aniRunError()
+    function autoAppend(model, getinputstring, setinputstring) {
+        for(var i = 0; i < model.count; ++i)
+            if (getinputstring(model.get(i))){
+                return true
+            }
+        return null
+    }
+
+    function evalAutoLogic() {
+        if (suggestionsBox.currentIndex === -1) {
+        } else {
+            suggestionsBox.complete(suggestionsBox.currentItem)
         }
     }
-    
+
+
     ListModel {
         id: completionItems
     }
     
-    Drawer {
-         id: drawer
-          width: dwrpaddedwidth
-          height: units.gridUnit * 5.5
-          edge: Qt.BottomEdge
- 
-          Rectangle {
+    ColumnLayout {
+        anchors.fill: parent
+        
+        Rectangle {
+            id: suggestionbottombox
+            Layout.fillWidth: true
+            Layout.preferredHeight: Kirigami.Units.gridUnit * 2
             color: theme.backgroundColor
-            anchors.fill: parent
-          }
-
-     CustomIndicator {
-              id: waitanimoutter
-              height: 70
-              width: 70
-              anchors.verticalCenter: parent.verticalCenter
-              anchors.horizontalCenter: parent.horizontalCenter
-                  }
-          }
-    
-    Rectangle {
-        id: suggestionbottombox
-        anchors.top: parent.top
-        anchors.bottom: qinput.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        color: theme.backgroundColor
             
-        Suggestions {
-            id: suggst
-            visible: true;
-        }
-    }
-    
-        Rectangle {
-        id: keyboardactivaterect
-        color: theme.backgroundColor
-        border.width: 1
-        border.color: Qt.lighter(theme.backgroundColor, 1.2)
-        width: units.gridUnit * 2
-        height: qinput.height
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
+            Suggestions {
+                id: suggst
+                anchors.fill: parent
 
-        PlasmaCore.IconItem {
-            id: keybdImg
-            source: "input-keyboard"
-            anchors.centerIn: parent
-            width: units.gridUnit * 1.5
-            height: units.gridUnit * 1.5
-        }
-
-        Rectangle {
-            id: keybindic
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 4
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.leftMargin: 8
-            anchors.rightMargin: 8
-            height: 2
-            color: "green"
-        }
-
-        MouseArea{
-            anchors.fill: parent
-            hoverEnabled: true
-            onEntered: {}
-            onExited: {}
-            onClicked: {
-                if(qinput.visible === false){
-                    toggleInputMethod("KeyboardSetActive")
+                Connections {
+                    target: suggestionsmainitem
+                    onEmitAsk: {
+                        console.log(lastMessage)
+                        Mycroft.MycroftController.sendText(lastMessage);
+                        root.pushMessage(lastMessage, false);
                     }
-                else if(qinput.visible === true){
-                    toggleInputMethod("KeyboardSetDisable")
+                    onEmitStop:{
+                        Mycroft.MycroftController.sendText("stop");
+                    }
+                    onEmitClear: {
+                        conversationModel.clear();
                     }
                 }
             }
         }
-    
-    PlasmaComponents.TextField {
-        id: qinput
-        anchors.left: keyboardactivaterect.right
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
-        clearButtonShown: true
-        
-        onAccepted: {
-            var doesExist = Autocomplete.autoAppend(autoCompModel, function(item) { return item.name === qinput.text }, qinput.text)
-            var evaluateExist = doesExist
-            if(evaluateExist === null){
-                        autoCompModel.append({"name": qinput.text});
-            }
-            suggst.visible = true;
-            var socketmessage = {};
-            socketmessage.type = "recognizer_loop:utterance";
-            socketmessage.data = {};
-            socketmessage.data.utterances = [qinput.text];
-            socket.onSendMessage(JSON.stringify(socketmessage));
-            qinput.text = ""; 
-            }
-        
-        onTextChanged: {
-            Autocomplete.evalAutoLogic();
-        }
-    }
-    
-    CustomMicIndicator {
-        id: customMicIndicator
-        anchors.centerIn: parent
-        visible: false
-    }
-    
-    AutocompleteBox {
-        id: suggestionsBox
-        model: completionItems
-        width: parent.width
-        anchors.bottom: qinput.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        filter: textInput.text
-        property: "name"
-        onItemSelected: complete(item)
 
-        function complete(item) {
-            if (item !== undefined)
-                textInput.text = item.name
+        PlasmaComponents.TextField {
+            id: qinput
+            Layout.fillWidth: true
+            Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+            placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
+            clearButtonShown: true
+
+            onAccepted: {
+                if(qinput.text !== ""){
+                    lastMessage = qinput.text
+                }
+                var doesExist = appletBottomBarComponent.autoAppend(autoCompModel, function(item) { return item.name === qinput.text }, qinput.text)
+                var evaluateExist = doesExist
+                if(evaluateExist === null){
+                    autoCompModel.append({"name": qinput.text});
+                }
+                Mycroft.MycroftController.sendText(qinput.text);
+                root.pushMessage(qinput.text, false);
+                qinput.text = "";
             }
+
+            onTextChanged: {
+                appletBottomBarComponent.evalAutoLogic();
+            }
+
+            AutocompleteBox {
+                id: suggestionsBox
+                model: completionItems
+                width: parent.width
+                anchors.bottom: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                filter: qinput.text
+                property: "name"
+                onItemSelected: complete(item)
+
+                function complete(item) {
+                    if (item !== undefined)
+                        qinput.text = item.name
+                }
+            }
+        }
     }
 }

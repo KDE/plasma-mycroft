@@ -32,7 +32,6 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     WebSockets
 )
 
-add_subdirectory(plugin)
 add_subdirectory(icons)
 plasma_install_package(plasmoid org.kde.plasma.mycroftplasmoid)
 

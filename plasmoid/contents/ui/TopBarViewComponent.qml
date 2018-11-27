@@ -19,220 +19,111 @@
 
 import QtQuick 2.9
 import QtQml.Models 2.2
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.2 as Controls
 import QtQuick.Layouts 1.3
-import Qt.WebSockets 1.0
-import Qt.labs.settings 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
-import QtQuick.Window 2.0
+import org.kde.kirigami 2.5 as Kirigami
 import QtGraphicalEffects 1.0
-import "Applet.js" as Applet
-import "Autocomplete.js" as Autocomplete
-import "Conversation.js" as Conversation
-import "Dashboard.js" as Dash
+import Mycroft 1.0 as Mycroft
 
 Item {
     id: topBarBGrect
-    anchors.fill: parent
-    z: 101
-    property alias mycroftStatus: statusId
     property alias talkAnimation: midbarAnim
-    property alias startSwitch: mycroftstartservicebutton
-    property alias retryButton: statusRetryBtn
     property alias micIcon: qinputmicbx.iconSource
     
-    function animateTalk(){
-        midbarAnim.wsistalking()
+    Connections {
+        target: Mycroft.MycroftController
+        onSpeakingChanged: {
+            if (Mycroft.MycroftController.speaking){
+                midbarAnim.startTalking()
+            }
+            else {
+                midbarAnim.stopTalking()
+            }
+        }
+        onListeningChanged: {
+            if (Mycroft.MycroftController.listening){
+                midbarAnim.startTalking()
+            }
+            else {
+                midbarAnim.stopTalking()
+            }
+        }
     }
-    
-    Image {
-            id: barAnim
-            anchors.left: parent.left
-            anchors.leftMargin: units.gridUnit * 0.1
-            anchors.verticalCenter: parent.verticalCenter
+
+    RowLayout {
+        anchors.fill: parent
+
+        Image {
+            id: logoImageArea
+            Layout.alignment: Qt.AlignLeft
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 1.4
+            Layout.preferredHeight: Kirigami.Units.gridUnit * 1.5
             source: "../images/mycroftsmaller.png"
-            width: units.gridUnit * 1.4
-            height: units.gridUnit * 1.5
         }
         
-    ColorOverlay {
-                    anchors.fill: barAnim
-                    source: barAnim
-                    color: theme.linkColor
-    }
-    
-    PlasmaComponents.Label {
-                anchors.top: parent.top
-                anchors.topMargin: 4
-                anchors.left: barAnim.right
-                anchors.leftMargin: units.gridUnit * 0.25
-                font.capitalization: Font.SmallCaps 
-                id: logotextId
-                text: i18n("Mycroft")
-                font.bold: false;
-                color: theme.textColor
-    }
-    
-    PlasmaCore.SvgItem {
-        id: topbarLeftDividerline
-        anchors {
-            left: logotextId.right
-            leftMargin: units.gridUnit * 0.34
-            top: parent.top
-            topMargin: 0
-            bottom: parent.bottom
-            bottomMargin: 0
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignLeft
+            Layout.leftMargin: Kirigami.Units.smallSpacing
+            font.capitalization: Font.SmallCaps
+            id: logoTextArea
+            text: i18n("Mycroft")
+            font.bold: false;
+            color: theme.textColor
         }
 
-        width: linetopleftvertSvg.elementSize("vertical-line").width
-        z: 110
-        elementId: "vertical-line"
+        PlasmaCore.SvgItem {
+            id: topbarLeftDividerline
+            Layout.fillHeight: true
+            Layout.preferredWidth: linetopleftvertSvg.elementSize("vertical-line").width
+            elementId: "vertical-line"
 
-        svg: PlasmaCore.Svg {
-            id: linetopleftvertSvg;
-            imagePath: "widgets/line"
+            svg: PlasmaCore.Svg {
+                id: linetopleftvertSvg;
+                imagePath: "widgets/line"
+            }
         }
-    }  
-
-    PlasmaComponents.Label {
-                anchors.top: parent.top
-                anchors.topMargin: 4
-                anchors.left: topbarLeftDividerline.right
-                anchors.leftMargin: units.gridUnit * 0.25
-                font.capitalization: Font.SmallCaps 
-                id: statusId
-                text: i18n("<b>Disabled</b>")
-                font.bold: false;
-                color: theme.textColor
-    }
-    
-    PlasmaComponents.Button {
-        id: statusRetryBtn
-        anchors.top: parent.top
-        anchors.topMargin: 1
-        anchors.left: statusId.right
-        anchors.leftMargin: units.gridUnit * 0.50
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: units.gridUnit * 0.25
-        text: i18n("Reconnect")
-        width: units.gridUnit * 6
-        visible: false
-        focus: false
-        enabled: false
         
-        onClicked: {
-            socket.active = false
-            socket.active = true
-            if (socket.active = false){
-               mycroftConversationComponent.conversationModel.append({"itemType": "NonVisual", "InputQuery": socket.errorString})
-            }
-        }
-    }
-    
-TopBarAnim {
-    id: midbarAnim
-    anchors.verticalCenter: parent.verticalCenter
-    anchors.left: statusId.left
-    anchors.right:  topbarDividerline.left
-    height: units.gridUnit * 4
-    z: 6
-}    
-    
-    PlasmaCore.SvgItem {
-        id: topbarDividerline
-        anchors {
-            right: mycroftstartservicebutton.left
-            rightMargin: units.gridUnit * 0.25
-            top: parent.top
-            topMargin: 0
-            bottom: parent.bottom
-            bottomMargin: 0
+        TopBarAnim {
+            id: midbarAnim
+            Layout.fillWidth: true
+            Layout.preferredHeight: Kirigami.Units.gridUnit * 2 - Kirigami.Units.largeSpacing * 2
+            Layout.topMargin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing
         }
 
-        width: linetopvertSvg.elementSize("vertical-line").width
-        z: 110
-        elementId: "vertical-line"
+        PlasmaCore.SvgItem {
+            id: topbarDividerline
+            Layout.fillHeight: true
+            Layout.preferredWidth: linetopvertSvg.elementSize("vertical-line").width
+            elementId: "vertical-line"
 
-        svg: PlasmaCore.Svg {
-            id: linetopvertSvg;
-            imagePath: "widgets/line"
-        }
-    }   
-    
-    
-        SwitchButton {
-                anchors.right: qinputmicbx.left
-                anchors.verticalCenter: topBarBGrect.verticalCenter
-                id: mycroftstartservicebutton
-                checked: false
-                width: Math.round(units.gridUnit * 2)
-                height: width
-                z: 102
-                
-                onClicked: {
-                    if (mycroftstartservicebutton.checked === false) {
-                        statusRetryBtn.visible = false
-                        statusRetryBtn.enabled = false
-                        PlasmaLa.LaunchApp.runCommand("bash", coreinstallstoppath);
-                        mycroftConversationComponent.conversationModel.clear()
-                        bottomBarView.suggestBox.visible = true;
-                        socket.active = false;
-                        midbarAnim.showstatsId()
-                        Dash.showDash("setVisible")
-                    }
-                    
-                    if (mycroftstartservicebutton.checked === true) {
-                        disclaimbox.visible = false;
-                        PlasmaLa.LaunchApp.runCommand("bash", coreinstallstartpath);
-                        if(appletSettings.innerset.dashboardSetting == "false"){
-                        mycroftConversationComponent.conversationModel.clear()
-                        }
-                        bottomBarView.suggestBox.visible = true;
-                        statusId.color = theme.linkColor
-                        statusId.text = i18n("<b>Starting up..please wait</b>")
-                        statusId.visible = true
-                        delay(15000, function() {
-                        socket.active = true;
-                        })
-                    }
-                }
+            svg: PlasmaCore.Svg {
+                id: linetopvertSvg;
+                imagePath: "widgets/line"
             }
-                
+        }
+
         PlasmaComponents.ToolButton {
-                id: qinputmicbx
-                anchors.right: pinButton.left
-                anchors.verticalCenter: parent.verticalCenter
-                iconSource: "mic-on"
-                tooltip: i18n("Toggle Mic")
-                flat: true
-                width: Math.round(units.gridUnit * 2)
-                height: width
-                z: 102
-    
-                onClicked: {
-                    if (qinputmicbx.iconSource == "mic-on") {
-                        Applet.muteMicrophone()
-                    }
-                    else if (qinputmicbx.iconSource == "mic-off") {
-                        Applet.unmuteMicrophone()
-                        }
-                    } 
+            id: qinputmicbx
+            Layout.alignment: Qt.AlignRight
+            iconSource: "mic-on"
+            tooltip: i18n("Toggle Mic")
+            flat: true
+            Layout.preferredWidth: Math.round(Kirigami.Units.gridUnit * 2)
+            height: Layout.preferredWidth
         }
-    
-    PlasmaComponents.ToolButton {
-        id: pinButton
-        anchors.right: parent.right
-        anchors.verticalCenter: topBarBGrect.verticalCenter
-        width: Math.round(units.gridUnit * 1.5)
-        height: width
-        checkable: true
-        iconSource: "window-pin"
-        onCheckedChanged: plasmoid.hideOnWindowDeactivate = !checked
-        z: 102
+
+        PlasmaComponents.ToolButton {
+            id: pinButton
+            Layout.alignment: Qt.AlignRight
+            Layout.preferredWidth: Math.round(Kirigami.Units.gridUnit * 1.5)
+            height: Layout.preferredWidth
+            checkable: true
+            iconSource: "window-pin"
+            onCheckedChanged: plasmoid.hideOnWindowDeactivate = !checked
         }
-    }  
+    }
+}

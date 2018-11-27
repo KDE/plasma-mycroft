@@ -26,8 +26,8 @@ ListModel {
         Pic: "../images/alarm.png"
         Skill: "Alarm"
         CommandList: [
-         ListElement { Commands: "Hey Mycroft, Set an alarm for 9 pm" },
-         ListElement { Commands: "Hey Mycroft, Cancel alarm" }
+            ListElement { Commands: "Hey Mycroft, Set an alarm for 9 pm" },
+            ListElement { Commands: "Hey Mycroft, Cancel alarm" }
         ]
     }
 
@@ -35,8 +35,8 @@ ListModel {
         Pic: "../images/dateandtime.png"
         Skill: "Date & Time"
         CommandList: [
-        ListElement { Commands: "Hey Mycroft, What is the current time" },
-        ListElement { Commands: "Hey Mycroft, What is the date today" }
+            ListElement { Commands: "Hey Mycroft, What is the current time" },
+            ListElement { Commands: "Hey Mycroft, What is the date today" }
         ]
     }
 
@@ -44,8 +44,8 @@ ListModel {
         Pic: "../images/desktop.png"
         Skill: "Desktop"
         CommandList: [
-        ListElement { Commands: "Hey Mycroft, Open firefox"},
-        ListElement { Commands: "Hey Mycroft, Open konsole"}
+            ListElement { Commands: "Hey Mycroft, Open firefox"},
+            ListElement { Commands: "Hey Mycroft, Open konsole"}
         ]
     }
 
@@ -53,8 +53,8 @@ ListModel {
         Pic: "../images/joke.png"
         Skill: "Joke"
         CommandList: [
-        ListElement {Commands: "Hey Mycroft, Tell me a joke"},
-        ListElement {Commands: "Hey Mycroft, Sing for me"}
+            ListElement {Commands: "Hey Mycroft, Tell me a joke"},
+            ListElement {Commands: "Hey Mycroft, Sing for me"}
         ]
     }
 
@@ -62,8 +62,8 @@ ListModel {
         Pic: "../images/spell.png"
         Skill: "Spell"
         CommandList: [
-        ListElement {Commands: "Hey Mycroft, Spell hello"},
-        ListElement {Commands: "Hey Mycroft, Spell mycroft"}
+            ListElement {Commands: "Hey Mycroft, Spell hello"},
+            ListElement {Commands: "Hey Mycroft, Spell mycroft"}
         ]
     }
     
@@ -71,8 +71,8 @@ ListModel {
         Pic: "../images/productivity.png"
         Skill: "Productivity"
         CommandList: [
-        ListElement {Commands: "Hey Mycroft, What is the stock price of nasdaq"},
-        ListElement {Commands: "Hey Mycroft, What is the current price of oil"}
+            ListElement {Commands: "Hey Mycroft, What is the stock price of nasdaq"},
+            ListElement {Commands: "Hey Mycroft, What is the current price of oil"}
         ]
     }
 
@@ -80,8 +80,8 @@ ListModel {
         Pic: "../images/wikip.png"
         Skill: "WiKi"
         CommandList: [
-        ListElement {Commands: "Hey Mycroft, What is the distance to the moon"},
-        ListElement {Commands: "Hey Mycroft, What is relativity"}
+            ListElement {Commands: "Hey Mycroft, What is the distance to the moon"},
+            ListElement {Commands: "Hey Mycroft, What is relativity"}
         ]
     }
 
@@ -89,8 +89,8 @@ ListModel {
         Pic: "../images/wolfram.png"
         Skill: "Wolfram Alpha"
         CommandList: [
-        ListElement {Commands: "Hey Mycroft, What is PI to 10 digits"},
-        ListElement {Commands: "Hey Mycroft, What is 2+2"}
+            ListElement {Commands: "Hey Mycroft, What is PI to 10 digits"},
+            ListElement {Commands: "Hey Mycroft, What is 2+2"}
         ]
     }
 
@@ -98,8 +98,8 @@ ListModel {
         Pic: "../images/weather.png"
         Skill: "Weather"
         CommandList: [
-        ListElement {Commands: "Hey Mycroft, What is the current weather"},
-        ListElement {Commands: "Hey Mycroft, Current weather in Tokyo"}
+            ListElement {Commands: "Hey Mycroft, What is the current weather"},
+            ListElement {Commands: "Hey Mycroft, Current weather in Tokyo"}
         ]
     }
 } 
