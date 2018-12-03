@@ -27,12 +27,14 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.plasmoid 2.0
 import org.kde.kirigami 2.5 as Kirigami
+import org.kde.private.mycroftplasmoid 1.0 as MycroftPlasmoid
 import Mycroft 1.0 as Mycroft
 
 Item {
     id: root
     implicitWidth: Kirigami.Units.gridUnit * 20
     implicitHeight: Kirigami.Units.gridUnit * 32
+    property bool cfg_notifications: plasmoid.configuration.notifications
 
     function pushMessage(text, inbound) {
         conversationModel.append({"text": text,
@@ -149,6 +151,12 @@ Item {
 
                 onFallbackTextRecieved: {
                     pushMessage(data.utterance, true);
+                    if (!plasmoid.expanded && cfg_notifications == true) {
+                        var post = data.utterance;
+                        var title = "Mycroft's Reply:"
+                        var notiftext = " " + post;
+                        MycroftPlasmoid.Notify.mycroftResponse(title, notiftext);
+                    }
                 }
             }
 

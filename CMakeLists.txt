@@ -33,6 +33,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 )
 
 add_subdirectory(icons)
+add_subdirectory(plugin)
 plasma_install_package(plasmoid org.kde.plasma.mycroftplasmoid)
 
 install( DIRECTORY mycroft DESTINATION ${SYSCONF_INSTALL_DIR})
