@@ -131,18 +131,15 @@ Rectangle {
         }
     }
 
-    ListView {
+    Kirigami.CardsListView {
         id: msmlistView
         anchors.top: msmtabtopbar.bottom
-        anchors.topMargin: 5
+        anchors.topMargin: Kirigami.Units.largeSpacing
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         model: msmskillsModel
         delegate: MsmView{}
-        spacing: 4
-        focus: false
-        interactive: true
         clip: true;
     }
 }

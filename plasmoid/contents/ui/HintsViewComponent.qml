@@ -15,15 +15,58 @@ Rectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
     color: Kirigami.Theme.backgroundColor
+    property var modelCreatedObject
     
-    ListView {
-        id: hintsListView
-        anchors.fill: parent
-        model: HintsModel{}
-        delegate: HintsView{}
-        spacing: 4
-        focus: false
-        interactive: true
+    Component.onCompleted: {
+        createHintModel()
+    }
+
+    function createHintModel(){
+        var hintList = []
+        var defaultFold = '/opt/mycroft/skills'
+        var fileToFind = "README.md"
+        var getList = Mycroft.FileReader.checkForMeta(defaultFold, fileToFind)
+        for(var i=0; i < getList.length; i++){
+            var fileParse = Mycroft.FileReader.read(getList[i]+"/"+fileToFind);
+            var matchedRegex = getImgSrc(fileParse)
+            var matchedExamples = getExamples(fileParse)
+            var matchedCategory = getCategory(fileParse)
+            if(matchedRegex !== null && matchedRegex.length > 0 && matchedExamples !== null && matchedExamples.length > 0 && matchedCategory !== null && matchedCategory.length > 0) {
+                var metaFileObject = {
+                    imgSrc: matchedRegex[1],
+                    title: matchedRegex[2],
+                    category: matchedCategory[1],
+                    examples: matchedExamples
+                }
+                hintList.push(metaFileObject);
+            }
+        }
+        modelCreatedObject = hintList
+    }
+
+    function getImgSrc(fileText){
+        var re = new RegExp(/<img[^>]*src='([^']*)'.*\/>\s(.*)/g);
+        var match = re.exec(fileText);
+        return match;
+    }
+
+    function getExamples(fileText){
+        var re = new RegExp(/Examples \n.*"(.*)"\n\*\s"(.*)"/g);
+        var match = re.exec(fileText);
+        return match;
+    }
+
+    function getCategory(fileText){
+        var re = new RegExp(/## Category\n\*\*(.*)\*\*/g);
+        var match = re.exec(fileText);
+        return match;
+    }
+    
+    Kirigami.CardsListView {
+        id: skillslistmodelview
+        anchors.fill: parent;
         clip: true;
+        model: modelCreatedObject
+        delegate: HintsView{}
     }
 }
