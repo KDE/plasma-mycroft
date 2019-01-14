@@ -132,54 +132,39 @@ Item {
                 easing.type: Easing.InOutCubic
             }
         }
-        
-        Mycroft.SkillView {
-            id: skillView
-            Kirigami.Theme.colorSet: Kirigami.Theme.View
+                
+        Item {
+            id: delegateItem
             Layout.fillWidth: true
             Layout.fillHeight: true
-            clip: true
-            onCurrentItemChanged: {
-                currentItem.background.visible = false
-                inputField.forceActiveFocus();
-            }
-
-            Connections {
-                id: mycroftConnection
-
-                target: Mycroft.MycroftController
-
-                onFallbackTextRecieved: {
-                    pushMessage(data.utterance, true);
-                    if (!plasmoid.expanded && cfg_notifications == true) {
-                        var post = data.utterance;
-                        var title = "Mycroft's Reply:"
-                        var notiftext = " " + post;
-                        MycroftPlasmoid.Notify.mycroftResponse(title, notiftext);
-                    }
-                }
-            }
-
-            initialItem: Controls.ScrollView {
+            
+            Mycroft.SkillView {
+                id: skillView
+                anchors.fill: parent
                 Kirigami.Theme.colorSet: Kirigami.Theme.View
-                ListView {
-                    id: mainView
+                anchors.margins: Kirigami.Units.largeSpacing
+                clip: true
+                onCurrentItemChanged: {
+                    backgroundVisible = false
+                }
 
-                    spacing: Kirigami.Units.largeSpacing
-
-                    topMargin: Math.max(0, height - contentHeight - Kirigami.Units.largeSpacing * 3)
-                    bottomMargin: Kirigami.Units.largeSpacing
-
-                    //onContentHeightChanged: flick(0, 100);
-                    //contentY = contentHeight - height - topMargin + bottomMargin;
-
-                    model: ListModel {
-                        id: conversationModel
+                Connections {
+                    id: mycroftConnection
+                    target: Mycroft.MycroftController
+                    
+                    onFallbackTextRecieved: {
+                        skillsSwipeView.setCurrentIndex(0)
+                        //pushMessage(data.utterance, true);
+                        if (!plasmoid.expanded && cfg_notifications == true) {
+                            var post = data.utterance;
+                            var title = "Mycroft's Reply:"
+                            var notiftext = " " + post;
+                            MycroftPlasmoid.Notify.mycroftResponse(title, notiftext);
+                        }
                     }
-                    delegate: ConversationDelegate {}
                 }
             }
-        }
+        }        
     }
     
     Item {
