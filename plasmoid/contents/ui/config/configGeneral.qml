@@ -13,6 +13,7 @@ Item {
     id: page
     property alias cfg_websocketAddress: websocketAddress.text
     property alias cfg_notificationSwitch: notificationSwitch.checked
+    property alias cfg_selectView: selectView.currentIndex
     
     GridLayout {
         Layout.fillWidth: true
@@ -31,12 +32,32 @@ Item {
                     websocketAddress.text = Mycroft.GlobalSettings.webSocketAddress
                 }
             }
-                    
-        PlasmaComponents.Switch {
-                id: notificationSwitch
+        
+        ColumnLayout{
+        Layout.fillWidth: true
+        
+            PlasmaComponents.Switch {
+                    id: notificationSwitch
+                    Layout.fillWidth: true
+                    text: i18n("Enable Notifications")
+                    checked: true
+            }
+            
+            RowLayout {
                 Layout.fillWidth: true
-                text: i18n("Enable Notifications")
-                checked: true
+                
+                PlasmaComponents.Label {
+                    id: selectViewLabel
+                    Layout.fillWidth: true
+                    text: "Select Default View:"
+                }
+                
+                PlasmaComponents.ComboBox{
+                        id: selectView
+                        Layout.fillWidth: true
+                        model: ["Conversation View", "Dashboard View"]
+                }
+            }
         }
     }
 }

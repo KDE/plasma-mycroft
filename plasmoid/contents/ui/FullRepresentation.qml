@@ -35,22 +35,6 @@ Item {
     implicitWidth: Kirigami.Units.gridUnit * 20
     implicitHeight: Kirigami.Units.gridUnit * 32
     property bool cfg_notifications: plasmoid.configuration.notifications
-
-    function pushMessage(text, inbound) {
-        conversationModel.append({"text": text,
-                                     "inbound": inbound});
-
-        // Limit to 20 items in the histry as ListModel is quite heavy on memory
-        if (conversationModel.count > 20) {
-            conversationModel.remove(0)
-        }
-
-        mainView.flick(0, -500);
-    }
-
-    Component.onCompleted: {
-        pushMessage(i18n("How can I help you?"), true);
-    }
     
     Item {
         id: topBar
@@ -153,8 +137,7 @@ Item {
                     target: Mycroft.MycroftController
                     
                     onFallbackTextRecieved: {
-                        skillsSwipeView.setCurrentIndex(0)
-                        //pushMessage(data.utterance, true);
+                        Mycroft.MycroftController.sendRequest("mycroft.desktop.applet.show_conversationview", {})
                         if (!plasmoid.expanded && cfg_notifications == true) {
                             var post = data.utterance;
                             var title = "Mycroft's Reply:"
@@ -172,7 +155,7 @@ Item {
         anchors.bottom: root.bottom
         anchors.left: root.left
         anchors.right: root.right
-        height: Kirigami.Units.gridUnit * 4
+        height: Kirigami.Units.gridUnit * 2
 
         BottomBarViewComponent {
             id: bottomBarView
@@ -232,10 +215,5 @@ Item {
         SkillsInstallerComponent{
             id: skillsInstallerView
         }
-    }
-
-    Mycroft.StatusIndicator {
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: skillView.currentItem == skillView.initialItem ? parent.height/2 - height/2 : parent.height - height - Kirigami.Units.largeSpacing
     }
 }

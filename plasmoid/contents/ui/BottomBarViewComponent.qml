@@ -34,7 +34,6 @@ Item {
     anchors.fill: parent
     property alias autoCompModel: completionItems
     property alias queryInput: qinput
-    property alias suggestBox: suggst
     property var lastMessage
     
     function autoAppend(model, getinputstring, setinputstring) {
@@ -60,33 +59,6 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         
-        Rectangle {
-            id: suggestionbottombox
-            Layout.fillWidth: true
-            Layout.preferredHeight: Kirigami.Units.gridUnit * 2
-            color: theme.backgroundColor
-            
-            Suggestions {
-                id: suggst
-                anchors.fill: parent
-
-                Connections {
-                    target: suggestionsmainitem
-                    onEmitAsk: {
-                        console.log(lastMessage)
-                        Mycroft.MycroftController.sendText(lastMessage);
-                        root.pushMessage(lastMessage, false);
-                    }
-                    onEmitStop:{
-                        Mycroft.MycroftController.sendText("stop");
-                    }
-                    onEmitClear: {
-                        conversationModel.clear();
-                    }
-                }
-            }
-        }
-
         PlasmaComponents.TextField {
             id: qinput
             Layout.fillWidth: true
@@ -104,7 +76,7 @@ Item {
                     autoCompModel.append({"name": qinput.text});
                 }
                 Mycroft.MycroftController.sendText(qinput.text);
-                root.pushMessage(qinput.text, false);
+//                root.pushMessage(qinput.text, false);
                 qinput.text = "";
             }
 
