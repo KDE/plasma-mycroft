@@ -45,24 +45,24 @@ Item {
 
         ColumnLayout{
             anchors.fill: parent
-
+            
             TopBarViewComponent {
                 id: topBarView
                 Layout.fillWidth: true
                 Layout.preferredHeight: Kirigami.Units.gridUnit * 2
             }
-
+            
             PlasmaCore.SvgItem {
                 Layout.fillWidth: true
                 Layout.preferredHeight: horlineSvg.elementSize("horizontal-line").height
 
                 elementId: "horizontal-line"
                 svg: PlasmaCore.Svg {
-                    id: horlineSvg;
+                    id: horlineSvg2;
                     imagePath: "widgets/line"
                 }
             }
-
+            
             PlasmaComponents.TabBar {
                 id: tabBar
                 visible: true
@@ -94,7 +94,7 @@ Item {
 
                 elementId: "horizontal-line"
                 svg: PlasmaCore.Svg {
-                    id: horlineSvg2;
+                    id: horlineSvg;
                     imagePath: "widgets/line"
                 }
             }
@@ -162,27 +162,15 @@ Item {
         }
     }
 
-    ColumnLayout {
+    Image {
         anchors.centerIn: parent
         opacity: Mycroft.MycroftController.status != Mycroft.MycroftController.Open
-
+        source: "../images/logo.png"
+        
         Behavior on opacity {
             OpacityAnimator {
                 duration: Kirigami.Units.longDuration
                 easing.type: Easing.InOutCubic
-            }
-        }
-
-        Kirigami.Heading {
-            Layout.fillWidth: true
-            text: i18n("Mycroft not connected")
-            wrapMode: Text.WordWrap
-        }
-        Controls.Button {
-            Layout.alignment: Qt.AlignHCenter
-            text: i18n("Connect")
-            onClicked: {
-                Mycroft.MycroftController.start();
             }
         }
     }

@@ -92,6 +92,13 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: Kirigami.Units.gridUnit * 2 - Kirigami.Units.largeSpacing * 2
             Layout.topMargin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing
+            
+            PlasmaComponents.Label {
+                anchors.centerIn: parent
+                opacity: Mycroft.MycroftController.status != Mycroft.MycroftController.Open
+                text: i18n("Disconnected") 
+                wrapMode: Text.WordWrap
+            }
         }
 
         PlasmaCore.SvgItem {
@@ -106,6 +113,24 @@ Item {
             }
         }
 
+        PlasmaComponents.ToolButton {
+            id: startBtn
+            Layout.alignment: Qt.AlignRight
+            iconSource: Mycroft.MycroftController.status != Mycroft.MycroftController.Open ? "draw-triangle2" : "media-playback-pause"
+            tooltip: i18n("Connect")
+            flat: true
+            Layout.preferredWidth: Math.round(Kirigami.Units.gridUnit * 2)
+            height: Layout.preferredWidth
+            onClicked: {
+                if(Mycroft.MycroftController.status != Mycroft.MycroftController.Open) {
+                Mycroft.MycroftController.start();
+                } else {
+                 Mycroft.MycroftController.stop();   
+                }
+            }
+        }
+        
+        
         PlasmaComponents.ToolButton {
             id: qinputmicbx
             Layout.alignment: Qt.AlignRight
