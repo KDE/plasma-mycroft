@@ -15,6 +15,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMInstallIcons)
+include(ExternalProject)
 
 # Locate plasma_install_package macro.
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -34,6 +35,14 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 
 add_subdirectory(icons)
 add_subdirectory(plugin)
+
+ExternalProject_Add(mycroft-gui
+    GIT_REPOSITORY https://github.com/MycroftAI/Mycroft-Gui
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_LIBDIR=lib -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+    BUILD_COMMAND make
+    INSTALL_COMMAND sudo make install
+)
+
 plasma_install_package(plasmoid org.kde.plasma.mycroftplasmoid)
 
 install( DIRECTORY mycroft DESTINATION ${SYSCONF_INSTALL_DIR})
