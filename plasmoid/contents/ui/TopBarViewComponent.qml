@@ -125,7 +125,7 @@ Item {
                 if(Mycroft.MycroftController.status != Mycroft.MycroftController.Open) {
                 Mycroft.MycroftController.start();
                 } else {
-                 Mycroft.MycroftController.stop();   
+                 Mycroft.MycroftController.disconnectSocket();   
                 }
             }
         }

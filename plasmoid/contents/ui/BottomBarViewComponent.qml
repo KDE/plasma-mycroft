@@ -76,7 +76,7 @@ Item {
                     autoCompModel.append({"name": qinput.text});
                 }
                 Mycroft.MycroftController.sendText(qinput.text);
-//                root.pushMessage(qinput.text, false);
+                Mycroft.MycroftController.sendRequest('mycroft.qinput.text', {"inputQuery": qinput.Text})
                 qinput.text = "";
             }
 
