@@ -43,6 +43,13 @@ ExternalProject_Add(mycroft-gui
     INSTALL_COMMAND sudo make install
 )
 
+ExternalProject_Add(lottie-qml
+    GIT_REPOSITORY https://github.com/kbroulik/lottie-qml
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_LIBDIR=lib -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+    BUILD_COMMAND make
+    INSTALL_COMMAND sudo make install
+)
+
 plasma_install_package(plasmoid org.kde.plasma.mycroftplasmoid)
 
 install( DIRECTORY mycroft DESTINATION ${SYSCONF_INSTALL_DIR})
