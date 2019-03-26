@@ -18,11 +18,7 @@
 
 #include "mycroftplasmoidplugin.h"
 #include "mycroftplasmoid_dbus.h"
-#include "launchapp.h"
 #include "notify.h"
-#include "filereader.h"
-#include "msmapp.h"
-#include "connectioncheck.h"
 #include <QtQml>
 #include <QtDebug>
 #include <QtDBus>
@@ -35,38 +31,10 @@ static QObject *notify_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
     return new Notify;
 }
 
-static QObject *launchapp_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
-
-    return new LaunchApp;
-}
-
-static QObject *filereader_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
-
-    return new FileReader;
-}
-
-static QObject *connectioncheck_singleton(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
-
-    return new ConnectionCheck;
-}
-
 void MycroftPlasmoidPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.private.mycroftplasmoid"));
     qmlRegisterSingletonType<Notify>(uri, 1, 0, "Notify", notify_singleton);
-    qmlRegisterSingletonType<LaunchApp>(uri, 1, 0, "LaunchApp", launchapp_singleton);
-    qmlRegisterSingletonType<FileReader>(uri, 1, 0, "FileReader", filereader_singleton);
-    qmlRegisterSingletonType<ConnectionCheck>(uri, 1, 0, "ConnectionCheck", connectioncheck_singleton);    
-    qmlRegisterType<MsmApp>(uri, 1, 0, "MsmApp");
 }
 
 void MycroftPlasmoidPlugin::initializeEngine(QQmlEngine* engine, const char* uri)

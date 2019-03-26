@@ -2,7 +2,7 @@ kde_enable_exceptions()
 
 add_definitions(-DTRANSLATION_DOMAIN=\"mycroftplasmoidplugin\")
 
-set(mycroftplasmoidplugin_SRCS mycroftplasmoidplugin.cpp launchapp.cpp notify.cpp filereader.cpp msmapp.cpp connectioncheck.cpp mycroftplasmoid_dbus.cpp)
+set(mycroftplasmoidplugin_SRCS mycroftplasmoidplugin.cpp notify.cpp mycroftplasmoid_dbus.cpp)
 
 add_library(mycroftplasmoidplugin SHARED ${mycroftplasmoidplugin_SRCS})
 
