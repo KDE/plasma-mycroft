@@ -27,9 +27,8 @@ import org.kde.kirigami 2.5 as Kirigami
 Item {
     id: root
 
-    //Plasmoid.switchWidth: Kirigami.Units.gridUnit * 5
-    //Plasmoid.switchHeight: Kirigami.Units.gridUnit * 5
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    Plasmoid.switchWidth: Plasmoid.formFactor == PlasmaCore.Types.Planar ? 0 : Kirigami.Units.gridUnit * 5
+    Plasmoid.switchHeight: Plasmoid.formFactor == PlasmaCore.Types.Planar ? 0 : Kirigami.Units.gridUnit * 5
 
     Plasmoid.fullRepresentation: FullRepresentation {}
 }

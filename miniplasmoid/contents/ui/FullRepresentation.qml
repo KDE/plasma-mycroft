@@ -33,6 +33,9 @@ Item {
     implicitWidth: Kirigami.Units.gridUnit * 20
     implicitHeight: Kirigami.Units.gridUnit * 32
 
+    Layout.minimumWidth: Kirigami.Units.gridUnit * 10
+    Layout.minimumHeight: Kirigami.Units.gridUnit * 15
+
     Component.onCompleted: {
         Mycroft.MycroftController.start();
     }
