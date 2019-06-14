@@ -1765,8 +1765,10 @@ Item {
             
             model: ListModel {
                 id: versionItem
+                ListElement { key: "19.02"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/19.02/.gitmodules" }
+                ListElement { key: "18.08"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/18.08/.gitmodules" }
                 ListElement { key: "18.02"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/18.02/.gitmodules" }
-                ListElement { key: "18.0x"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/master/.gitmodules" }
+                ListElement { key: "17.0x"; value: "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/17.08-and-older/.gitmodules"}
             }
             onActivated: {
                 msmskillsModel.clear();
