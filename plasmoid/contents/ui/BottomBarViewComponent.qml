@@ -107,8 +107,15 @@ Item {
                 }
             }
             
-            Controls.Button {
-                text: "Speak" // TODO generic microphone icon
+            PlasmaComponents.Button {
+                Layout.preferredHeight: Kirigami.Units.iconSizes.medium
+                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+                Kirigami.Icon{
+                    anchors.centerIn: parent
+                    width: Kirigami.Units.iconSizes.small
+                    height: Kirigami.Units.iconSizes.small
+                    source: "audio-input-microphone"
+                }
                 onClicked:  {
                         audioRecorder.open()  
                 }
