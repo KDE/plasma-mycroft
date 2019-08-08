@@ -37,6 +37,29 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 add_subdirectory(icons)
 add_subdirectory(plugin)
 
+find_program(MycroftGUI mycroft-gui-app)
+
+if(NOT MycroftGUI)
+    message(STATUS "MYCROFT GUI DEPENDENCY NOT FOUND, ADDING AND BUILDING DEPENDENCIES")
+
+ExternalProject_Add(mycroft-gui
+    GIT_REPOSITORY https://github.com/MycroftAI/Mycroft-Gui
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_LIBDIR=lib -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DBUILD_REMOTE_TTS=ON
+    BUILD_COMMAND make
+    INSTALL_COMMAND sudo make install
+)
+
+ExternalProject_Add(lottie-qml
+    GIT_REPOSITORY https://github.com/kbroulik/lottie-qml
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_LIBDIR=lib -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+    BUILD_COMMAND make
+    INSTALL_COMMAND sudo make install
+)
+endif()
+
+if(MycroftGUI)
+    message(STATUS "MYCROFT GUI DEPENDENCY FOUND, SKIPPING BUILDING DEPENDENCIES")
+endif()
 
 if(BUILD_GUI_DEPS)
 ExternalProject_Add(mycroft-gui

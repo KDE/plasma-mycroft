@@ -59,46 +59,60 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         
-        PlasmaComponents.TextField {
-            id: qinput
+        
+        RowLayout{
             Layout.fillWidth: true
-            Layout.preferredHeight: Kirigami.Units.gridUnit * 2
-            placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
-            clearButtonShown: true
+            Layout.fillHeight: true
+        
+            PlasmaComponents.TextField {
+                id: qinput
+                Layout.fillWidth: true
+                Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+                placeholderText: i18n("Enter Query or Say 'Hey Mycroft'")
+                clearButtonShown: true
 
-            onAccepted: {
-                if(qinput.text !== ""){
-                    lastMessage = qinput.text
+                onAccepted: {
+                    if(qinput.text !== ""){
+                        lastMessage = qinput.text
+                    }
+                    var doesExist = appletBottomBarComponent.autoAppend(autoCompModel, function(item) { return item.name === qinput.text }, qinput.text)
+                    var evaluateExist = doesExist
+                    if(evaluateExist === null){
+                        autoCompModel.append({"name": qinput.text});
+                    }
+                    Mycroft.MycroftController.sendText(qinput.text);
+                    Mycroft.MycroftController.sendRequest('mycroft.qinput.text', {"inputQuery": qinput.Text})
+                    qinput.text = "";
                 }
-                var doesExist = appletBottomBarComponent.autoAppend(autoCompModel, function(item) { return item.name === qinput.text }, qinput.text)
-                var evaluateExist = doesExist
-                if(evaluateExist === null){
-                    autoCompModel.append({"name": qinput.text});
+
+                onTextChanged: {
+                    appletBottomBarComponent.evalAutoLogic();
                 }
-                Mycroft.MycroftController.sendText(qinput.text);
-                Mycroft.MycroftController.sendRequest('mycroft.qinput.text', {"inputQuery": qinput.Text})
-                qinput.text = "";
+
+                AutocompleteBox {
+                    id: suggestionsBox
+                    model: completionItems
+                    width: parent.width
+                    anchors.bottom: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    filter: qinput.text
+                    property: "name"
+                    onItemSelected: complete(item)
+
+                    function complete(item) {
+                        if (item !== undefined)
+                            qinput.text = item.name
+                    }
+                }
             }
-
-            onTextChanged: {
-                appletBottomBarComponent.evalAutoLogic();
-            }
-
-            AutocompleteBox {
-                id: suggestionsBox
-                model: completionItems
-                width: parent.width
-                anchors.bottom: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                filter: qinput.text
-                property: "name"
-                onItemSelected: complete(item)
-
-                function complete(item) {
-                    if (item !== undefined)
-                        qinput.text = item.name
+            
+            Controls.Button {
+                text: "Speak" // TODO generic microphone icon
+                onClicked:  {
+                        audioRecorder.open()  
                 }
+                visible: plasmoid.configuration.enableRemoteSTT
             }
         }
     }

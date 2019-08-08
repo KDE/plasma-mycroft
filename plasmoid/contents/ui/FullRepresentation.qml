@@ -122,6 +122,27 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             
+            Controls.Popup {
+                id: audioRecorder
+                width: 300
+                height: 125
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                x: (root.width - width) / 2
+                y: (root.height - height) / 2
+                
+                RemoteStt {
+                    id: remoteSttInstance
+                }
+                
+                onOpenedChanged: {
+                    if(audioRecorder.opened){
+                        remoteSttInstance.record = true;
+                    } else {
+                        remoteSttInstance.record = false;
+                    }
+                }
+            }
+            
             Mycroft.SkillView {
                 id: skillView
                 anchors.fill: parent

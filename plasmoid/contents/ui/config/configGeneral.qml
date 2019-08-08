@@ -14,50 +14,48 @@ Item {
     property alias cfg_websocketAddress: websocketAddress.text
     property alias cfg_notificationSwitch: notificationSwitch.checked
     property alias cfg_selectView: selectView.currentIndex
+    property alias cfg_enableRemoteTTS: enableRemoteTTS.checked
+    property alias cfg_enableRemoteSTT: enableRemoteSTT.checked
     
-    GridLayout {
-        Layout.fillWidth: true
-        columns: 2
-         
-        PlasmaComponents.Label {
-            id: websocketLabel
-            text: "Websocket Address"
-        }
-            
+    Kirigami.FormLayout {
+        anchors.left: parent.left
+        anchors.right: parent.right
+                    
         PlasmaComponents.TextField {
-                id: websocketAddress
-                Layout.fillWidth: true
-                
-                Component.onCompleted: {
-                    websocketAddress.text = Mycroft.GlobalSettings.webSocketAddress
-                }
+            id: websocketAddress
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18n("Websocket Address:")       
+            Component.onCompleted: {
+                websocketAddress.text = Mycroft.GlobalSettings.webSocketAddress
             }
+        }
         
-        ColumnLayout{
-        Layout.fillWidth: true
+        CheckBox {
+            id: notificationSwitch
+            Kirigami.FormData.label: i18n ("Additional Settings:")
+            text: i18n("Enable Notifications")
+            checked: true
+        }
         
-            PlasmaComponents.Switch {
-                    id: notificationSwitch
-                    Layout.fillWidth: true
-                    text: i18n("Enable Notifications")
-                    checked: true
-            }
-            
-            RowLayout {
-                Layout.fillWidth: true
-                
-                PlasmaComponents.Label {
-                    id: selectViewLabel
-                    Layout.fillWidth: true
-                    text: "Select Default View:"
-                }
-                
-                PlasmaComponents.ComboBox{
-                        id: selectView
-                        Layout.fillWidth: true
-                        model: ["Conversation View", "Dashboard View"]
-                }
-            }
+        CheckBox {
+            id: enableRemoteTTS
+            text: i18n("Enable Remote TTS")
+            checked: Mycroft.GlobalSettings.usesRemoteTTS
+            onCheckedChanged: Mycroft.GlobalSettings.usesRemoteTTS = checked
+        }
+        
+        CheckBox {
+            id: enableRemoteSTT
+            text: i18n("Enable Remote STT")
+            checked: false
+        }
+        
+        PlasmaComponents.ComboBox{
+            id: selectView
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18n ("Default View:")
+            model: ["Conversation View", "Dashboard View"]
         }
     }
 }
+
