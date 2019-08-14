@@ -1,4 +1,4 @@
-/* Copyright 2016 Aditya Mehra <aix.m@outlook.com>                            
+/* Copyright 2019 Aditya Mehra <aix.m@outlook.com>                            
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,230 +18,150 @@
 */
 
 import QtQuick 2.9
+import QtQuick.Layouts 1.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.kirigami 2.5 as Kirigami
 
 Item {
-
-   property alias topanimrun: seqrun.running 
     
-   //anchors.fill: parent
-   function wsistalking() {
-            if(statusId.visible == true){
-            numanimtest.running = true
+    function startTalking() {
+        animRunTime.running = true
+        seqrun.running = true
+        canvasmiddlegraphics.opacity = 1
+    }
+    
+    function stopTalking() {
+        if(animRunTime.interval = 100){
+            animRunTime.running = false
             seqrun.running = false
+            canvasmiddlegraphics.opacity = 0
         }
-        else if(statusId.visible == false){
-            seqrun.running = true
-            canvasmiddlegraphics.visible = !canvasmiddlegraphics.visible
-        }
-} 
-
-    function showstatsId() {
-        canvasmiddlegraphics.opacity = 0
-        statusId.visible = true
     }
     
-    SequentialAnimation{
-        id: numanimtest
-        
-    SequentialAnimation {  
-         
-    PropertyAnimation {
-        id: n1test
-        target: statusId
-        property: "opacity"
-        from: 1;
-        to: 0;
-        duration: 3000
-        }     
-        
-    PropertyAnimation {
-        id: n1testr
-        target: statusId
-        property: "visible"
-        from: true;
-        to: false;
-        duration: 2000
+    
+    Timer{
+        id: animRunTime
+        interval: 100
+        repeat: true
+        running: false
+        onTriggered: {
+            canvasmiddlegraphics.i += Math.PI/180
+            canvasmiddlegraphics.amplitude += Math.PI/180 + Math.floor(Math.random() * 2) + 1
+            canvasmiddlegraphics.amplitude -= Math.PI/180 + Math.floor(Math.random() * 2) + 1
+            while(canvasmiddlegraphics.i >= Math.PI && canvasmiddlegraphics.amplitude >= Math.PI) canvasmiddlegraphics.i -= 2*Math.PI
         }
-        
-    PropertyAnimation {
-        id: n1testn
-        target: statusId
-        property: "opacity"
-        from: 0;
-        to: 1;
-        duration: 20
-        }     
     }
-            
-    NumberAnimation{
-        id: n2testop
-        target: canvasmiddlegraphics
-        property: "opacity"
-        from: 0;
-        to: 1;
-        duration: 300
-    }            
-}
-
-   SequentialAnimation {
+    
+    
+    SequentialAnimation {
         id: seqrun
         
-        ParallelAnimation {
-        NumberAnimation{
-        target: canvasmiddlegraphics
-        property: "i"
-        from: -50
-        to: -70
-        duration: 200
-        }
-
         SequentialAnimation {
             loops: 10
-            
-            ParallelAnimation {
-            NumberAnimation{
-            target: canvasmiddlegraphics
-            property: "amplitude"
-            from: 0
-            to: 10 + Math.floor(Math.random() * 6) + 1  
-            duration: 12
-            }
-                }
-            
-            ParallelAnimation {
-            NumberAnimation{
-            target: canvasmiddlegraphics
-            property: "amplitude"
-            from: 10
-            to: 16 + Math.floor(Math.random() * 2) + 1  
-            duration: 12
 
+            ParallelAnimation {
+                NumberAnimation{
+                    target: canvasmiddlegraphics
+                    property: "amplitude"
+                    from: 0
+                    to: 10 + Math.floor(Math.random() * 6) + 1
+                    duration: 12
+                }
+            }
+            
+            ParallelAnimation {
+                NumberAnimation{
+                    target: canvasmiddlegraphics
+                    property: "amplitude"
+                    from: 10
+                    to: 16 + Math.floor(Math.random() * 2) + 1
+                    duration: 12
                 }
             }
 
             ParallelAnimation{
-            NumberAnimation{
-            target: canvasmiddlegraphics
-            property: "amplitude"
-            from: 16 + Math.floor(Math.random() * 2) + 1
-            to: 10 + Math.floor(Math.random() * 6) + 1
-            duration: 12
+                NumberAnimation{
+                    target: canvasmiddlegraphics
+                    property: "amplitude"
+                    from: 16 + Math.floor(Math.random() * 2) + 1
+                    to: 10 + Math.floor(Math.random() * 6) + 1
+                    duration: 12
                 }
+            }
+
+            ParallelAnimation {
+                NumberAnimation{
+                    target: canvasmiddlegraphics
+                    property: "amplitude"
+                    from: 10 + Math.floor(Math.random() / 6) + 1
+                    to: 0
+                    duration: 12
                 }
-                
-            ParallelAnimation {    
-            NumberAnimation{
-            target: canvasmiddlegraphics
-            property: "amplitude"
-            from: 10 + Math.floor(Math.random() / 6) + 1
-            to: 0
-            duration: 12
-                } 
-
-            }
-            }
-        }
-
-        ParallelAnimation {
-        
-        PropertyAnimation {
-            target: canvasmiddlegraphics
-            property: "visible"
-            from: true
-            to: false
-            duration: 20
             }
         }
     }
     
     Canvas {
-                          id:canvasmiddlegraphics
-                          width: parent.width
-                          height: parent.height
-                          anchors.verticalCenter: parent.verticalCenter
-                          anchors.horizontalCenter: parent.horizontalCenter
-                          visible: true
-                          opacity: 0
+        id:canvasmiddlegraphics
+        width: parent.width
+        height: Kirigami.Units.gridUnit * 2
+        anchors.centerIn: parent
+        visible: true
 
-                          property color strokeStyle:  Qt.darker(fillStyle, 1.5)
-                          property color fillStyle: Qt.darker(theme.linkColor, 1.1)
-                          property real lineWidth: 1.6
-                          property bool fill: true
-                          property bool stroke: false
-                          property real alpha: 1.0
-                          property real scale : 1
-                          property real rotate : 0
-                          property real i: -50
-                          property real waveSpeed: 10
-                          property real amplitude: 0
-                          antialiasing: true
-                          smooth: true
+        property color strokeStyle:  Qt.darker(fillStyle, 1.5)
+        property color fillStyle: Qt.darker(theme.linkColor, 1.1)
+        property real lineWidth: 5
+        property bool fill: true
+        property bool stroke: true
+        property real alpha: 1.0
+        property real scale : 1
+        property real rotate : 0
+        property real i: 0
+        property real waveSpeed: 10
+        property real amplitude: 0
+        antialiasing: true
+        smooth: true
+        opacity: 0
 
-                          onLineWidthChanged:requestPaint();
-                          onFillChanged:requestPaint();
-                          onStrokeChanged:requestPaint();
-                          onScaleChanged:requestPaint();
-                          onRotateChanged:requestPaint();
-                          onIChanged: requestPaint();
+        onIChanged: requestPaint();
 
-                          renderTarget: Canvas.FramebufferObject
-                          renderStrategy: Canvas.Cooperative
+        renderTarget: Canvas.FramebufferObject
+        renderStrategy: Canvas.Cooperative
 
 
-              onPaint: {
-                              var ctxside = canvasmiddlegraphics.getContext('2d');
-                              var ctxside2 = canvasmiddlegraphics.getContext('2d');
-                              var hCenter = width * 0.5
-                              var vCenter = height * 0.5
-                              var size = 12
-                              var period = 15;
-                              var dotSpeed = 5;
+        onPaint: {
+            var ctxside = canvasmiddlegraphics.getContext('2d');
+            var hCenter = width * 0.5
+            var vCenter = height * 0.5
+            var size = 12
+            var period = 15;
+            var dotSpeed = 5;
 
-                              function draw_line(i){
-                                  var oStartx=0;
-                                  var oStarty=( height / 2 )
-                                  ctxside.beginPath();
-                                  ctxside.moveTo( oStartx, oStarty + amplitude * Math.sin( x / period + ( i  / 5 ) ) );
-                                  ctxside.lineWidth = 1;
-                                  ctxside.strokeStyle = theme.linkColor;
+            function draw_line(i){
+                var oStartx=0;
+                var oStarty=( height / 2 )
+                ctxside.beginPath();
+                ctxside.moveTo( oStartx, oStarty + amplitude * Math.sin( x / period + ( i  / 5 ) ) );
+                ctxside.lineWidth = 1;
+                ctxside.strokeStyle = theme.linkColor;
 
-                                  for(var Vx = oStartx; Vx < width * 0.95; Vx++) {
-                                      var Vy = amplitude * Math.sin( Vx / period + ( i  / 5 + Math.floor(Math.random() * 2) + 0));
-                                      ctxside.lineTo( oStartx + Vx,  oStarty + Vy);
-                                  }
+                for(var Vx = oStartx; Vx < width * 0.95; Vx++) {
+                    var Vy = amplitude * Math.sin( Vx / period + ( i  / 5 + Math.floor(Math.random() * 2) + 0));
+                    ctxside.lineTo( oStartx + Vx,  oStarty + Vy);
+                }
 
-                                   ctxside.stroke();
-                              }
-                              
-                              
-                              function draw_line_rev(i){
-                                  var oStartx=-10;
-                                  var oStarty=(height / 2)
-                                  ctxside2.beginPath();
-                                  ctxside2.moveTo( oStartx, oStarty + amplitude * Math.sin( x / period + ( i  / 5 ) ) );
-                                  ctxside2.lineWidth = 2;
-                                  ctxside2.strokeStyle = theme.linkColor;
+                ctxside.stroke();
+            }
 
-                                  for(var Vx = Math.random(oStartx); Vx < width * 1; Vx++) {
-                                      var Vy = Math.random() * amplitude * Math.sin( Vx / period + ( i  / 5 + Math.floor(Math.random() * 2) + 0));
-                                      ctxside2.lineTo( oStartx + Vx,  oStarty + Vy);
-                                  }
 
-                                   ctxside2.stroke();
-                              }
-                                
-
-                              function render(){
-                                  var st = i
-                                  ctxside.clearRect(0, 0, width, height);
-                                  ctxside2.clearRect(0, 0, width, height);
-                                  draw_line(st)
-                                  draw_line_rev(st)
-                              }
-                  render();
-              }
+            function render(){
+                var st = i
+                ctxside.clearRect(0, 0, width, height);
+                draw_line(st)
+            }
+            render();
+        }
     }
 }

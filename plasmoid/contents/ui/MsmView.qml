@@ -1,4 +1,4 @@
-/* Copyright 2016 Aditya Mehra <aix.m@outlook.com>                            
+/* Copyright 2019 Aditya Mehra <aix.m@outlook.com>                            
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,234 +18,95 @@
 */
 
 import QtQuick 2.9
-import QtQuick.Layouts 1.3
+import QtQml.Models 2.2
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.private.mycroftplasmoid 1.0 as PlasmaLa
-import Qt.labs.settings 1.0
+import QtGraphicalEffects 1.0
+import org.kde.kirigami 2.5 as Kirigami
+import Mycroft 1.0 as Mycroft
 
-Rectangle {
-                id: skillcontent
+Kirigami.AbstractCard {
+    id: skillInstallerDelegate
+    
+    contentItem: Item {
+        implicitWidth: delegateLayout.implicitWidth;
+        implicitHeight: delegateLayout.implicitHeight;
+    
+        ColumnLayout{
+            id: delegateLayout
+            anchors {
+                left: parent.left;
+                top: parent.top;
+                right: parent.right;
+            }
+            
+            Kirigami.Heading {
+                id: skillName
                 Layout.fillWidth: true;
-                anchors { 
-                    left: parent.left;
-                    leftMargin: 0.5;
-                    right: parent.right 
-                    }
-                height: units.gridUnit * 4
-                border.width: 1        
-                border.color: Qt.darker(theme.linkColor, 1.2)
-                color: Qt.darker(theme.backgroundColor, 1.2)
-                property var configPath
-                
-                function exec(msmparam) {
-                    if(main.coreinstallstartpath == packagemcorestartcmd){
-                        if(innerset.versionIndex == 0){
-                            var createSkillMsg = "install " + model.name
-                            var socketmessage = {};
-                            socketmessage.type = "recognizer_loop:utterance";
-                            socketmessage.data = {};
-                            socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
-                        }
-                        else {
-                            return launchinstaller.msmapp("bash msm install " + model.url)
-                        }
-                    }
-                    else {
-                        if(innerset.versionIndex == 0){
-                            var createSkillMsg = "install " + model.name
-                            var socketmessage = {};
-                            socketmessage.type = "recognizer_loop:utterance";
-                            socketmessage.data = {};
-                            socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
-                        }
-                        else {
-                            var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                            return launchinstaller.msmapp("bash " + bscrpt + " install " + model.url)
-                        }
-                    }
+                wrapMode: Text.WordWrap;
+                font.bold: true;
+                text: qsTr(model.name);
+                level: 3;
+                color: Kirigami.Theme.textColor;
+            }
+            
+            RowLayout {
+                id: skillInfoRow
+                spacing: Kirigami.Units.largeSpacing
+                Layout.fillWidth: true
+            
+                PlasmaCore.IconItem {
+                    id: innerskImg
+                    source: "download";
+                    Layout.preferredWidth: innerskImg.width
+                    Layout.preferredHeight: innerskImg.height
+                    width: Kirigami.Units.gridUnit * 2
+                    height: Kirigami.Units.gridUnit * 2
                 }
                 
-                function execUninstall(msmparam) {
-                    if(main.coreinstallstartpath == packagemcorestartcmd){
-                        if(innerset.versionIndex == 0){
-                            var createSkillMsg = "uninstall " + model.name
-                            var socketmessage = {};
-                            socketmessage.type = "recognizer_loop:utterance";
-                            socketmessage.data = {};
-                            socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
-                        }
-                        else {
-                            return launchinstaller.msmapp("bash msm remove " + model.name)
-                        }
-                    }
-                    else {
-                        if(innerset.versionIndex == 0){
-                            var createSkillMsg = "uninstall " + model.name
-                            var socketmessage = {};
-                            socketmessage.type = "recognizer_loop:utterance";
-                            socketmessage.data = {};
-                            socketmessage.data.utterances = [createSkillMsg];
-                            socket.sendTextMessage(JSON.stringify(socketmessage));   
-                        }
-                        else {
-                            var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                            return launchinstaller.msmapp("bash " + bscrpt + " remove " + model.name)
-                        }
-                    }
-                }
-                
-                function execUpdate(msmparam) {
-                    if(main.coreinstallstartpath == packagemcorestartcmd){
-                        return launchinstaller.msmapp("bash msm update " + model.name)
-                    }
-                    else {
-                        var bscrpt = "/usr/share/plasma/plasmoids/org.kde.plasma.mycroftplasmoid/contents/code/msm.sh"
-                        return launchinstaller.msmapp("bash " + bscrpt + " update " + model.name)
-                    }
-                }
-                
-                function execConfiguration(msmparam) {
-                        var openConfigUrl = Qt.resolvedUrl(configPath)
-                        Qt.openUrlExternally(openConfigUrl)
-                }
-                
-                function getSkillInfoLocal() {
-                    var customFold = launchinstaller.skillsPath()
-                    var defaultFold = '/opt/mycroft/skills'
-                    var skillPath = (defaultFold || customFold) + "/" + model.name
-                    configPath = (defaultFold || customFold) + "/" + model.name + "/" + "settingsmeta.json"
-                    if(PlasmaLa.FileReader.file_exists_local(skillPath)){
-                        installUpdateLabl.text = i18n("Uninstall")
-                        updateskillviamsm.enabled = true
-                    }
-                    if(PlasmaLa.FileReader.file_exists_local(configPath)){
-                        configureSkillLabl.enabled = true
-                    }
-                }
-                
-                PlasmaLa.MsmApp{
-                    id: launchinstaller
-                }
-                
-                Component.onCompleted: {
-                    getSkillInfoLocal();
-                }
-                
-                PlasmaComponents.Label {
-                id: skllname
-                font.capitalization: Font.AllUppercase
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.leftMargin: units.gridUnit * 0.5
-                anchors.right: parent.right
-                anchors.rightMargin: units.gridUnit * 0.5
-                wrapMode: Text.WordWrap
-                text: model.name
-                    Rectangle {
-                        id: sepratrmsm
-                        width: parent.width
-                        height: 1
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: 2
-                        color: Qt.darker(theme.linkColor, 1.2)
-                            }
-                        }
+                Label {
+                    id: skillURL
+                    wrapMode: Text.WordWrap
+                    color: theme.textColor
+                    text: "View Repository"
+                    Layout.fillWidth: true;
 
-                PlasmaComponents.Label {
-                id: urlskllable
-                anchors.top: skllname.bottom
-                anchors.topMargin: units.gridUnit * 0.03
-                anchors.left: parent.left
-                anchors.leftMargin: units.gridUnit * 0.5
-                anchors.right: parent.right
-                anchors.rightMargin: units.gridUnit * 0.5
-                wrapMode: Text.WordWrap
-                color: theme.textColor
-                text: model.url
-                
-                MouseArea{
-                    id: gotoGit
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {Qt.openUrlExternally(model.url)}
-                    onEntered: {
-                        urlskllable.color = Qt.darker(theme.linkColor, 1.2)
-                    }
-                    onExited: {
-                        urlskllable.color = theme.textColor
+                    MouseArea{
+                        id: gotoGit
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {Qt.openUrlExternally(model.url)}
+                        onEntered: {
+                            skillURL.color = Qt.darker(theme.linkColor, 1.2)
                         }
-                    }
-                }
-                Rectangle {
-                    id: getskillviamsmRect
-                    width: parent.width
-                    height: units.gridUnit * 2.5
-                    anchors.bottom: parent.bottom
-                    color: Qt.darker(theme.linkColor, 1.2)
-
-                    PlasmaComponents.Button{
-                       id: installUpdateLabl
-                       width: parent.width / 4
-                       height: parent.height
-                       anchors.left: parent.left
-                       text: i18n("Install")
-                       
-                       onClicked:{
-                           switch(installUpdateLabl.text){
-                                case "Install":
-                                     var msmprogress = exec()
-                                     break
-                                case "Uninstall":
-                                     var msmprogress = execUninstall()
-                                     break
-                            }
-                        }
-                    }
-                    
-                    PlasmaComponents.Button{
-                       id: updateskillviamsm
-                       width: parent.width / 4
-                       height: parent.height
-                       anchors.left: installUpdateLabl.right
-                       text: i18n("Update")
-                       enabled: false
-                       
-                       onClicked:{
-                            execUpdate()
-                        }
-                    }
-                    
-                    PlasmaComponents.Button{
-                       id: viewGit
-                       width: parent.width / 4
-                       height: parent.height
-                       anchors.left: updateskillviamsm.right
-                       text: i18n("Readme")
-                       
-                       onClicked: {
-                           Qt.openUrlExternally(model.url)
-                        }
-                    }
-
-                    PlasmaComponents.Button{
-                       id: configureSkillLabl
-                       width: parent.width / 4
-                       anchors.right: parent.right
-                       height: parent.height
-                       text: i18n("Configure")
-                       enabled: false
-                       
-                       onClicked: {
-                            execConfiguration()
+                        onExited: {
+                            skillURL.color = theme.textColor
                         }
                     }
                 }
             }
+        
+            PlasmaComponents.Button{
+                id: actionItem
+                text: "Install"
+                Layout.fillWidth: true
+                onClicked:{
+                    switch(actionItem.text){
+                    case "Install":
+                        Mycroft.MycroftController.sendText("install" + skillName)
+                        break
+                    case "Uninstall":
+                        var msmprogress = execUninstall()
+                        break
+                    }
+                }
+            }
+        }
+    }
+}
+

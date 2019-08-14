@@ -1,5 +1,4 @@
-/*  Copyright 2019 Aditya Mehra <aix.m@outlook.com>
-    Copyright 2018 Marco Martin <mart@kde.org>
+/* Copyright 2019 Aditya Mehra <aix.m@outlook.com>                            
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,16 +18,12 @@
 */
 
 import QtQuick 2.9
+import org.kde.plasma.configuration 2.0
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kirigami 2.5 as Kirigami
-
-Item {
-    id: root
-
-    Plasmoid.switchWidth: Kirigami.Units.gridUnit * 10
-    Plasmoid.switchHeight: Kirigami.Units.gridUnit * 12
-
-    Plasmoid.fullRepresentation: FullRepresentation {}
+ConfigModel {
+    ConfigCategory {
+            name: i18n('General')
+            icon: 'preferences-system-windows'
+            source: 'config/configGeneral.qml'
+    }
 }

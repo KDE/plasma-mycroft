@@ -1,4 +1,4 @@
-/* Copyright 2016 Aditya Mehra <aix.m@outlook.com>                            
+/* Copyright 2019 Aditya Mehra <aix.m@outlook.com>                            
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.7
+import QtQuick 2.9
 
 Item {
     id: component
