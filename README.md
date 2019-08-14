@@ -1,6 +1,6 @@
-# Mycroft Plasmoid
+# Mycroft Plasmoid v1.x
 
-_Mycroft AI Plasmoid and Skills for KDE Plasma 5 Desktop_
+_Mycroft AI Plasmoid Version 1.x and Skills for KDE Plasma 5 Desktop_
 
 * [Installation Requirements](#installation-requirements)
   + [KDE Neon/Kubuntu](#kde-neon-kubuntu)
