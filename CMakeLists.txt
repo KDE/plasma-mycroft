@@ -1,5 +1,6 @@
 # Set minimum CMake version (required for CMake 3.0 or later)
 cmake_minimum_required(VERSION 2.8.12)
+cmake_policy(SET CMP0048 NEW)
 project(plasma-mycroft VERSION "2.0.0")
 
 option(BUILD_GUI_DEPS "Build Mycroft-GUI Dependencies" OFF)
