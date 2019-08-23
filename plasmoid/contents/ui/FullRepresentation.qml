@@ -35,6 +35,16 @@ Item {
     implicitWidth: Kirigami.Units.gridUnit * 20
     implicitHeight: Kirigami.Units.gridUnit * 32
     property bool cfg_notifications: plasmoid.configuration.notifications
+    property var incomingString
+    
+    Connections {
+        target: Mycroft.MycroftController
+        onIntentRecevied: { 
+            if(type == "recognizer_loop:utterance") {
+                incomingString = data.utterances[0]
+            }
+        }
+    }
     
     Item {
         id: topBar
@@ -158,7 +168,7 @@ Item {
                     target: Mycroft.MycroftController
                     
                     onFallbackTextRecieved: {
-                        Mycroft.MycroftController.sendRequest("mycroft.desktop.applet.show_conversationview", {})
+                        Mycroft.MycroftController.sendRequest("skill.desktop.applet.conversation", {"query": incomingString, "speak": data.utterance})
                         if (!plasmoid.expanded && cfg_notifications == true) {
                             var post = data.utterance;
                             var title = "Mycroft's Reply:"
