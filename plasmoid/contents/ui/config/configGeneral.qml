@@ -32,7 +32,6 @@ Item {
     id: page
     property alias cfg_websocketAddress: websocketAddress.text
     property alias cfg_notificationSwitch: notificationSwitch.checked
-    property alias cfg_selectView: selectView.currentIndex
     property alias cfg_enableRemoteTTS: enableRemoteTTS.checked
     property alias cfg_enableRemoteSTT: enableRemoteSTT.checked
     
@@ -67,13 +66,6 @@ Item {
             id: enableRemoteSTT
             text: i18n("Enable Remote STT")
             checked: false
-        }
-        
-        PlasmaComponents.ComboBox{
-            id: selectView
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18n ("Default View:")
-            model: ["Conversation View", "Dashboard View"]
         }
     }
 }
