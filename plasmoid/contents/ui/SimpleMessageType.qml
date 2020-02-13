@@ -29,6 +29,20 @@ Item {
     width: cbwidth
     height: messageRect.height + timeStampLabel.height
     property alias mssg: messageText.text
+    readonly property date currentDateTime: dataSource.data.Local ? dataSource.data.Local.DateTime : new Date()
+    
+    function getCurrentTime(){
+        var currentTime = Qt.formatTime(currentDateTime)
+        return currentTime
+    }
+
+    PlasmaCore.DataSource {
+        id: dataSource
+        engine: "time"
+        connectedSources: ["Local"]
+        interval: 6000
+        intervalAlignment: PlasmaCore.Types.AlignToMinute
+    }
                     
         Row {
             id: messageRow
@@ -133,7 +147,11 @@ Item {
             font.wordSpacing: theme.defaultFont.wordSpacing
             font.family: theme.defaultFont.family
             renderType: Text.NativeRendering 
-            text: currentDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+            
+            Component.onCompleted: {
+                    var cTime = getCurrentTime()
+                    text = cTime
+                }
             }
                 }
                     }
