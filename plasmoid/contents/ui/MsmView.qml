@@ -98,7 +98,7 @@ Kirigami.AbstractCard {
                 onClicked:{
                     switch(actionItem.text){
                     case "Install":
-                        Mycroft.MycroftController.sendText("install" + skillName)
+                        Mycroft.MycroftController.sendText("install " + skillName.text)
                         break
                     case "Uninstall":
                         var msmprogress = execUninstall()

@@ -61,7 +61,7 @@ Rectangle {
     
     function getSkills() {
         var doc = new XMLHttpRequest()
-        var url = "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/18.08/.gitmodules"
+        var url = "https://raw.githubusercontent.com/MycroftAI/mycroft-skills/20.02/.gitmodules"
         doc.open("GET", url, true);
         doc.send();
 
